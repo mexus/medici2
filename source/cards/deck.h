@@ -10,10 +10,12 @@ struct Card{
 	bool operator<(const Card& other) const;
 };
 
-template<int N>
+template<int n>
 struct Deck{
-	typedef std::array<Card, N> ArrayType;
-	static ArrayType cards;
+	typedef std::array<Card, n> ArrayType;
+	static const ArrayType cards;
+
+	static constexpr int N() {return n;}
 };
 
 #endif /* CARDS_DECK_H */
