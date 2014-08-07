@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "modules/test_mixer.h"
+#include "modules/test_medici.h"
 
 logxx::Log cLog("testing");
 
@@ -54,6 +55,7 @@ int main(int argc, char **argv) {
 	bool colouredOutput(true);
         
 	AddTest<TestMixer>(false);
+	AddTest<TestMedici>(true);
         
         for (int i = 1; i < argc; ++i){
                 std::string arg(argv[i]);

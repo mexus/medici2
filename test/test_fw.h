@@ -5,6 +5,7 @@
 #include <logxx/logxx.h>
 #include <vector>
 #include <set>
+#include <map>
 #include <functional>
 
 class TestFW {
@@ -23,6 +24,12 @@ protected:
 
 	template<class T, class Result = float>
 	Result CalculateAverage(std::size_t tests, const std::function<T()>&);
+
+	template<class T>
+	bool Compare(const std::set<T>& etalon, const std::set<T>& test);
+
+	template<class T1, class T2>
+	bool Compare(const std::map<T1, T2>& etalon, const std::map<T1, T2>& test);
 private:
         logxx::LogLevel desiredLevel;
 
