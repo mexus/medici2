@@ -6,5 +6,6 @@ SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories("source")
 
+add_subdirectory(converter)
 add_subdirectory(source)
 add_subdirectory(test)
