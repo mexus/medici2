@@ -41,21 +41,40 @@ int main(int argc, char **argv){
 			argument += ' ';
 		argument += argv[i];
 	}
-	std::size_t N = argument.size();
+
 	std::string result("{");
-	bool first(true);
-	for (std::size_t i = 0; i < N; ++i){
+	std::string stationars("{");
+
+	std::size_t i = 0;
+	std::size_t N = argument.size();
+	std::string lastCard;
+	while (i < N){
+		if (argument[i] == ']' && !lastCard.empty()){
+			if (stationars.size() != 1) stationars += ", ";
+			stationars += lastCard;
+			lastCard.clear();
+			++i;
+			continue;
+		}
 		std::string guessedRank, guessedSuit;
 		Guess(argument, i, ranks, guessedRank);
-		if (guessedRank.empty())
+		if (guessedRank.empty()){
+			++i;
 			continue;
+		}
 		Guess(argument, i, suits, guessedSuit);
-		if (guessedSuit.empty())
+		if (guessedSuit.empty()){
+			++i;
 			continue;
-		if (first) first = false; else result += ", ";
-		result += "{" + guessedRank + ", " + guessedSuit + "}";
+		}
+		if (result.size() != 1) result += ", ";
+		lastCard = "{" + guessedRank + ", " + guessedSuit + "}";
+		result += lastCard;
 	}
+	std::cout << "Deck:\n";
 	std::cout << result << "}\n";
+	std::cout << "Stationars:\n";
+	std::cout << stationars << "}\n";
 	return 0;
 }
 
