@@ -47,16 +47,11 @@ int main(int argc, char **argv){
 	for (std::size_t i = 0; i < N; ++i){
 		std::string guessedRank, guessedSuit;
 		Guess(argument, i, ranks, guessedRank);
-		if (guessedRank.empty()){
-			std::cout << "Can't find a rank at " << "(" << argument.substr(i, 9) << ")" << "\n";
-			break ;
-		}
+		if (guessedRank.empty())
+			continue;
 		Guess(argument, i, suits, guessedSuit);
-		if (guessedSuit.empty()){
-			std::cout << "Can't find a suit at " << "(" << argument.substr(i, 9) << ")" << "\n";
-			break ;
-		}
-
+		if (guessedSuit.empty())
+			continue;
 		if (first) first = false; else result += ", ";
 		result += "{" + guessedRank + ", " + guessedSuit + "}";
 	}
