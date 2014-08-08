@@ -4,7 +4,7 @@
 #include <random>
 #include <array>
 
-template<class T, int N>
+template<class T, std::size_t N>
 class Mixer {
 public:
 	Mixer(uint_fast32_t seed = 0);

@@ -4,11 +4,11 @@
 #include "mixer.h"
 
 
-template<class T, int N>
+template<class T, std::size_t N>
 Mixer<T, N>::Mixer(uint_fast32_t seed) : randomEngine(seed), uniformDistribution(1, N - 1) {
 }
 
-template<class T, int N>
+template<class T, std::size_t N>
 void Mixer<T, N>::Mix(std::array<T, N>& array){
 	std::size_t i = uniformDistribution(randomEngine);
 	std::swap(array[0], array[i]);
