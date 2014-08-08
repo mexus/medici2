@@ -10,7 +10,7 @@ void Performance::Run(){
 }
 
 void Performance::Mixer(){
-	static logxx::Log log("Mixer");
+	S_LOG("Mixer");
 	StandardMixer mixer;
 	auto deck = standard_36_deck::Deck::cards;
 	std::size_t decksCount = 1E6;
@@ -25,7 +25,7 @@ void Performance::Mixer(){
 }
 
 std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(){
-	static logxx::Log log("PregenerateConvergableDecks");
+	S_LOG("PregenerateConvergableDecks");
 	StandardMixer mixer;
 	Patience::PatienceInfo info;
 	std::vector<StandardDeck> pregeneratedDecks;
@@ -44,7 +44,7 @@ std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(
 }
 
 void Performance::MediciGenerator(){
-	static logxx::Log log("MediciGenerator");
+	S_LOG("MediciGenerator");
 	StandardMixer mixer;
 	Patience::PatienceInfo info;
 
