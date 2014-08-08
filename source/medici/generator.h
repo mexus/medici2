@@ -1,7 +1,7 @@
 #ifndef MEDICI_GENERATOR_H
 #define MEDICI_GENERATOR_H
 
-#include <medici/medici.h>
+#include <medici/patience.h>
 #include <mixer/mixer.h>
 #include <type_traits>
 

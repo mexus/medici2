@@ -1,7 +1,7 @@
 #ifndef TEST_MEDICI
 #define TEST_MEDICI
 
-#include <medici/medici.h>
+#include <medici/patience.h>
 #include <cards/standard-36-deck.h>
 #include "../test_fw.h"
 

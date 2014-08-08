@@ -27,6 +27,6 @@ namespace medici{
 
 }
 
-#include "medici.hpp"
+#include "patience.hpp"
 
 #endif /* MEDICI_PATIENCE_H */

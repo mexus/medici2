@@ -1,7 +1,7 @@
 #ifndef MEDICI_MEDICI_HPP
 #define MEDICI_MEDICI_HPP
 
-#include "medici.h"
+#include "patience.h"
 
 namespace medici{
 
