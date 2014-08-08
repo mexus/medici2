@@ -3,13 +3,17 @@
 
 #include "generator.h"
 
-template<std::size_t N, class TestFunctor>
-void MediciGenerator::Generate(std::array<Card, N>& deck, Medici::PatienceInfo& info, Mixer<Card, N>& mixer){
-	do {
-		mixer.Mix(deck);
-		if (Medici::Converge(deck, info) && TestFunctor()(deck, info))
-			break;
-	} while (true);
+namespace medici{
+
+	template<std::size_t N, class TestFunctor>
+	void Generator::Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer){
+		do {
+			mixer.Mix(deck);
+			if (Patience::Converge(deck, info) && TestFunctor()(deck, info))
+				break;
+		} while (true);
+	}
+
 }
 
 #endif /* MEDICI_GENERATOR_HPP */

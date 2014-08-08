@@ -5,15 +5,19 @@
 #include <mixer/mixer.h>
 #include <type_traits>
 
-struct BinaryTrueFunctor {
-	template<class A, class B>
-	bool operator()(const A&, const B&) const {return true;}
-};
+namespace medici {
 
-struct MediciGenerator {
-	template<std::size_t N, class TestFunctor = BinaryTrueFunctor>
-	static void Generate(std::array<Card, N>&, Medici::PatienceInfo& info , Mixer<Card, N>&);
-};
+	struct BinaryTrueFunctor {
+		template<class A, class B>
+		bool operator()(const A&, const B&) const {return true;}
+	};
+
+	struct Generator {
+		template<std::size_t N, class TestFunctor = BinaryTrueFunctor>
+		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info , Mixer<Card, N>&);
+	};
+
+}
 
 #include "generator.hpp"
 
