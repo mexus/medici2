@@ -5,12 +5,12 @@ logxx::Log Performance::cLog("Performance");
 using namespace medici;
 
 void Performance::Run(){
-	Mixer();
+	Mixing();
 	MediciGenerator();
 }
 
-void Performance::Mixer(){
-	S_LOG("Mixer");
+void Performance::Mixing(){
+	S_LOG("Mixing");
 	StandardMixer mixer;
 	auto deck = standard_36_deck::Deck::cards;
 	std::size_t decksCount = 1E6;

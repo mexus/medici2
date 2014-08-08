@@ -14,8 +14,8 @@ private:
 	static const std::size_t decksCount = 1E3;
 
 	static logxx::Log cLog;
-	static void Mixer();
 
+	static void Mixing();
 	static std::vector<StandardDeck> PregenerateConvergableDecks();
 	static void MediciGenerator();
 };
