@@ -14,7 +14,7 @@ public:
 protected:
 	static logxx::Log cLog;
 	bool Tests() ;
-	bool Test(const ArrayType& deck, bool converges, const Medici::PatienceInfo& etalonInfo);
+	bool Test(const ArrayType& deck, bool converges, const Medici::PatienceInfo& etalonInfo = Medici::PatienceInfo());
 
 	bool Compare(const Medici::PatienceInfo& result, const Medici::PatienceInfo& etalon);
 };
