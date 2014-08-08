@@ -15,7 +15,7 @@ public:
 
 		void Clear();
 	};
-	template<int N>
+	template<std::size_t N>
 	static bool Converge(const std::array<Card, N>&, PatienceInfo&);
 private:
 	typedef const Card* PCard;

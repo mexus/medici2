@@ -3,7 +3,7 @@
 
 #include "medici.h"
 
-template<int N>
+template<std::size_t N>
 bool Medici::Converge(const std::array<Card, N>& cards, PatienceInfo& info){
 	static_assert(N >= 3, "Deck should be at least 3 cards large!");
 	std::vector<PCard> deck;
