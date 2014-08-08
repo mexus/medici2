@@ -1,7 +1,7 @@
 medici2
 =======
 
-A library, cli (in plans) and gui (in plans) for calculations on a "Medici patience"
+A library, cli (in plans) and gui (in plans) for calculations on a "Medici patience".
 
 
 Warning!
@@ -23,17 +23,26 @@ Tested with:
 Building
 ========
 
-Go to a "build" folder and execute
+Go to a "build" folder and execute:
 
 % cmake ..
 
 % make
 
-Consider running tests via ./test/medici-test and ./performance/performance-test
+Consider running tests via ./test/medici-test and ./performance/performance-test.
 
 
 Using the library
 =================
 
-See usage at test/ folder
+See usage at test/ folder.
+
+
+Code analysis
+====================
+
+Static code analysis is done on a regular basis by means of clang (scan-build) and cppcheck.
+
+Dynamic code analisis is done on a regular basis by valgrind.
+
 
