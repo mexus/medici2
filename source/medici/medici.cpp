@@ -7,8 +7,8 @@ void Medici::PatienceInfo::Clear(){
 	mobiles.clear();
 }
 
-bool Medici::Converges(const Card& left, const Card& right){
-	return left.suit == right.suit || left.rank == right.rank;
+bool Medici::Converges(const PCard& left, const PCard& right){
+	return left->suit == right->suit || left->rank == right->rank;
 }
 
 void Medici::Mobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info){
@@ -17,20 +17,26 @@ void Medici::Mobiles(const Card& leftCard, const Card& middleCard, PatienceInfo&
 		info.stationars.insert(leftCard);
 }
 
-std::size_t Medici::Converge(std::vector<Card>& deck, PatienceInfo& info){
+std::size_t Medici::Converge(std::vector<PCard>& deck, PatienceInfo& info){
 	if (deck.size() <= 2)
 		return 0;
-	auto rightCardIt = deck.end() - 1;
 	std::size_t convolutions = 0;
-	while (rightCardIt != deck.end() && deck.size() > 2){
-		auto middleCardIt = rightCardIt - 1;
-		auto leftCardIt  = middleCardIt - 1;
-		if (Converges(*leftCardIt, *rightCardIt)){
-			Mobiles(*leftCardIt, *middleCardIt, info);
-			rightCardIt = deck.erase(leftCardIt);
-			++convolutions;
-		} else
-			++rightCardIt;
+	std::size_t rightCardN = 0;
+	while (rightCardN != deck.size() && deck.size() > 2){
+		if (rightCardN < 2)
+			++rightCardN;
+		else {
+			auto &rightPCard = deck[rightCardN];
+			auto middleCardN = rightCardN - 1; auto &middlePCard = deck[middleCardN];
+			auto leftCardN  = middleCardN - 1; auto &leftPCard   = deck[leftCardN];
+			if (Converges(leftPCard, rightPCard)){
+				Mobiles(*leftPCard, *middlePCard, info);
+				deck.erase(deck.begin() + leftCardN);
+				rightCardN = leftCardN;
+				++convolutions;
+			} else
+				++rightCardN;
+		}
 	}
 	return convolutions;
 }

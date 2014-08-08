@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <memory>
 
 class Medici {
 public:
@@ -17,9 +18,11 @@ public:
 	template<int N>
 	static bool Converge(const std::array<Card, N>&, PatienceInfo&);
 private:
-	static std::size_t Converge(std::vector<Card>& deck, PatienceInfo&);
+	typedef const Card* PCard;
+
+	static std::size_t Converge(std::vector<PCard>& deck, PatienceInfo&);
 	static void Mobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info);
-	static bool Converges(const Card& left, const Card& right);
+	static bool Converges(const PCard& left, const PCard& right);
 
 };
 
