@@ -50,10 +50,8 @@ bool TestMedici::Tests(){
 	return Test(convergingDeck1, true, deck1Info) && Test(notConvergingDeck2, false) && Test(convergingDeck3, true, deck3Info);
 }
 
-namespace {
-	std::ostream& operator<<(std::ostream& s, const Card& card){
-		return s << "suit #" << (int)card.suit << " rank #" << (int)card.rank;
-	}
+std::ostream& operator<<(std::ostream& s, const Card& card){
+	return s << "suit #" << (int)card.suit << " rank #" << (int)card.rank;
 }
 
 bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Medici::PatienceInfo& etalonInfo){
