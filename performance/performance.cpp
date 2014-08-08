@@ -13,6 +13,7 @@ void Performance::Mixing(){
 	S_LOG("Mixing");
 	StandardMixer mixer;
 	auto deck = standard_36_deck::Deck::cards;
+	// cppcheck-suppress variableScope
 	std::size_t decksCount = 1E6;
 	{
 		TimeMeasure timer;
