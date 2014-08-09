@@ -1,5 +1,6 @@
 #include "performance.h"
 #include <helpers/time_measure.h>
+#include <cards/deck-selector.h>
 
 logxx::Log Performance::cLog("Performance");
 using namespace medici;
@@ -7,6 +8,7 @@ using namespace medici;
 void Performance::Run(){
 	Mixing();
 	MediciGenerator();
+	MediciWithConditions();
 }
 
 void Performance::Mixing(){
@@ -63,5 +65,46 @@ void Performance::MediciGenerator(){
 		log(logxx::info) << decksCount << " convergable decks converged in " << elapsed << "s: " << decksCount / elapsed << " decks per second" << logxx::endl;
 	}
 
+}
+
+void Performance::MediciWithConditions(){
+	S_LOG("MediciWithConditions");
+	using namespace standard_36_deck;
+	DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
+	DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
+	DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
+	DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
+	DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
+
+	DeckSelectors selectors;
+	selectors.AddDeckSelector(targetCard);
+	selectors.AddDeckSelector(ownActions);
+	selectors.AddDeckSelector(firstCard);
+	selectors.AddDeckSelector(secondCard);
+	selectors.AddDeckSelector(thirdCard);
+
+	struct CheckOperand{
+		CheckOperand(const DeckSelectors& deckSelectors) : deckSelectors(deckSelectors) {}
+		bool operator()(const StandardDeck& deck, const Patience::PatienceInfo&) const {
+			return deckSelectors.Check(deck);
+		}
+	private:
+		const DeckSelectors& deckSelectors;
+	};
+
+	StandardMixer mixer;
+	auto deck = standard_36_deck::Deck::cards;
+	Patience::PatienceInfo info;
+	CheckOperand checker(selectors);
+
+	static const std::size_t totalDecks = 20;
+	{
+		TimeMeasure timer;
+		for (std::size_t i = 0; i != totalDecks; ++i){
+			Generator::Generate(deck, info, mixer, checker);
+		}
+		double elapsed = timer.Elapsed();
+		log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
+	}
 }
 

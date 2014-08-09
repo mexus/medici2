@@ -18,6 +18,7 @@ private:
 	static void Mixing();
 	static std::vector<StandardDeck> PregenerateConvergableDecks();
 	static void MediciGenerator();
+	static void MediciWithConditions();
 };
 
 #endif /* PERFORMANCE_H */
