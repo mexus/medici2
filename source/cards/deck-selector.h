@@ -7,14 +7,14 @@
 
 class DeckAbstractSelector{
 public:
-	DeckAbstractSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
-protected:
-	virtual bool Check(const std::vector<Card>& deckPart) const = 0;
+
 	const std::vector<CardSelector> cardSelectors;
-private:
-	std::size_t from, to;
+	const std::size_t from, to;
+protected:
+	DeckAbstractSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
+	virtual bool Check(const std::vector<Card>& deckPart) const = 0;
 };
 
 

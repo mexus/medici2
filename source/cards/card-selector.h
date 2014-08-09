@@ -10,12 +10,12 @@ public:
 	CardSelector(const Card::Rank& rank, bool straight);
 
 	bool Check(const Card&) const;
-private:
-	Card::Suit suit;
-	Card::Rank rank;
-	bool suitSet;
-	bool rankSet;
-	bool straight;
+
+	const Card::Suit suit;
+	const Card::Rank rank;
+	const bool suitSet;
+	const bool rankSet;
+	const bool straight;
 };
 
 #endif /* CARDS_CARD_SELECTOR_H */
