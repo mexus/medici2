@@ -1,4 +1,4 @@
-#include "test_medici.h"
+#include "medici.h"
 
 logxx::Log TestMedici::cLog("TestMedici");
 

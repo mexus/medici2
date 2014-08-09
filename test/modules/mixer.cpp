@@ -1,4 +1,4 @@
-#include "test_mixer.h"
+#include "mixer.h"
 #include <cmath>
 #include <algorithm>
 

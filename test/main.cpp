@@ -5,8 +5,8 @@
 #include <logxx/logxx.h>
 #include <stdbool.h>
 
-#include "modules/test_mixer.h"
-#include "modules/test_medici.h"
+#include "modules/mixer.h"
+#include "modules/medici.h"
 
 logxx::Log cLog("testing");
 
