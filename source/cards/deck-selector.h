@@ -20,7 +20,8 @@ protected:
 
 class DeckSelectors{
 public:
-	void AddDeckSelector(const std::shared_ptr<DeckAbstractSelector>&);
+	template<class T>
+	typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type AddDeckSelector(const T&);
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
 private:

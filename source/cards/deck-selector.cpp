@@ -3,10 +3,6 @@
 DeckAbstractSelector::DeckAbstractSelector(const std::vector<CardSelector>& selectors, std::size_t from, std::size_t to) : cardSelectors(selectors), from(from), to(to){
 }
 
-void DeckSelectors::AddDeckSelector(const std::shared_ptr<DeckAbstractSelector>& deckSelector){
-	deckSelectors.push_back(deckSelector);
-}
-
 
 DeckNegateSelector::DeckNegateSelector(const std::vector<CardSelector>& selectors, std::size_t from, std::size_t to) : DeckAbstractSelector(selectors, from, to) {
 }
