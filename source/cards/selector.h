@@ -5,12 +5,9 @@
 
 class CardSelector {
 public:
-	struct OnlyRank{};
-	struct OnlySuit{};
-
-	CardSelector(std::uint_fast8_t suit, std::uint_fast8_t rank);
-	CardSelector(std::uint_fast8_t rank, const OnlyRank&);
-	CardSelector(std::uint_fast8_t suit, const OnlySuit&);
+	CardSelector(const Card::Suit& suit, const Card::Rank& rank, bool straight);
+	CardSelector(const Card::Suit& suit, bool straight);
+	CardSelector(const Card::Rank& rank, bool straight);
 
 	bool Check(const Card&) const;
 private:
@@ -18,6 +15,7 @@ private:
 	Card::Rank rank;
 	bool suitSet;
 	bool rankSet;
+	bool straight;
 };
 
 #endif /* CARDS_SELECTOR_H */
