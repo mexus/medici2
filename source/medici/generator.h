@@ -14,7 +14,7 @@ namespace medici {
 
 	struct Generator {
 		template<std::size_t N, class TestFunctor = BinaryTrueFunctor>
-		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info , Mixer<Card, N>&);
+		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info , Mixer<Card, N>&, TestFunctor = TestFunctor());
 	};
 
 }
