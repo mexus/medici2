@@ -18,6 +18,7 @@ protected:
 	bool TestNegateSelector();
 	bool TestAllSelector();
 	bool TestOneSelector();
+	bool TestComplex();
 
 	static bool TestSelector(const ArrayType& deck, const DeckAbstractSelector&, bool etalonResult);
 };
