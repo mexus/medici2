@@ -1,4 +1,5 @@
 #include "medici.h"
+#include "operators.h"
 
 logxx::Log TestMedici::cLog("TestMedici");
 
@@ -48,10 +49,6 @@ bool TestMedici::Tests(){
 	};
 
 	return Test(convergingDeck1, true, deck1Info) && Test(notConvergingDeck2, false) && Test(convergingDeck3, true, deck3Info);
-}
-
-std::ostream& operator<<(std::ostream& s, const Card& card){
-	return s << "suit #" << (int)card.suit.value << " rank #" << (int)card.rank.value;
 }
 
 bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Patience::PatienceInfo& etalonInfo){

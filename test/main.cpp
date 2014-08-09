@@ -7,6 +7,7 @@
 
 #include "modules/mixer.h"
 #include "modules/medici.h"
+#include "modules/deck-selector.h"
 
 logxx::Log cLog("testing");
 
@@ -55,7 +56,8 @@ int main(int argc, char **argv) {
 	bool colouredOutput(true);
         
 	AddTest<TestMixer>(false);
-	AddTest<TestMedici>(true);
+	AddTest<TestMedici>(false);
+	AddTest<TestDeckSelector>(true);
         
         for (int i = 1; i < argc; ++i){
                 std::string arg(argv[i]);

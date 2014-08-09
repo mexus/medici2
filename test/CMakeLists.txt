@@ -10,8 +10,11 @@ add_executable(${TEST_EXE}
         main.cpp
         test_fw.cpp
 
+	modules/operators.cpp
+
 	modules/mixer.cpp
 	modules/medici.cpp
+	modules/deck-selector.cpp
 )
 target_link_libraries (${TEST_EXE}
 	source-library
