@@ -2,28 +2,44 @@
 
 template<>
 const standard_36_deck::Deck::ArrayType standard_36_deck::Deck::cards {{
-	{standard_36_deck::Spades, standard_36_deck::Six}, {standard_36_deck::Spades, standard_36_deck::Seven},
-	{standard_36_deck::Spades, standard_36_deck::Eight}, {standard_36_deck::Spades, standard_36_deck::Nine},
-	{standard_36_deck::Spades, standard_36_deck::Ten}, {standard_36_deck::Spades, standard_36_deck::Jack},
-	{standard_36_deck::Spades, standard_36_deck::Queen}, {standard_36_deck::Spades, standard_36_deck::King},
-	{standard_36_deck::Spades, standard_36_deck::Ace},
+	{standard_36_deck::Spades, standard_36_deck::Six},	// 0
+	{standard_36_deck::Spades, standard_36_deck::Seven},	// 1
+	{standard_36_deck::Spades, standard_36_deck::Eight},	// 2
+	{standard_36_deck::Spades, standard_36_deck::Nine},	// 3
+	{standard_36_deck::Spades, standard_36_deck::Ten},	// 4
+	{standard_36_deck::Spades, standard_36_deck::Jack},	// 5
+	{standard_36_deck::Spades, standard_36_deck::Queen},	// 6
+	{standard_36_deck::Spades, standard_36_deck::King},	// 7
+	{standard_36_deck::Spades, standard_36_deck::Ace},	// 8
 
-	{standard_36_deck::Hearts, standard_36_deck::Six}, {standard_36_deck::Hearts, standard_36_deck::Seven},
-	{standard_36_deck::Hearts, standard_36_deck::Eight}, {standard_36_deck::Hearts, standard_36_deck::Nine},
-	{standard_36_deck::Hearts, standard_36_deck::Ten}, {standard_36_deck::Hearts, standard_36_deck::Jack},
-	{standard_36_deck::Hearts, standard_36_deck::Queen}, {standard_36_deck::Hearts, standard_36_deck::King},
-	{standard_36_deck::Hearts, standard_36_deck::Ace},
+	{standard_36_deck::Hearts, standard_36_deck::Six},	// 9
+	{standard_36_deck::Hearts, standard_36_deck::Seven},	// 10
+	{standard_36_deck::Hearts, standard_36_deck::Eight},	// 11
+	{standard_36_deck::Hearts, standard_36_deck::Nine},	// 12
+	{standard_36_deck::Hearts, standard_36_deck::Ten},	// 13
+	{standard_36_deck::Hearts, standard_36_deck::Jack},	// 14
+	{standard_36_deck::Hearts, standard_36_deck::Queen},	// 15
+	{standard_36_deck::Hearts, standard_36_deck::King},	// 16
+	{standard_36_deck::Hearts, standard_36_deck::Ace},	// 17
 
-	{standard_36_deck::Diamonds, standard_36_deck::Six}, {standard_36_deck::Diamonds, standard_36_deck::Seven},
-	{standard_36_deck::Diamonds, standard_36_deck::Eight}, {standard_36_deck::Diamonds, standard_36_deck::Nine},
-	{standard_36_deck::Diamonds, standard_36_deck::Ten}, {standard_36_deck::Diamonds, standard_36_deck::Jack},
-	{standard_36_deck::Diamonds, standard_36_deck::Queen}, {standard_36_deck::Diamonds, standard_36_deck::King},
-	{standard_36_deck::Diamonds, standard_36_deck::Ace},
+	{standard_36_deck::Diamonds, standard_36_deck::Six},	// 18
+	{standard_36_deck::Diamonds, standard_36_deck::Seven},	// 19
+	{standard_36_deck::Diamonds, standard_36_deck::Eight},	// 20
+	{standard_36_deck::Diamonds, standard_36_deck::Nine},	// 21
+	{standard_36_deck::Diamonds, standard_36_deck::Ten},	// 22
+	{standard_36_deck::Diamonds, standard_36_deck::Jack},	// 23
+	{standard_36_deck::Diamonds, standard_36_deck::Queen},	// 24
+	{standard_36_deck::Diamonds, standard_36_deck::King},	// 25
+	{standard_36_deck::Diamonds, standard_36_deck::Ace},	// 26
 
-	{standard_36_deck::Clubs, standard_36_deck::Six}, {standard_36_deck::Clubs, standard_36_deck::Seven},
-	{standard_36_deck::Clubs, standard_36_deck::Eight}, {standard_36_deck::Clubs, standard_36_deck::Nine},
-	{standard_36_deck::Clubs, standard_36_deck::Ten}, {standard_36_deck::Clubs, standard_36_deck::Jack},
-	{standard_36_deck::Clubs, standard_36_deck::Queen}, {standard_36_deck::Clubs, standard_36_deck::King},
-	{standard_36_deck::Clubs, standard_36_deck::Ace}
+	{standard_36_deck::Clubs, standard_36_deck::Six},	// 27
+	{standard_36_deck::Clubs, standard_36_deck::Seven},	// 28
+	{standard_36_deck::Clubs, standard_36_deck::Eight},	// 29
+	{standard_36_deck::Clubs, standard_36_deck::Nine},	// 30
+	{standard_36_deck::Clubs, standard_36_deck::Ten},	// 31
+	{standard_36_deck::Clubs, standard_36_deck::Jack},	// 32
+	{standard_36_deck::Clubs, standard_36_deck::Queen},	// 33
+	{standard_36_deck::Clubs, standard_36_deck::King},	// 34
+	{standard_36_deck::Clubs, standard_36_deck::Ace}	// 35
 }};
 
