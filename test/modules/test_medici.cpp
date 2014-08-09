@@ -51,7 +51,7 @@ bool TestMedici::Tests(){
 }
 
 std::ostream& operator<<(std::ostream& s, const Card& card){
-	return s << "suit #" << (int)card.suit << " rank #" << (int)card.rank;
+	return s << "suit #" << (int)card.suit.value << " rank #" << (int)card.rank.value;
 }
 
 bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Patience::PatienceInfo& etalonInfo){

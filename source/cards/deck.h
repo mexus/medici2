@@ -5,8 +5,31 @@
 #include <cstdint>
 
 struct Card{
-	std::uint_fast8_t suit;
-	std::uint_fast8_t rank;
+	struct Suit;
+	struct Rank;
+
+	struct Suit{
+		Suit(std::uint_fast8_t);
+		Suit(const Rank&) = delete;
+		Suit();
+
+		std::uint_fast8_t value;
+		bool operator==(const Suit&) const;
+		bool operator<(const Suit&) const;
+	};
+
+	struct Rank{
+		Rank(std::uint_fast8_t);
+		Rank(const Suit&) = delete;
+		Rank();
+
+		std::uint_fast8_t value;
+		bool operator==(const Rank&) const;
+		bool operator<(const Rank&) const;
+	};
+
+	Suit suit;
+	Rank rank;
 	bool operator<(const Card& other) const;
 };
 
