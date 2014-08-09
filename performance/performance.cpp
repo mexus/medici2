@@ -85,7 +85,7 @@ void Performance::MediciWithConditions(){
 
 	struct CheckOperand{
 		CheckOperand(const DeckSelectors& deckSelectors) : deckSelectors(deckSelectors) {}
-		bool operator()(const StandardDeck& deck, const Patience::PatienceInfo&) const {
+		bool operator()(const StandardDeck& deck) const {
 			return deckSelectors.Check(deck);
 		}
 	private:

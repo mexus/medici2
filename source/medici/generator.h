@@ -7,14 +7,14 @@
 
 namespace medici {
 
-	struct BinaryTrueFunctor {
-		template<class A, class B>
-		bool operator()(const A&, const B&) const {return true;}
+	struct TrueFunctor {
+		template<class... Args>
+		bool operator()(Args...) const {return true;}
 	};
 
 	struct Generator {
-		template<std::size_t N, class TestFunctor = BinaryTrueFunctor>
-		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info , Mixer<Card, N>&, const TestFunctor& = TestFunctor());
+		template<std::size_t N, class TestBeforeFunctor = TrueFunctor, class TestAfterFunctor = TrueFunctor>
+		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const TestBeforeFunctor& = TestBeforeFunctor(), const TestAfterFunctor& = TestAfterFunctor());
 	};
 
 }
