@@ -1,5 +1,5 @@
-#ifndef CARDS_SELECTOR_H
-#define CARDS_SELECTOR_H
+#ifndef CARDS_CARD_SELECTOR_H
+#define CARDS_CARD_SELECTOR_H
 
 #include "deck.h"
 
@@ -18,4 +18,4 @@ private:
 	bool straight;
 };
 
-#endif /* CARDS_SELECTOR_H */
+#endif /* CARDS_CARD_SELECTOR_H */

@@ -1,4 +1,4 @@
-#include "selector.h"
+#include "card-selector.h"
 
 CardSelector::CardSelector(const Card::Suit& suit, const Card::Rank& rank, bool straight) : suit(suit), rank(rank), suitSet(true), rankSet(true), straight(straight) {
 }
@@ -14,10 +14,5 @@ bool CardSelector::Check(const Card& card) const {
 		(!rankSet || rank == card.rank) &&
 		(!suitSet || suit == card.suit);
 	return (straight == match);
-//straight	value	result
-//false		false	true
-//false		true	false
-//true		false	false
-//true		true	true
 }
 
