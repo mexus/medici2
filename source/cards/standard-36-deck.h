@@ -6,10 +6,10 @@
 namespace standard_36_deck{
 
 	enum Suits{
-		Spades,
-		Hearts,
-		Diamonds,
-		Clubs
+		Spades = 0,
+		Hearts = 1,
+		Diamonds = 2,
+		Clubs = 3
 	};	
 	
 	enum Ranks{
