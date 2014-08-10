@@ -65,4 +65,20 @@ bool TestFW::Compare(const std::map<T1, T2>& etalon, const std::map<T1, T2>& tes
 	return res;
 }
 
+template<class T, std::size_t N>
+bool TestFW::Compare(const std::array<T, N>& etalon, const std::array<T, N>& test){
+	static logxx::Log log("CompareArray");
+	bool res = true;
+	for (std::size_t i = 0; i != N; ++i){
+		auto &etalonEl = etalon[i];
+		auto &testEl = test[i];
+		if (!(etalonEl == testEl)){
+			log(logxx::error) << "Error at element #" << i << ": got {" << testEl << "}, but should be {" << etalonEl << "}" << logxx::endl;
+			res = false;
+		}
+	}
+	return res;
+}
+
+
 #endif /* TEST_FW_HPP */

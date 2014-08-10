@@ -30,6 +30,9 @@ protected:
 
 	template<class T1, class T2>
 	bool Compare(const std::map<T1, T2>& etalon, const std::map<T1, T2>& test);
+
+	template<class T, std::size_t N>
+	bool Compare(const std::array<T, N>& etalon, const std::array<T, N>& test);
 private:
         logxx::LogLevel desiredLevel;
 
