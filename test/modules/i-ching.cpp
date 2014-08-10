@@ -10,7 +10,63 @@ TestIChing::TestIChing() : TestFW("i-ching"){
 }
 
 bool TestIChing::Tests(){
-	return TestBalance() && TestBalanceAndSuit();
+	return TestCalculation() && TestBalance() && TestBalanceAndSuit();
+}
+
+bool TestIChing::TestCalculation(){
+	S_LOG("TestCalculation");
+	Patience::PatienceInfo info1, info2;
+	info1.stationars = {
+		{Spades, Jack},	
+		{Spades, Eight},
+		{Hearts, Six},
+		{Hearts, Nine},	
+		{Hearts, Ten},
+		{Hearts, Jack},
+		{Hearts, Queen},
+		{Hearts, King},
+		{Diamonds, Six},
+		{Diamonds, Seven},
+		{Diamonds, Eight},
+		{Diamonds, Nine},
+		{Diamonds, Jack},
+		{Diamonds, Ace},
+		{Clubs, Seven},
+		{Clubs, Jack},
+	};
+	info2.stationars = {
+		{Spades, Ten},
+		{Spades, Jack},
+		{Spades, Queen},
+		{Spades, King},
+		{Hearts, Jack},
+		{Hearts, Queen},
+		{Diamonds, Jack},
+		{Diamonds, Queen},
+		{Diamonds, Ace},
+		{Clubs, Nine},
+		{Clubs, Jack},
+		{Clubs, King},
+	};
+	SuitsHexagrams etalonHexagrams1 {{
+		{{Yang, Yang, Yang, Yang, Yang, Yang}},  // Spades
+		{{Yin , Yin , Yin , Yin , Yin , Yang }}, // Hearts
+		{{Yin , Yin , Yang, Yang, Yang, Yin }},  // Diamonds
+		{{Yang, Yang, Yang, Yang, Yang, Yang}}   // Clubs
+	}};
+	SuitsHexagrams etalonHexagrams2 {{
+		{{Yang, Yang, Yin , Yin , Yin , Yang}}, // Spades
+		{{Yang, Yang, Yang, Yin , Yang, Yang}}, // Hearts
+		{{Yang, Yang, Yang, Yin , Yang, Yin }}, // Diamonds
+		{{Yin , Yang, Yang, Yang, Yin , Yang}}, // Clubs
+	}};
+	auto resultHexagrams1 = CalculateHexagrams(info1);
+	auto resultHexagrams2 = CalculateHexagrams(info2);
+	if (!Compare(etalonHexagrams1, resultHexagrams1) || !Compare(etalonHexagrams2, resultHexagrams2)){
+		log(logxx::error) << "Failed" << logxx::endl;
+		return false;
+	} else
+		return true;
 }
 
 bool TestIChing::TestBalance(){
@@ -119,7 +175,64 @@ bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon){
 }
 
 bool TestIChing::TestBalanceAndSuit(){
-	return false;
+	ArrayType balancedDeck {{
+		{Spades, Jack},	
+		{Spades, Nine},	
+		{Clubs, Ten},	
+		{Hearts, Queen},	
+		{Diamonds, Six},	
+		{Clubs, Nine},	
+		{Clubs, Six},	
+		{Hearts, Jack},	
+		{Spades, Six},	
+		{Spades, Queen},	
+		{Diamonds, Jack},	
+		{Clubs, Queen},	
+		{Clubs, Ace},	
+		{Hearts, Seven},	
+		{Diamonds, King},	
+		{Clubs, Jack},	
+		{Diamonds, Queen},	
+		{Clubs, Eight},	
+		{Spades, Seven},	
+		{Spades, Eight},	
+		{Hearts, Ace},	
+		{Spades, Ace},	
+		{Hearts, Six},	
+		{Spades, Ten},	
+		{Spades, King},	
+		{Clubs, Seven},	
+		{Diamonds, Seven},	
+		{Clubs, King},	
+		{Diamonds, Ace},	
+		{Hearts, Nine},	
+		{Hearts, Ten},	
+		{Diamonds, Eight},	
+		{Diamonds, Nine},	
+		{Hearts, Eight},	
+		{Diamonds, Ten},	
+		{Hearts, King}
+	}};
+	Hexagram etalonHexagram {{Yin, Yang, Yang, Yang, Yang, Yang}};
+
+	return TestBalanceAndSuit(balancedDeck, Card::Suit(Hearts), etalonHexagram);
 }
 
+bool TestIChing::TestBalanceAndSuit(const ArrayType& deck, const Card::Suit& suit, const i_ching::Hexagram& etalonHexagram){
+	S_LOG("TestBalanceAndSuit");
+	Patience::PatienceInfo info;
+	if (!Patience::Converge(deck, info)){
+		log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
+		return false;
+	} else {
+		BalanceAndSuitChecker checker(suit, etalonHexagram);
+		bool checkResult = checker(deck, info);
+		if (!checkResult){
+			log(logxx::error) << "Deck doesn't match, but it should" <<
+			"\nDeck: " << deck << logxx::endl;
+			return false;
+		} else
+			return true;
+	}
+}
 

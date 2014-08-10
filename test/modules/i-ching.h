@@ -14,10 +14,12 @@ protected:
 	static logxx::Log cLog;
 	bool Tests();
 
+	bool TestCalculation();
 	bool TestBalance();
 	bool TestBalance(const ArrayType& deck, bool balancedEtalon);
 
 	bool TestBalanceAndSuit();
+	bool TestBalanceAndSuit(const ArrayType& deck, const Card::Suit&, const i_ching::Hexagram& etalonHexagram);
 };
 
 #endif /* TEST_I_CHING_H */
