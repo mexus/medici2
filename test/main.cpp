@@ -8,6 +8,7 @@
 #include "modules/mixer.h"
 #include "modules/medici.h"
 #include "modules/deck-selector.h"
+#include "modules/i-ching.h"
 
 logxx::Log cLog("testing");
 
@@ -57,7 +58,8 @@ int main(int argc, char **argv) {
         
 	AddTest<TestMixer>(false);
 	AddTest<TestMedici>(false);
-	AddTest<TestDeckSelector>(true);
+	AddTest<TestDeckSelector>(false);
+	AddTest<TestIChing>(true);
         
         for (int i = 1; i < argc; ++i){
                 std::string arg(argv[i]);

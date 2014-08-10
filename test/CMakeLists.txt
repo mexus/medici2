@@ -15,6 +15,7 @@ add_executable(${TEST_EXE}
 	modules/mixer.cpp
 	modules/medici.cpp
 	modules/deck-selector.cpp
+	modules/i-ching.cpp
 )
 target_link_libraries (${TEST_EXE}
 	source-library
