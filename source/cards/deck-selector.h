@@ -25,7 +25,7 @@ public:
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
 private:
-	std::vector<std::shared_ptr<DeckAbstractSelector>> deckSelectors;
+	std::vector<std::unique_ptr<DeckAbstractSelector>> deckSelectors;
 };
 
 

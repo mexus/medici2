@@ -11,7 +11,7 @@ bool DeckAbstractSelector::Check(const std::array<Card, N>& deck) const{
 
 template<class T>
 typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type DeckSelectors::AddDeckSelector(const T& s){
-	deckSelectors.emplace_back(std::make_shared<T>(s));
+	deckSelectors.emplace_back(new T(s));
 }
 
 template<std::size_t N>
