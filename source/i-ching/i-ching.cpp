@@ -3,8 +3,6 @@
 
 namespace i_ching{
 
-	typedef std::array<Hexagram, 4> SuitsHexagrams;
-
 	SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info){
 		using namespace standard_36_deck;
 		static const Hexagram defaultHexagram{{Yang, Yang, Yang, Yang, Yang, Yang}};
@@ -17,20 +15,23 @@ namespace i_ching{
 		static const std::unordered_map<std::uint_fast8_t, std::size_t> converter{
 			{Ace,   6 - 1},
 			{King,  5 - 1},
-			{Queen, 4 - 1}, {Jack,  4 - 1},
+			{Queen, 4 - 1},// {Jack,  4 - 1},
 			{Ten,   3 - 1},
-			{Six,   2 - 1}, {Eight, 2 - 1},
-			{Nine,  1 - 1},	{Seven, 1 - 1}
+			{Six,   2 - 1},// {Eight, 2 - 1},
+			{Nine,  1 - 1},// {Seven, 1 - 1}
 		};
 		for (auto &card : info.stationars){
 			auto &suitHexagram = hexagrams[card.suit.value];
-			std::size_t lineNumber = converter.at(card.rank.value);
-			suitHexagram[lineNumber] = Yin;
+			auto it = converter.find(card.rank.value);
+			if (it != converter.end()){
+				auto lineNumber = it->second;
+				suitHexagram[lineNumber] = Yin;
+			}
 		}
 		return hexagrams;
 	}
 
-	inline std::size_t IsYang(const Line& line){
+	std::size_t IsYang(const Line& line){
 		return line == Yang ? 1 : 0;
 	}
 

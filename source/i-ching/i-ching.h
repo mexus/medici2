@@ -26,6 +26,9 @@ namespace i_ching {
 		Hexagram hexagram;
 	};
 
+	typedef std::array<Hexagram, 4> SuitsHexagrams;
+	SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info);
+
 }
 
 #endif /* I_CHING_I_CHING_H */
