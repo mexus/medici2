@@ -1,6 +1,7 @@
 #include "performance.h"
 #include <helpers/time_measure.h>
 #include <cards/deck-selector.h>
+#include <i-ching/i-ching.h>
 
 logxx::Log Performance::cLog("Performance");
 using namespace medici;
@@ -9,6 +10,7 @@ void Performance::Run(){
 	Mixing();
 	MediciGenerator();
 	MediciWithConditions();
+	MediciWithConditionsAndIChing();
 }
 
 void Performance::Mixing(){
@@ -108,3 +110,60 @@ void Performance::MediciWithConditions(){
 	}
 }
 
+void Performance::MediciWithConditionsAndIChing(){
+	S_LOG("MediciWithConditionsAndIChing");
+	using namespace standard_36_deck;
+	DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
+	DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
+	DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
+	DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
+	DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
+
+	DeckSelectors selectors;
+	selectors.AddDeckSelector(targetCard);
+	selectors.AddDeckSelector(ownActions);
+	selectors.AddDeckSelector(firstCard);
+	selectors.AddDeckSelector(secondCard);
+	selectors.AddDeckSelector(thirdCard);
+
+	struct CheckOperand{
+		CheckOperand(const DeckSelectors& deckSelectors) : deckSelectors(deckSelectors) {}
+		bool operator()(const StandardDeck& deck) const {
+			return deckSelectors.Check(deck);
+		}
+	private:
+		const DeckSelectors& deckSelectors;
+	};
+
+	auto deck = standard_36_deck::Deck::cards;
+	Patience::PatienceInfo info;
+	CheckOperand checker(selectors);
+	
+	i_ching::BalanceChecker iChingChecker;
+	std::size_t totalDecks = 1E5;
+	double elapsedWOIChing, elapsedWIChing;
+	StandardMixer mixer;
+	{
+		TimeMeasure timer;
+		for (std::size_t i = 0; i != totalDecks; ++i){
+			Generator::Generate(deck, info, mixer);
+		}
+		elapsedWOIChing = timer.Elapsed();
+	}
+	mixer = StandardMixer();
+	deck = standard_36_deck::Deck::cards;
+	std::size_t balanced = 0;
+	{
+		TimeMeasure timer;
+		for (std::size_t i = 0; i != totalDecks; ++i){
+			Generator::Generate(deck, info, mixer);
+			if (iChingChecker(deck, info))
+				++balanced;
+		}
+		elapsedWIChing = timer.Elapsed();
+	}
+	if (balanced != 0)
+		log(logxx::info) << "Found " << balanced << " balanced decks" << logxx::endl;
+	double decrease = (elapsedWIChing - elapsedWOIChing) / elapsedWOIChing;
+	log(logxx::info) << "Speed decrease while using i-ching checker is " << decrease * 100 << "%" << logxx::endl;
+}
