@@ -18,7 +18,7 @@ SuitsHexagrams TestIChing::CalculateHexagrams(const ArrayType& deck){
 	if (Patience::Converge(deck, info)){
 		return i_ching::CalculateHexagrams(info);
 	} else
-		throw std::logic_error("Supplied not convertable deck");
+		throw std::logic_error("Supplied not convergable deck");
 }
 
 bool TestIChing::TestCalculation(){
