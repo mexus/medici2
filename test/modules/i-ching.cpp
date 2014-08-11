@@ -13,41 +13,19 @@ bool TestIChing::Tests(){
 	return TestCalculation() && TestBalance() && TestBalanceAndSuit();
 }
 
+SuitsHexagrams TestIChing::CalculateHexagrams(const ArrayType& deck){
+	Patience::PatienceInfo info;
+	if (Patience::Converge(deck, info)){
+		return i_ching::CalculateHexagrams(info);
+	} else
+		throw std::logic_error("Supplied not convertable deck");
+}
+
 bool TestIChing::TestCalculation(){
 	S_LOG("TestCalculation");
 	Patience::PatienceInfo info1, info2;
-	info1.stationars = {
-		{Spades, Jack},	
-		{Spades, Eight},
-		{Hearts, Six},
-		{Hearts, Nine},	
-		{Hearts, Ten},
-		{Hearts, Jack},
-		{Hearts, Queen},
-		{Hearts, King},
-		{Diamonds, Six},
-		{Diamonds, Seven},
-		{Diamonds, Eight},
-		{Diamonds, Nine},
-		{Diamonds, Jack},
-		{Diamonds, Ace},
-		{Clubs, Seven},
-		{Clubs, Jack},
-	};
-	info2.stationars = {
-		{Spades, Ten},
-		{Spades, Jack},
-		{Spades, Queen},
-		{Spades, King},
-		{Hearts, Jack},
-		{Hearts, Queen},
-		{Diamonds, Jack},
-		{Diamonds, Queen},
-		{Diamonds, Ace},
-		{Clubs, Nine},
-		{Clubs, Jack},
-		{Clubs, King},
-	};
+	info1.stationars = {{Spades, Jack}, {Spades, Eight}, {Hearts, Six}, {Hearts, Nine}, {Hearts, Ten}, {Hearts, Jack}, {Hearts, Queen}, {Hearts, King}, {Diamonds, Six}, {Diamonds, Seven}, {Diamonds, Eight}, {Diamonds, Nine}, {Diamonds, Jack}, {Diamonds, Ace}, {Clubs, Seven}, {Clubs, Jack}};
+	info2.stationars = {{Spades, Ten}, {Spades, Jack}, {Spades, Queen}, {Spades, King}, {Hearts, Jack}, {Hearts, Queen}, {Diamonds, Jack}, {Diamonds, Queen}, {Diamonds, Ace}, {Clubs, Nine}, {Clubs, Jack}, {Clubs, King}};
 	SuitsHexagrams etalonHexagrams1 {{
 		{{Yang, Yang, Yang, Yang, Yang, Yang}},  // Spades
 		{{Yin , Yin , Yin , Yin , Yin , Yang }}, // Hearts
@@ -60,9 +38,18 @@ bool TestIChing::TestCalculation(){
 		{{Yang, Yang, Yang, Yin , Yang, Yin }}, // Diamonds
 		{{Yin , Yang, Yang, Yang, Yin , Yang}}, // Clubs
 	}};
-	auto resultHexagrams1 = CalculateHexagrams(info1);
-	auto resultHexagrams2 = CalculateHexagrams(info2);
-	if (!Compare(etalonHexagrams1, resultHexagrams1) || !Compare(etalonHexagrams2, resultHexagrams2)){
+	ArrayType deck3 {{{Spades, Seven}, {Clubs, Eight}, {Clubs, Ace}, {Hearts, Six}, {Hearts, King}, {Diamonds, Nine}, {Clubs, Ten}, {Spades, Nine}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Queen}, {Diamonds, Ten}, {Clubs, Nine}, {Spades, Queen}, {Spades, Ten}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Six}, {Clubs, Jack}, {Hearts, Ten}, {Diamonds, Eight}, {Hearts, Eight}, {Spades, Jack}, {Diamonds, Queen}, {Spades, Eight}, {Diamonds, Six}, {Clubs, Six}, {Diamonds, Jack}, {Hearts, Jack}, {Diamonds, Ace}, {Hearts, Queen}, {Spades, King}, {Hearts, Ace}, {Clubs, King}, {Hearts, Nine}, {Clubs, Seven}}};
+	SuitsHexagrams etalonHexagrams3 {{
+		{{Yin , Yin , Yin , Yin , Yang, Yin }}, // Spades
+		{{Yang, Yang, Yin , Yin , Yin , Yang}}, // Hearts
+		{{Yin , Yin , Yang, Yang, Yin , Yang}}, // Diamonds
+		{{Yang, Yang, Yang, Yang, Yang, Yin }}, // Clubs
+	}};
+	auto resultHexagrams1 = i_ching::CalculateHexagrams(info1);
+	auto resultHexagrams2 = i_ching::CalculateHexagrams(info2);
+	auto resultHexagrams3 = CalculateHexagrams(deck3);
+	if (!Compare(etalonHexagrams1, resultHexagrams1) || !Compare(etalonHexagrams2, resultHexagrams2) || 
+			!Compare(etalonHexagrams3, resultHexagrams3)){
 		log(logxx::error) << "Failed" << logxx::endl;
 		return false;
 	} else
@@ -70,84 +57,11 @@ bool TestIChing::TestCalculation(){
 }
 
 bool TestIChing::TestBalance(){
-	ArrayType balancedDeck {{
-		{Hearts, Jack},	
-		{Hearts, Nine},	
-		{Hearts, Ten},	
-		{Diamonds, Queen},	
-		{Clubs, Seven},	
-		{Hearts, Seven},	
-		{Diamonds, Jack},	
-		{Spades, Jack},	
-		{Hearts, Six},	
-		{Hearts, Queen},	
-		{Diamonds, Seven},	
-		{Spades, Ace},	
-		{Spades, Queen},	
-		{Spades, Ten},	
-		{Clubs, Jack},	
-		{Clubs, Nine},	
-		{Diamonds, Nine},	
-		{Diamonds, Ten},	
-		{Diamonds, Six},	
-		{Clubs, Queen},	
-		{Diamonds, Ace},	
-		{Clubs, Ten},	
-		{Clubs, Six},	
-		{Diamonds, King},	
-		{Hearts, Ace},	
-		{Clubs, Eight},	
-		{Hearts, Eight},	
-		{Spades, Six},	
-		{Hearts, King},	
-		{Clubs, King},	
-		{Spades, Nine},	
-		{Spades, King},	
-		{Diamonds, Eight},	
-		{Spades, Seven},	
-		{Clubs, Ace},	
-		{Spades, Eight} 
-	}} ;
-	ArrayType unbalancedDeck {{
-		{Spades, Jack},	
-		{Hearts, Nine},	
-		{Diamonds, Ace},	
-		{Clubs, Six},	
-		{Clubs, Queen},	
-		{Spades, Queen},	
-		{Spades, Seven},	
-		{Clubs, Jack},	
-		{Diamonds, Queen},	
-		{Spades, Six},	
-		{Diamonds, King},	
-		{Spades, Ten},	
-		{Diamonds, Ten},	
-		{Hearts, King},	
-		{Clubs, King},	
-		{Hearts, Ten},	
-		{Spades, Nine},	
-		{Diamonds, Eight},	
-		{Clubs, Ten},	
-		{Clubs, Ace},	
-		{Hearts, Six},	
-		{Hearts, Queen},	
-		{Clubs, Eight},	
-		{Hearts, Ace},	
-		{Diamonds, Six},	
-		{Diamonds, Seven},	
-		{Clubs, Nine},	
-		{Hearts, Eight},	
-		{Clubs, Seven},	
-		{Diamonds, Nine},	
-		{Spades, Ace},	
-		{Diamonds, Jack},	
-		{Spades, Eight},	
-		{Hearts, Seven},	
-		{Spades, King},	
-		{Hearts, Jack}
-	}};
-
-	return TestBalance(balancedDeck, true) && TestBalance(unbalancedDeck, false);
+	ArrayType balancedDeck {{{Hearts, Jack}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Queen}, {Clubs, Seven}, {Hearts, Seven}, {Diamonds, Jack}, {Spades, Jack}, {Hearts, Six}, {Hearts, Queen}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Queen}, {Spades, Ten}, {Clubs, Jack}, {Clubs, Nine}, {Diamonds, Nine}, {Diamonds, Ten}, {Diamonds, Six}, {Clubs, Queen}, {Diamonds, Ace}, {Clubs, Ten}, {Clubs, Six}, {Diamonds, King}, {Hearts, Ace}, {Clubs, Eight}, {Hearts, Eight}, {Spades, Six}, {Hearts, King}, {Clubs, King}, {Spades, Nine}, {Spades, King}, {Diamonds, Eight}, {Spades, Seven}, {Clubs, Ace}, {Spades, Eight}}} ;
+	ArrayType unbalancedDeck {{{Spades, Jack}, {Hearts, Nine}, {Diamonds, Ace}, {Clubs, Six}, {Clubs, Queen}, {Spades, Queen}, {Spades, Seven}, {Clubs, Jack}, {Diamonds, Queen}, {Spades, Six}, {Diamonds, King}, {Spades, Ten}, {Diamonds, Ten}, {Hearts, King}, {Clubs, King}, {Hearts, Ten}, {Spades, Nine}, {Diamonds, Eight}, {Clubs, Ten}, {Clubs, Ace}, {Hearts, Six}, {Hearts, Queen}, {Clubs, Eight}, {Hearts, Ace}, {Diamonds, Six}, {Diamonds, Seven}, {Clubs, Nine}, {Hearts, Eight}, {Clubs, Seven}, {Diamonds, Nine}, {Spades, Ace}, {Diamonds, Jack}, {Spades, Eight}, {Hearts, Seven}, {Spades, King}, {Hearts, Jack}}};
+	ArrayType balanced2 = {{{Hearts, Jack}, {Clubs, Nine}, {Spades, Ten}, {Hearts, Six}, {Diamonds, Six}, {Spades, Nine}, {Spades, Queen}, {Spades, Six}, {Hearts, Eight}, {Clubs, King}, {Spades, King}, {Clubs, Queen}, {Spades, Eight}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Seven}, {Hearts, Queen}, {Clubs, Eight}, {Diamonds, Nine}, {Spades, Seven}, {Hearts, Ace}, {Spades, Jack}, {Diamonds, Ten}, {Diamonds, King}, {Hearts, Seven}, {Clubs, Ace}, {Spades, Ace}, {Hearts, King}, {Diamonds, Ace}, {Diamonds, Queen}, {Clubs, Ten}, {Diamonds, Jack}, {Clubs, Six}, {Clubs, Jack}, {Hearts, Nine}, {Clubs, Seven}}};
+	ArrayType balanced3 = {{{Clubs, Nine}, {Diamonds, Eight}, {Hearts, Ten}, {Spades, Queen}, {Hearts, King}, {Clubs, Eight}, {Spades, Ten}, {Clubs, Ten}, {Clubs, King}, {Diamonds, Nine}, {Diamonds, King}, {Hearts, Seven}, {Hearts, Eight}, {Diamonds, Ten}, {Diamonds, Ace}, {Hearts, Jack}, {Hearts, Ace}, {Spades, King}, {Diamonds, Six}, {Clubs, Ace}, {Diamonds, Queen}, {Spades, Nine}, {Clubs, Queen}, {Diamonds, Jack}, {Hearts, Nine}, {Clubs, Seven}, {Hearts, Queen}, {Diamonds, Seven}, {Clubs, Six}, {Spades, Ace}, {Clubs, Jack}, {Hearts, Six}, {Spades, Eight}, {Spades, Jack}, {Spades, Seven}, {Spades, Six}}};
+	return TestBalance(balancedDeck, true) && TestBalance(unbalancedDeck, false) && TestBalance(balanced2, true) && TestBalance(balanced3, true);
 }
 
 bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon){
@@ -175,43 +89,7 @@ bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon){
 }
 
 bool TestIChing::TestBalanceAndSuit(){
-	ArrayType balancedDeck {{
-		{Spades, Jack},	
-		{Spades, Nine},	
-		{Clubs, Ten},	
-		{Hearts, Queen},	
-		{Diamonds, Six},	
-		{Clubs, Nine},	
-		{Clubs, Six},	
-		{Hearts, Jack},	
-		{Spades, Six},	
-		{Spades, Queen},	
-		{Diamonds, Jack},	
-		{Clubs, Queen},	
-		{Clubs, Ace},	
-		{Hearts, Seven},	
-		{Diamonds, King},	
-		{Clubs, Jack},	
-		{Diamonds, Queen},	
-		{Clubs, Eight},	
-		{Spades, Seven},	
-		{Spades, Eight},	
-		{Hearts, Ace},	
-		{Spades, Ace},	
-		{Hearts, Six},	
-		{Spades, Ten},	
-		{Spades, King},	
-		{Clubs, Seven},	
-		{Diamonds, Seven},	
-		{Clubs, King},	
-		{Diamonds, Ace},	
-		{Hearts, Nine},	
-		{Hearts, Ten},	
-		{Diamonds, Eight},	
-		{Diamonds, Nine},	
-		{Hearts, Eight},	
-		{Diamonds, Ten},	
-		{Hearts, King}
+	ArrayType balancedDeck {{{Spades, Jack}, {Spades, Nine}, {Clubs, Ten}, {Hearts, Queen}, {Diamonds, Six}, {Clubs, Nine}, {Clubs, Six}, {Hearts, Jack}, {Spades, Six}, {Spades, Queen}, {Diamonds, Jack}, {Clubs, Queen}, {Clubs, Ace}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Jack}, {Diamonds, Queen}, {Clubs, Eight}, {Spades, Seven}, {Spades, Eight}, {Hearts, Ace}, {Spades, Ace}, {Hearts, Six}, {Spades, Ten}, {Spades, King}, {Clubs, Seven}, {Diamonds, Seven}, {Clubs, King}, {Diamonds, Ace}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Nine}, {Hearts, Eight}, {Diamonds, Ten}, {Hearts, King}
 	}};
 	Hexagram etalonHexagram {{Yin, Yang, Yang, Yang, Yang, Yang}};
 

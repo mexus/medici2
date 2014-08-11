@@ -14,6 +14,7 @@ protected:
 	static logxx::Log cLog;
 	bool Tests();
 
+	static i_ching::SuitsHexagrams CalculateHexagrams(const ArrayType& deck);
 	bool TestCalculation();
 	bool TestBalance();
 	bool TestBalance(const ArrayType& deck, bool balancedEtalon);
