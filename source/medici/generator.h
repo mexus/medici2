@@ -10,7 +10,7 @@ namespace medici {
 	struct Generator {
 		struct TrueFunctor {
 			template<class... Args>
-			bool operator()(Args...) const {return true;}
+			constexpr bool operator()(Args...) const {return true;}
 		};
 
 		template<std::size_t N, class TestBeforeFunctor = TrueFunctor, class TestAfterFunctor = TrueFunctor>
