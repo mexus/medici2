@@ -68,7 +68,7 @@ int main(int argc, char **argv){
 			continue;
 		}
 		if (result.size() != 1) result += ", ";
-		lastCard = "{" + guessedRank + ", " + guessedSuit + "}";
+		lastCard = "{" + guessedSuit + ", " + guessedRank + "}";
 		result += lastCard;
 	}
 	std::cout << "Deck:\n";
