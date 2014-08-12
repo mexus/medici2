@@ -15,7 +15,6 @@ protected:
 	static logxx::Log cLog;
 	bool Tests();
 
-	bool TestNegateSelector();
 	bool TestAllSelector();
 	bool TestOneSelector();
 	bool TestComplex();

@@ -8,22 +8,7 @@ TestDeckSelector::TestDeckSelector() : TestFW("deck-selector"){
 }
 
 bool TestDeckSelector::Tests(){
-	return TestNegateSelector() && TestAllSelector() && TestOneSelector() && TestComplex();
-}
-
-bool TestDeckSelector::TestNegateSelector(){
-	auto deck1 = DeckType::cards;
-	deck1[0] = {Hearts, Six};
-	deck1[1] = {Hearts, Ten};
-	deck1[2] = {Clubs, Ace};
-	//No "Heart"s in {0, 1}, e.g. all should be non-hearts:
-	DeckNegateSelector deckSelector1({CardSelector(Card::Suit(Hearts), true)}, 0, 1); 
-	//No "No-Heart"s in {0, 1}, e.g. all should be hearts:
-	DeckNegateSelector deckSelector2({CardSelector(Card::Suit(Hearts), false)}, 0, 1);
-	//Same as previous, but range is {0, 2}
-	DeckNegateSelector deckSelector3({CardSelector(Card::Suit(Hearts), false)}, 0, 2);
-
-	return TestSelector(deck1, deckSelector1, false) && TestSelector(deck1, deckSelector2, true) && TestSelector(deck1, deckSelector3, false);
+	return TestAllSelector() && TestOneSelector() && TestComplex();
 }
 
 bool TestDeckSelector::TestAllSelector(){
@@ -127,12 +112,6 @@ void PrintDeckSelectorInfo(std::ostream& s, const DeckAbstractSelector& abstract
 }
 
 std::ostream& operator <<(std::ostream& s, const DeckAbstractSelector& abstractSelector){
-	try {
-		auto &selector = dynamic_cast<const DeckNegateSelector&>(abstractSelector);
-		s << "DeckNegateSelector ";
-		PrintDeckSelectorInfo(s, selector);
-		return s;
-	} catch (const std::bad_cast&) {}
 	try {
 		auto &selector = dynamic_cast<const DeckAllSelector&>(abstractSelector);
 		s << "DeckAllSelector ";

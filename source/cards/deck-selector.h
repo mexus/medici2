@@ -34,14 +34,6 @@ private:
 	std::vector<std::unique_ptr<DeckAbstractSelector>> deckSelectors;
 };
 
-
-class DeckNegateSelector : public DeckAbstractSelector {
-public:
-	DeckNegateSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
-protected:
-	bool Check(const std::vector<Card>& deckPart) const;
-};
-
 class DeckAllSelector : public DeckAbstractSelector {
 public:
 	DeckAllSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
