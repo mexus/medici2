@@ -9,6 +9,7 @@ namespace medici{
 	bool Patience::Converge(const std::array<Card, N>& cards, PatienceInfo& info){
 		static_assert(N >= 3, "Deck should be at least 3 cards large!");
 		std::vector<Card> deck;
+		info.Clear();
 		for (std::size_t i = 0; i != N; ++i){
 			const Card& current = cards[i];
 			deck.push_back(current);
