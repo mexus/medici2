@@ -21,9 +21,15 @@ protected:
 class DeckSelectors{
 public:
 	template<class T>
-	typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type AddDeckSelector(const T&);
+	typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type
+	AddDeckSelector(const T&);
+
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
+
+	DeckSelectors() = default;
+	DeckSelectors(const DeckSelectors&) = delete;
+	DeckSelectors(DeckSelectors&&) = default;
 private:
 	std::vector<std::unique_ptr<DeckAbstractSelector>> deckSelectors;
 };
