@@ -4,6 +4,7 @@
 #include <medici/generator.h>
 #include <logxx/logxx.h>
 #include <cards/standard-36-deck.h>
+#include <cards/deck-selector.h>
 
 class Performance {
 public:
@@ -11,7 +12,14 @@ public:
 private:
 	typedef standard_36_deck::Deck::ArrayType StandardDeck;
 	typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
-	static const std::size_t decksCount = 1E3;
+
+	class CheckOperand{
+	public:
+		CheckOperand(DeckSelectors&&);
+		bool operator()(const StandardDeck&) const;
+	private:
+		DeckSelectors deckSelectors;
+	};
 
 	static logxx::Log cLog;
 
@@ -20,6 +28,10 @@ private:
 	static void MediciGenerator();
 	static void MediciWithConditions();
 	static void MediciWithConditionsAndIChing();
+	static void IChingBalancedPercent();
+
+	static DeckSelectors DefaultSelectors();
+	static CheckOperand DefaultCheckOperand();
 };
 
 #endif /* PERFORMANCE_H */

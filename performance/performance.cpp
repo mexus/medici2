@@ -11,15 +11,22 @@ void Performance::Run(){
 	MediciGenerator();
 	MediciWithConditions();
 	MediciWithConditionsAndIChing();
+	IChingBalancedPercent();
+}
+
+Performance::CheckOperand::CheckOperand(DeckSelectors&& selectors) : deckSelectors(std::move(selectors)) {
+}
+
+bool Performance::CheckOperand::operator()(const StandardDeck& deck) const {
+	return deckSelectors.Check(deck);
 }
 
 void Performance::Mixing(){
 	S_LOG("Mixing");
 	StandardMixer mixer;
 	auto deck = standard_36_deck::Deck::cards;
-	// cppcheck-suppress variableScope
-	std::size_t decksCount = 1E6;
 	{
+		static const std::size_t decksCount = 1E6;
 		TimeMeasure timer;
 		for (std::size_t i = 0; i != decksCount; ++i){
 			mixer.Mix(deck);
@@ -34,6 +41,7 @@ std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(
 	StandardMixer mixer;
 	Patience::PatienceInfo info;
 	std::vector<StandardDeck> pregeneratedDecks;
+	static const std::size_t decksCount = 1E3;
 	pregeneratedDecks.reserve(decksCount);
 	auto deck = standard_36_deck::Deck::cards;
 	{
@@ -64,106 +72,88 @@ void Performance::MediciGenerator(){
 				throw std::logic_error("Convergable deck doesn't converges!");
 		}
 		double elapsed = timer.Elapsed();
-		log(logxx::info) << decksCount << " convergable decks converged in " << elapsed << "s: " << decksCount / elapsed << " decks per second" << logxx::endl;
+		log(logxx::info) << pregeneratedDecks.size() << " convergable decks converged in " << elapsed << "s: " <<
+		       pregeneratedDecks.size() / elapsed << " decks per second" << logxx::endl;
 	}
 
+}
+
+DeckSelectors Performance::DefaultSelectors(){
+	using namespace standard_36_deck;
+	DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
+	DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
+	DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
+	DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
+	DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
+
+	DeckSelectors selectors;
+	selectors.AddDeckSelector(targetCard);
+	selectors.AddDeckSelector(ownActions);
+	selectors.AddDeckSelector(firstCard);
+	selectors.AddDeckSelector(secondCard);
+	selectors.AddDeckSelector(thirdCard);
+	return selectors;
+}
+
+Performance::CheckOperand Performance::DefaultCheckOperand(){
+	CheckOperand operand(DefaultSelectors());
+	return operand;
 }
 
 void Performance::MediciWithConditions(){
 	S_LOG("MediciWithConditions");
-	using namespace standard_36_deck;
-	DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
-	DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
-	DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
-	DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
-	DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
-
-	DeckSelectors selectors;
-	selectors.AddDeckSelector(targetCard);
-	selectors.AddDeckSelector(ownActions);
-	selectors.AddDeckSelector(firstCard);
-	selectors.AddDeckSelector(secondCard);
-	selectors.AddDeckSelector(thirdCard);
-
-	struct CheckOperand{
-		CheckOperand(const DeckSelectors& deckSelectors) : deckSelectors(deckSelectors) {}
-		bool operator()(const StandardDeck& deck) const {
-			return deckSelectors.Check(deck);
-		}
-	private:
-		const DeckSelectors& deckSelectors;
-	};
 
 	StandardMixer mixer;
 	auto deck = standard_36_deck::Deck::cards;
 	Patience::PatienceInfo info;
-	CheckOperand checker(selectors);
-
+	auto checker = DefaultCheckOperand();
 	static const std::size_t totalDecks = 20;
-	{
-		TimeMeasure timer;
-		for (std::size_t i = 0; i != totalDecks; ++i){
-			Generator::Generate(deck, info, mixer, checker);
-		}
-		double elapsed = timer.Elapsed();
-		log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
+	TimeMeasure timer;
+	for (std::size_t i = 0; i != totalDecks; ++i){
+		Generator::Generate(deck, info, mixer, checker);
 	}
+	double elapsed = timer.Elapsed();
+	log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
 }
 
 void Performance::MediciWithConditionsAndIChing(){
 	S_LOG("MediciWithConditionsAndIChing");
-	using namespace standard_36_deck;
-	DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
-	DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
-	DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
-	DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
-	DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
-
-	DeckSelectors selectors;
-	selectors.AddDeckSelector(targetCard);
-	selectors.AddDeckSelector(ownActions);
-	selectors.AddDeckSelector(firstCard);
-	selectors.AddDeckSelector(secondCard);
-	selectors.AddDeckSelector(thirdCard);
-
-	struct CheckOperand{
-		CheckOperand(const DeckSelectors& deckSelectors) : deckSelectors(deckSelectors) {}
-		bool operator()(const StandardDeck& deck) const {
-			return deckSelectors.Check(deck);
-		}
-	private:
-		const DeckSelectors& deckSelectors;
-	};
 
 	auto deck = standard_36_deck::Deck::cards;
 	Patience::PatienceInfo info;
-	CheckOperand checker(selectors);
-	
 	i_ching::BalanceChecker iChingChecker;
-	std::size_t totalDecks = 1E5;
-	double elapsedWOIChing, elapsedWIChing;
+	auto checker = DefaultCheckOperand();
 	StandardMixer mixer;
-	{
-		TimeMeasure timer;
-		for (std::size_t i = 0; i != totalDecks; ++i){
-			Generator::Generate(deck, info, mixer);
-		}
-		elapsedWOIChing = timer.Elapsed();
-	}
-	mixer = StandardMixer();
-	deck = standard_36_deck::Deck::cards;
+	
+	std::size_t totalDecks = 20;
 	std::size_t balanced = 0;
-	{
-		TimeMeasure timer;
-		for (std::size_t i = 0; i != totalDecks; ++i){
-			Generator::Generate(deck, info, mixer);
-			if (iChingChecker(deck, info))
-				++balanced;
-		}
-		elapsedWIChing = timer.Elapsed();
+	TimeMeasure timer;
+	for (std::size_t i = 0; i != totalDecks; ++i){
+		Generator::Generate(deck, info, mixer, checker);
+		if (iChingChecker(deck, info))
+			++balanced;
 	}
+	double elapsed = timer.Elapsed();
 	if (balanced != 0)
-		log(logxx::info) << "Found " << balanced << " balanced decks" << logxx::endl;
-	double decrease = (elapsedWIChing - elapsedWOIChing) / elapsedWOIChing;
-	log(logxx::info) << "Speed decrease while using i-ching checker is " << decrease * 100 << "%" << logxx::endl;
+		log(logxx::info) << balanced << " balanced decks" << logxx::endl;
+	log(logxx::info) << totalDecks << " appropriate decks generated and checked in " << elapsed << "s: " <<
+		totalDecks / elapsed << " decks per second" << logxx::endl;
 }
+
+void Performance::IChingBalancedPercent(){
+	S_LOG("IChingBalancedPercent");
+	auto deck = standard_36_deck::Deck::cards;
+	Patience::PatienceInfo info;
+	i_ching::BalanceChecker iChingChecker;
+	StandardMixer mixer;
+
+	std::size_t totalDecks = 1E5;
+	std::size_t balanced = 0;
+	for (std::size_t i = 0; i != totalDecks; ++i){
+		Generator::Generate(deck, info, mixer);
+		if (iChingChecker(deck, info))
+			++balanced;
+	}
+	log(logxx::info) << static_cast<double>(balanced) / totalDecks * 100.0 << "% balanced decks" << logxx::endl;
+}
+
