@@ -98,13 +98,12 @@ std::size_t TestMixer::CalculateDuplicates(Int5Mixer& mixer){
 	int i(0);
 	while (i != tests){
 		auto &current = results[i];
-		do {
-			++i;
+		while (++i != tests){
 			auto &test = results[i];
 			if (test != current)
 				break;
 			++duplicates;
-		} while (i != tests);
+		}
 	}
 
 	return duplicates;
