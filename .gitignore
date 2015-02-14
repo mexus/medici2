@@ -1,2 +1,2 @@
-#YouCompleteMe
-.ycm_extra_conf.py*
+#YouCompleteMe compiled
+.ycm_extra_conf.pyc
