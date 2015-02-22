@@ -10,7 +10,7 @@ public:
 	Mixer(uint_fast32_t seed = 0);
 	void Mix(std::array<T, N>&);
 private:
-	std::ranlux24_base randomEngine;
+	std::minstd_rand randomEngine;
 	std::uniform_int_distribution<std::size_t> uniformDistribution;
 };
 
