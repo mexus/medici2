@@ -11,14 +11,15 @@ namespace i_ching {
 		Yang,
 		Yin
 	};
-
 	typedef std::array<Line, 6> Hexagram;
+	typedef std::array<Hexagram, 4> SuitsHexagrams;
 
 	struct BalanceChecker{
 		bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
 	};
 
-	struct BalanceAndSuitChecker{
+	class BalanceAndSuitChecker{
+	public:
 		BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram&);
 		bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
 	private:
@@ -26,8 +27,8 @@ namespace i_ching {
 		Hexagram hexagram;
 	};
 
-	typedef std::array<Hexagram, 4> SuitsHexagrams;
 	SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info);
+
 
 }
 
