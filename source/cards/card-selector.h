@@ -11,6 +11,7 @@ public:
 
 	bool Check(const Card&) const;
 
+private:
 	const Card::Suit suit;
 	const Card::Rank rank;
 	const bool suitSet;
