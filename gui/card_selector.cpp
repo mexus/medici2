@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <exception>
 
+#include <QFrame>
+
 template<class T>
 typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* comboBox, int data) {
 	int index = comboBox->findData(data);
@@ -57,11 +59,17 @@ void GuiCardSelector::CreateLayout() {
 	layout->addWidget(suit);
 	layout->addWidget(rank);
 	layout->addWidget(inverse);
-	setLayout(layout);
 
 	QPushButton *btn = new QPushButton(tr("Remove"));
 	layout->addWidget(btn);
 	QObject::connect(btn, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
+
+	auto frame = new QFrame();
+	frame->setLayout(layout);
+	frame->setFrameStyle(QFrame::StyledPanel);
+	
+	setLayout(new QGridLayout());
+	this->layout()->addWidget(frame);
 }
 
 CardSelector GuiCardSelector::GetSelector() const {
