@@ -33,25 +33,37 @@ void GuiCardSelector::CreateElements() {
 	inverse = new QCheckBox(tr("Inverse"));
 }
 
+class Populater {
+public:
+	Populater(QComboBox* box) : box(box) {}
+	void Add(const QString& title, int value) {
+		box->addItem(title, value);
+	}
+private:
+	QComboBox* box;
+};
+
 void GuiCardSelector::PopulateSuits() {
-	suit->addItem(tr("Any suit"), (int)-1);
-	suit->addItem(tr("Diamond"), (int)standard_36_deck::Suits::Diamonds);
-	suit->addItem(tr("Spade"), (int)standard_36_deck::Suits::Spades);
-	suit->addItem(tr("Heart"), (int)standard_36_deck::Suits::Hearts);
-	suit->addItem(tr("Clubs"), (int)standard_36_deck::Suits::Clubs);
+	Populater p(suit);
+	p.Add(tr("Any suit"), -1);
+	p.Add(tr("Diamond"), standard_36_deck::Suits::Diamonds);
+	p.Add(tr("Spade"), standard_36_deck::Suits::Spades);
+	p.Add(tr("Heart"), standard_36_deck::Suits::Hearts);
+	p.Add(tr("Clubs"), standard_36_deck::Suits::Clubs);
 }
 
 void GuiCardSelector::PopulateRanks() {
-	rank->addItem(tr("Any rank"), (int)-1);
-	rank->addItem(tr("Six"), (int)standard_36_deck::Ranks::Six);
-	rank->addItem(tr("Seven"), (int)standard_36_deck::Ranks::Seven);
-	rank->addItem(tr("Eight"), (int)standard_36_deck::Ranks::Eight);
-	rank->addItem(tr("Nine"), (int)standard_36_deck::Ranks::Nine);
-	rank->addItem(tr("Ten"), (int)standard_36_deck::Ranks::Ten);
-	rank->addItem(tr("Jack"), (int)standard_36_deck::Ranks::Jack);
-	rank->addItem(tr("Queen"), (int)standard_36_deck::Ranks::Queen);
-	rank->addItem(tr("King"), (int)standard_36_deck::Ranks::King);
-	rank->addItem(tr("Ace"), (int)standard_36_deck::Ranks::Ace);
+	Populater p(rank);
+	p.Add(tr("Any rank"), -1);
+	p.Add(tr("Six"), standard_36_deck::Ranks::Six);
+	p.Add(tr("Seven"), standard_36_deck::Ranks::Seven);
+	p.Add(tr("Eight"), standard_36_deck::Ranks::Eight);
+	p.Add(tr("Nine"), standard_36_deck::Ranks::Nine);
+	p.Add(tr("Ten"), standard_36_deck::Ranks::Ten);
+	p.Add(tr("Jack"), standard_36_deck::Ranks::Jack);
+	p.Add(tr("Queen"), standard_36_deck::Ranks::Queen);
+	p.Add(tr("King"), standard_36_deck::Ranks::King);
+	p.Add(tr("Ace"), standard_36_deck::Ranks::Ace);
 }
 
 void GuiCardSelector::CreateLayout() {
