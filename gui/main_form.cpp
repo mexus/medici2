@@ -22,6 +22,10 @@ void MainForm::AddSelectorTab(GuiDeckSelector* selector, const QString& label) {
 			});
 }
 
+void MainForm::AddSelectorTab() {
+	AddSelectorTab(new GuiDeckSelector(), tr("New condition"));
+}
+
 void MainForm::RenameSelector(int index) {
 	auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(index));
 	if (selector) {
@@ -45,7 +49,11 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 	setCentralWidget(new QWidget());
 	auto layout = new QVBoxLayout();
 
-	layout->addWidget(new QPushButton(tr("Add conditions set")));
+	{
+		auto addButton = new QPushButton(tr("Add conditions set"));
+		QObject::connect(addButton, &QPushButton::clicked, [this](){AddSelectorTab();});
+		layout->addWidget(addButton);
+	}
 
 	tabs = new QTabWidget();
 	LoadSelectorTabs(settings);
@@ -73,7 +81,7 @@ void MainForm::LoadSelectorTabs(const QSettings& settings) {
 	SettingsGetHelper helper(settings);
 	std::size_t conditionsCount = helper("conditions-count").toUInt();
 	if (conditionsCount == 0)
-		AddSelectorTab(new GuiDeckSelector(), tr("First condition"));
+		AddSelectorTab();
 	for (std::size_t i = 0; i != conditionsCount; ++i) {
 		SettingsGetHelper conditionHelper(helper, "condition-tab-" + QString::number(i) + ":");
 		GuiDeckSelector::Config config;
