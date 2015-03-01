@@ -59,7 +59,7 @@ void GuiCardSelector::CreateLayout() {
 	layout->addWidget(inverse);
 	setLayout(layout);
 
-	QPushButton *btn = new QPushButton();
+	QPushButton *btn = new QPushButton(tr("Remove"));
 	layout->addWidget(btn);
 	QObject::connect(btn, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
 }
