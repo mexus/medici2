@@ -7,6 +7,9 @@ SET (EXE_NAME medici-gui)
 add_executable(${EXE_NAME}
         main.cpp
         main_form.cpp
+
+	card_selector.cpp
+	deck_selector.cpp
 )
 
 target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )

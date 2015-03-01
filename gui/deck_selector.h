@@ -36,7 +36,6 @@ private:
 	void CreateLayout();
 
 	static QSpinBox* CreateSpinBox(int min, int max);
-	static void AddPushButton(const QString& name, QLayout* layout);
 };
 
 #endif /* GUI_DECK_SELECTOR_H */

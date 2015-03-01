@@ -40,9 +40,6 @@ void GuiDeckSelector::SetSpinBoxes() {
 	positionEnd = CreateSpinBox(1, 36);
 }
 
-void GuiDeckSelector::AddPushButton(const QString& name, QLayout* layout) {
-}
-
 void GuiDeckSelector::CreateLayout() {
 	auto mainLayout = new QVBoxLayout();
 	mainLayout->addWidget(selectorMode);
@@ -59,7 +56,7 @@ void GuiDeckSelector::CreateLayout() {
 		{
 			auto button = new QPushButton(tr("Add a card selector"));
 			selectorsLayout->addWidget(button);
-			QObject::connect(button, &QPushButton::clicked, this, &GuiDeckSelector::AddCardSelector);
+			QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
 		}
 		mainLayout->addItem(selectorsLayout);
 	}
