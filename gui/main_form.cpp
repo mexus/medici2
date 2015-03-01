@@ -22,10 +22,6 @@ void MainForm::AddSelectorTab(GuiDeckSelector* selector, const QString& label) {
 			});
 }
 
-void MainForm::AddSelectorTab() {
-	AddSelectorTab(new GuiDeckSelector(), tr("New condition"));
-}
-
 void MainForm::RenameSelector(int index) {
 	auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(index));
 	if (selector) {

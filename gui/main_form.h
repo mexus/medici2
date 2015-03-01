@@ -19,8 +19,7 @@ protected:
 
 	QTabWidget* tabs;
 
-	void AddSelectorTab();
-	void AddSelectorTab(GuiDeckSelector*, const QString& label);
+	void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
 	void RenameSelector(int index);
         
         static logxx::Log cLog;
