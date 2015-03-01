@@ -49,7 +49,7 @@ void GuiDeckSelector::CreateLayout() {
 		layout->addWidget(positionStart);
 		layout->addWidget(new QLabel(tr(" to: ")));
 		layout->addWidget(positionEnd);
-		mainLayout->addItem(layout);
+		mainLayout->addLayout(layout);
 	}
 	{
 		selectorsLayout = new QHBoxLayout();
@@ -58,7 +58,7 @@ void GuiDeckSelector::CreateLayout() {
 			selectorsLayout->addWidget(button);
 			QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
 		}
-		mainLayout->addItem(selectorsLayout);
+		mainLayout->addLayout(selectorsLayout);
 	}
 	setLayout(mainLayout);
 }
