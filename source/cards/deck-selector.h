@@ -15,6 +15,7 @@ protected:
 	const std::size_t from, to;
 
 	DeckAbstractSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
+	DeckAbstractSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
 	virtual bool Check(const std::vector<Card>& deckPart) const = 0;
 };
 
@@ -38,6 +39,7 @@ private:
 class DeckAllSelector : public DeckAbstractSelector {
 public:
 	DeckAllSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
+	DeckAllSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
 protected:
 	bool Check(const std::vector<Card>& deckPart) const;
 };
@@ -45,6 +47,7 @@ protected:
 class DeckOneSelector : public DeckAbstractSelector {
 public:
 	DeckOneSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
+	DeckOneSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
 protected:
 	bool Check(const std::vector<Card>& deckPart) const;
 };
