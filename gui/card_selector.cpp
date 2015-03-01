@@ -32,7 +32,7 @@ void GuiCardSelector::CreateElements() {
 }
 
 void GuiCardSelector::PopulateSuits() {
-	suit->addItem(tr("None"), (int)-1);
+	suit->addItem(tr("Any suit"), (int)-1);
 	suit->addItem(tr("Diamond"), (int)standard_36_deck::Suits::Diamonds);
 	suit->addItem(tr("Spade"), (int)standard_36_deck::Suits::Spades);
 	suit->addItem(tr("Heart"), (int)standard_36_deck::Suits::Hearts);
@@ -40,7 +40,7 @@ void GuiCardSelector::PopulateSuits() {
 }
 
 void GuiCardSelector::PopulateRanks() {
-	rank->addItem(tr("None"), (int)-1);
+	rank->addItem(tr("Any rank"), (int)-1);
 	rank->addItem(tr("Six"), (int)standard_36_deck::Ranks::Six);
 	rank->addItem(tr("Seven"), (int)standard_36_deck::Ranks::Seven);
 	rank->addItem(tr("Eight"), (int)standard_36_deck::Ranks::Eight);
