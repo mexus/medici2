@@ -1,2 +1,5 @@
 #YouCompleteMe compiled
 .ycm_extra_conf.pyc
+
+#Vim swap files
+*.swp
