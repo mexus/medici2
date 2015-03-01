@@ -15,11 +15,22 @@
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
 public:
+	struct Config {
+		int selectorMode;
+		std::size_t positionBegin, positionEnd;
+		bool enabled;
+		std::vector<GuiCardSelector::Config> cards;
+	};
+
+	GuiDeckSelector(const Config&, QWidget* parent = 0);
 	GuiDeckSelector(QWidget* parent = 0);
 
 	std::unique_ptr<DeckAbstractSelector> GetSelector() const;
+	Config GetConfig() const;
 private:
-	void AddCardSelector(int suit = -1, int rank = -1, bool inversed = false);
+	void AddCardSelector(const GuiCardSelector::Config&);
+	void AddCardSelector();
+	void AddCardSelector(GuiCardSelector*);
 	std::set<GuiCardSelector*> selectors;
 	
 	enum SelectorMode {

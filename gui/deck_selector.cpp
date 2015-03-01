@@ -3,14 +3,47 @@
 #include <QLabel>
 #include <QPushButton>
 
+GuiDeckSelector::Config GuiDeckSelector::GetConfig() const {
+	std::vector<GuiCardSelector::Config> cards;
+	for (auto &guiCardSelector: selectors) {
+		cards.push_back(std::move(guiCardSelector->GetConfig()));
+	}
+	return {
+		selectorMode->currentData().toInt(),
+		static_cast<std::size_t>(positionStart->value()),
+		static_cast<std::size_t>(positionEnd->value()),
+		enabled->isChecked(),
+		std::move(cards)
+	};
+}
+
 GuiDeckSelector::GuiDeckSelector(QWidget *parent) : QWidget(parent) {
 	CreateElements();
 	SetSpinBoxes();
 	CreateLayout();
 }
 
-void GuiDeckSelector::AddCardSelector(int suit, int rank, bool inversed) {
-	auto selector = new GuiCardSelector(suit, rank, inversed);
+GuiDeckSelector::GuiDeckSelector(const Config& config, QWidget *parent) : GuiDeckSelector(parent) {
+	auto index = selectorMode->findData(config.selectorMode);
+	if (index != -1)
+		selectorMode->setCurrentIndex(index);
+	positionStart->setValue(config.positionBegin);
+	positionEnd->setValue(config.positionEnd);
+	enabled->setChecked(config.enabled);
+	for (auto& cardConfig : config.cards) {
+		AddCardSelector(cardConfig);
+	}
+}
+
+void GuiDeckSelector::AddCardSelector() {
+	AddCardSelector(new GuiCardSelector());
+}
+
+void GuiDeckSelector::AddCardSelector(const GuiCardSelector::Config& config) {
+	AddCardSelector(new GuiCardSelector(config));
+}
+
+void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector) {
 	selectors.insert(selector);
 	QObject::connect(selector, &GuiCardSelector::DeleteClicked, [this, selector](){
 			selectors.erase(selector);

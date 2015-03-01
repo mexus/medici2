@@ -8,6 +8,12 @@
 
 #include <QFrame>
 
+GuiCardSelector::Config GuiCardSelector::GetConfig() const {
+	return {suit->currentData().toInt(),
+		rank->currentData().toInt(),
+		inverse->isChecked()};
+}
+
 template<class T>
 typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* comboBox, int data) {
 	int index = comboBox->findData(data);
@@ -16,15 +22,19 @@ typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* c
 	comboBox->setCurrentIndex(index);
 }
 
-GuiCardSelector::GuiCardSelector(int suit, int rank, bool inversed, QWidget* parent) : QWidget(parent) {
+GuiCardSelector::GuiCardSelector(QWidget* parent) : QWidget(parent) {
 	CreateElements();
 	PopulateSuits();
 	PopulateRanks();
 	CreateLayout();
+	SelectData(this->suit, -1);
+	SelectData(this->rank, -1);
+}
 
-	SelectData(this->suit, suit);
-	SelectData(this->rank, rank);
-	inverse->setChecked(inversed);
+GuiCardSelector::GuiCardSelector(const Config& config, QWidget* parent) : GuiCardSelector(parent) {
+	SelectData(this->suit, config.suit);
+	SelectData(this->rank, config.rank);
+	inverse->setChecked(config.inversed);
 }
 
 void GuiCardSelector::CreateElements() {

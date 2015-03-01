@@ -9,8 +9,17 @@
 class GuiCardSelector : public QWidget {
 Q_OBJECT
 public:
-	GuiCardSelector(int suit, int rank, bool inversed, QWidget* parent = nullptr);
+	struct Config {
+		int suit;
+		int rank;
+		bool inversed;
+	};
+
+	GuiCardSelector(const Config&, QWidget* parent = nullptr);
+	GuiCardSelector(QWidget* parent = nullptr);
 	CardSelector GetSelector() const;
+
+	Config GetConfig() const;
 private:
 	QComboBox *suit, *rank;
 	QCheckBox *inverse;

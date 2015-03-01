@@ -2,7 +2,7 @@
 #define	GUI_MAIN_FORM_H
 #include <QMainWindow>
 #include <QTabWidget>
-
+#include <QSettings>
 
 #include "deck_selector.h"
 
@@ -19,10 +19,13 @@ protected:
 
 	QTabWidget* tabs;
 
-	void AddSelectorTab(const QString& label);
+	void AddSelectorTab(GuiDeckSelector*, const QString& label);
 	void RenameSelector(int index);
         
         static logxx::Log cLog;
+
+	void LoadSelectorTabs(const QSettings&);
+	void SaveSelectorTabs(QSettings&);
 
 };
 
