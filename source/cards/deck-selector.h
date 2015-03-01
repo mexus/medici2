@@ -10,9 +10,10 @@ public:
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
 
+protected:
 	const std::vector<CardSelector> cardSelectors;
 	const std::size_t from, to;
-protected:
+
 	DeckAbstractSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
 	virtual bool Check(const std::vector<Card>& deckPart) const = 0;
 };

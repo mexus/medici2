@@ -1,7 +1,9 @@
 #ifndef TEST_DECK_SELECTOR
 #define TEST_DECK_SELECTOR
 
+#define protected public
 #include <cards/deck-selector.h>
+#undef protected
 #include "../test_fw.h"
 #include <cards/standard-36-deck.h>
 
