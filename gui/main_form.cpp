@@ -57,6 +57,12 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 
 	layout->addWidget(tabs);
 
+	{
+		actionButton = new QPushButton(tr("Calculate!"));
+		QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
+		layout->addWidget(actionButton);
+	}
+
 	centralWidget()->setLayout(layout);
 }
 
@@ -126,4 +132,6 @@ void MainForm::SaveSelectorTabs(QSettings& settings) {
 	
 }
 
+void MainForm::ActivateCalculation() {
+}
 
