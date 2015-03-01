@@ -40,16 +40,16 @@ void GuiCardSelector::PopulateSuits() {
 }
 
 void GuiCardSelector::PopulateRanks() {
-	suit->addItem(tr("None"), (int)-1);
-	suit->addItem(tr("Six"), (int)standard_36_deck::Ranks::Six);
-	suit->addItem(tr("Seven"), (int)standard_36_deck::Ranks::Seven);
-	suit->addItem(tr("Eight"), (int)standard_36_deck::Ranks::Eight);
-	suit->addItem(tr("Nine"), (int)standard_36_deck::Ranks::Nine);
-	suit->addItem(tr("Ten"), (int)standard_36_deck::Ranks::Ten);
-	suit->addItem(tr("Jack"), (int)standard_36_deck::Ranks::Jack);
-	suit->addItem(tr("Queen"), (int)standard_36_deck::Ranks::Queen);
-	suit->addItem(tr("King"), (int)standard_36_deck::Ranks::King);
-	suit->addItem(tr("Ace"), (int)standard_36_deck::Ranks::Ace);
+	rank->addItem(tr("None"), (int)-1);
+	rank->addItem(tr("Six"), (int)standard_36_deck::Ranks::Six);
+	rank->addItem(tr("Seven"), (int)standard_36_deck::Ranks::Seven);
+	rank->addItem(tr("Eight"), (int)standard_36_deck::Ranks::Eight);
+	rank->addItem(tr("Nine"), (int)standard_36_deck::Ranks::Nine);
+	rank->addItem(tr("Ten"), (int)standard_36_deck::Ranks::Ten);
+	rank->addItem(tr("Jack"), (int)standard_36_deck::Ranks::Jack);
+	rank->addItem(tr("Queen"), (int)standard_36_deck::Ranks::Queen);
+	rank->addItem(tr("King"), (int)standard_36_deck::Ranks::King);
+	rank->addItem(tr("Ace"), (int)standard_36_deck::Ranks::Ace);
 }
 
 void GuiCardSelector::CreateLayout() {
