@@ -54,11 +54,16 @@ void GuiDeckSelector::CreateLayout() {
 	{
 		selectorsLayout = new QHBoxLayout();
 		{
-			auto button = new QPushButton(tr("Add a card selector"));
+			auto button = new QPushButton(tr("Add a card"));
 			selectorsLayout->addWidget(button);
 			QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
 		}
 		mainLayout->addLayout(selectorsLayout);
+	}
+	{
+		auto deleteButton = new QPushButton(tr("Remove conditions set"));
+		QObject::connect(deleteButton, &QPushButton::clicked, this, &GuiDeckSelector::DeleteClicked);
+		mainLayout->addWidget(deleteButton);
 	}
 	setLayout(mainLayout);
 }
