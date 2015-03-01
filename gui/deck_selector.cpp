@@ -33,6 +33,8 @@ void GuiDeckSelector::CreateElements() {
 	selectorMode->addItem(tr("At least one of conditions must match"), SELECT_ONE);
 	selectorMode->addItem(tr("All conditions must match"), SELECT_ALL);
 	selectorMode->setCurrentIndex(0);
+
+	enabled = new QCheckBox(tr("Is enabled"));
 }
 
 void GuiDeckSelector::SetSpinBoxes() {
@@ -42,6 +44,7 @@ void GuiDeckSelector::SetSpinBoxes() {
 
 void GuiDeckSelector::CreateLayout() {
 	auto mainLayout = new QVBoxLayout();
+	mainLayout->addWidget(enabled);
 	mainLayout->addWidget(selectorMode);
 	{
 		auto layout = new QHBoxLayout();

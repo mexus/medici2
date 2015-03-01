@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 #include <set>
 
@@ -28,6 +29,7 @@ private:
 
 	QComboBox* selectorMode;
 	QSpinBox *positionStart, *positionEnd;
+	QCheckBox *enabled;
 
 	QHBoxLayout* selectorsLayout;
 
@@ -36,6 +38,9 @@ private:
 	void CreateLayout();
 
 	static QSpinBox* CreateSpinBox(int min, int max);
+
+signals:
+	void DeleteClicked();
 };
 
 #endif /* GUI_DECK_SELECTOR_H */
