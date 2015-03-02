@@ -107,7 +107,7 @@ void Performance::MediciWithConditions(){
 	auto deck = standard_36_deck::Deck::cards;
 	Patience::PatienceInfo info;
 	auto checker = DefaultCheckOperand();
-	static const std::size_t totalDecks = 20;
+	const std::size_t totalDecks = 100;
 	TimeMeasure timer;
 	for (std::size_t i = 0; i != totalDecks; ++i){
 		Generator::Generate(deck, info, mixer, checker);
@@ -125,7 +125,7 @@ void Performance::MediciWithConditionsAndIChing(){
 	auto checker = DefaultCheckOperand();
 	StandardMixer mixer;
 	
-	std::size_t totalDecks = 20;
+	std::size_t totalDecks = 100;
 	std::size_t balanced = 0;
 	TimeMeasure timer;
 	for (std::size_t i = 0; i != totalDecks; ++i){
