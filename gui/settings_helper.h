@@ -1,3 +1,6 @@
+#ifndef GUI_SETTINGS_HELPER_H
+#define GUI_SETTINGS_HELPER_H
+
 #include <QSettings>
 
 template<class T>
@@ -29,4 +32,4 @@ public:
 	}
 };
 
-
+#endif /* GUI_SETTINGS_HELPER_H */
