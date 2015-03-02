@@ -3,7 +3,9 @@
 
 #include <medici/patience.h>
 #include <mixer/mixer.h>
+
 #include <type_traits>
+#include <atomic>
 
 namespace medici {
 
@@ -24,7 +26,8 @@ namespace medici {
 		};
 
 		template<std::size_t N>
-		void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
+		void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const std::atomic_bool& interrupt,
+				const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
 
 	}
 

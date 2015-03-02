@@ -8,10 +8,12 @@ namespace medici{
 	namespace generator {
 
 		template<std::size_t N>
-		void Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer, const BeforeFunctor<N>& beforeFunctor, const AfterFunctor<N>& afterFunctor){
+		void Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer, const std::atomic_bool& interrupt,
+				const BeforeFunctor<N>& beforeFunctor, const AfterFunctor<N>& afterFunctor)
+		{
 			do {
 				mixer.Mix(deck);
-			} while (!(beforeFunctor(deck) && Patience::Converge(deck, info) && afterFunctor(deck, info)));
+			} while (!interrupt && !(beforeFunctor(deck) && Patience::Converge(deck, info) && afterFunctor(deck, info)));
 		}
 
 	}

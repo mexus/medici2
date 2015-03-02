@@ -23,6 +23,8 @@ private:
 
 	static logxx::Log cLog;
 
+	static std::atomic_bool interrupt;
+
 	static void Mixing();
 	static std::vector<StandardDeck> PregenerateConvergableDecks();
 	static void MediciGenerator();

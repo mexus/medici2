@@ -4,6 +4,7 @@
 #include <i-ching/i-ching.h>
 
 logxx::Log Performance::cLog("Performance");
+std::atomic_bool Performance::interrupt(false);
 using namespace medici;
 
 void Performance::Run(){
@@ -47,7 +48,7 @@ std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(
 	{
 		TimeMeasure timer;
 		for (std::size_t i = 0; i != decksCount; ++i){
-			generator::Generate(deck, info, mixer);
+			generator::Generate(deck, info, mixer, interrupt);
 			pregeneratedDecks.push_back(deck);
 		}
 		double elapsed = timer.Elapsed();
@@ -110,7 +111,7 @@ void Performance::MediciWithConditions(){
 	const std::size_t totalDecks = 100;
 	TimeMeasure timer;
 	for (std::size_t i = 0; i != totalDecks; ++i){
-		generator::Generate(deck, info, mixer, checker);
+		generator::Generate(deck, info, mixer, interrupt, checker);
 	}
 	double elapsed = timer.Elapsed();
 	log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
@@ -129,7 +130,7 @@ void Performance::MediciWithConditionsAndIChing(){
 	std::size_t balanced = 0;
 	TimeMeasure timer;
 	for (std::size_t i = 0; i != totalDecks; ++i){
-		generator::Generate(deck, info, mixer, checker);
+		generator::Generate(deck, info, mixer, interrupt, checker);
 		if (iChingChecker(deck, info))
 			++balanced;
 	}
@@ -150,7 +151,7 @@ void Performance::IChingBalancedPercent(){
 	std::size_t totalDecks = 1E5;
 	std::size_t balanced = 0;
 	for (std::size_t i = 0; i != totalDecks; ++i){
-		generator::Generate(deck, info, mixer);
+		generator::Generate(deck, info, mixer, interrupt);
 		if (iChingChecker(deck, info))
 			++balanced;
 	}
