@@ -8,13 +8,22 @@
 namespace medici {
 
 	struct Generator {
-		struct TrueFunctor {
-			template<class... Args>
-			constexpr bool operator()(Args...) const {return true;}
+		template<std::size_t N>
+		struct BeforeFunctor{
+			virtual bool operator()(const std::array<Card, N>&) const {
+				return true;
+			}
 		};
 
-		template<std::size_t N, class TestBeforeFunctor = TrueFunctor, class TestAfterFunctor = TrueFunctor>
-		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const TestBeforeFunctor& = TestBeforeFunctor(), const TestAfterFunctor& = TestAfterFunctor());
+		template<std::size_t N>
+		struct AfterFunctor{
+			virtual bool operator()(const std::array<Card, N>&, const Patience::PatienceInfo&) const {
+				return true;
+			}
+		};
+
+		template<std::size_t N>
+		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
 	};
 
 }
