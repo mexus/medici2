@@ -5,11 +5,15 @@
 
 namespace medici{
 
-	template<std::size_t N>
-	void Generator::Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer, const BeforeFunctor<N>& beforeFunctor, const AfterFunctor<N>& afterFunctor){
-		do {
-			mixer.Mix(deck);
-		} while (!(beforeFunctor(deck) && Patience::Converge(deck, info) && afterFunctor(deck, info)));
+	namespace generator {
+
+		template<std::size_t N>
+		void Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer, const BeforeFunctor<N>& beforeFunctor, const AfterFunctor<N>& afterFunctor){
+			do {
+				mixer.Mix(deck);
+			} while (!(beforeFunctor(deck) && Patience::Converge(deck, info) && afterFunctor(deck, info)));
+		}
+
 	}
 
 }

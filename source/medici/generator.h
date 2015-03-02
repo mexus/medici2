@@ -7,7 +7,8 @@
 
 namespace medici {
 
-	struct Generator {
+	namespace generator {
+
 		template<std::size_t N>
 		struct BeforeFunctor{
 			virtual bool operator()(const std::array<Card, N>&) const {
@@ -23,8 +24,9 @@ namespace medici {
 		};
 
 		template<std::size_t N>
-		static void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
-	};
+		void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
+
+	}
 
 }
 
