@@ -13,10 +13,10 @@ private:
 	typedef standard_36_deck::Deck::ArrayType StandardDeck;
 	typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
 
-	class CheckOperand : public medici::generator::BeforeFunctor<standard_36_deck::Deck::N()>{
+	class CheckOperand {
 	public:
 		CheckOperand(DeckSelectors&&);
-		bool operator()(const StandardDeck&) const override;
+		bool operator()(const StandardDeck&) const;
 	private:
 		DeckSelectors deckSelectors;
 	};

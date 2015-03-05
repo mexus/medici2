@@ -11,29 +11,27 @@ namespace medici {
 
 	namespace generator {
 
-		template<std::size_t N>
-		struct BeforeFunctor{
-			virtual bool operator()(const std::array<Card, N>&) const {
+		struct True {
+			template<class...Args>
+			bool operator()(Args...) const {
 				return true;
 			}
 		};
 
-		template<std::size_t N>
-		struct AfterFunctor{
-			virtual bool operator()(const std::array<Card, N>&, const Patience::PatienceInfo&) const {
-				return true;
-			}
-		};
-
-		template<std::size_t N>
-		void Generate(std::array<Card, N>&, Patience::PatienceInfo& info, Mixer<Card, N>&, const std::atomic_bool& interrupt,
-				const BeforeFunctor<N>& = BeforeFunctor<N>(), const AfterFunctor<N>& = AfterFunctor<N>());
+		template<std::size_t N, class BeforeFunctor = True, class AfterFunctor = True>
+		void Generate(std::array<Card, N>& deck, Patience::PatienceInfo& info, Mixer<Card, N>& mixer,
+				const std::atomic_bool& interrupt,
+				const BeforeFunctor& before = BeforeFunctor(),
+				const AfterFunctor& after = AfterFunctor())
+		{
+			do {
+				mixer.Mix(deck);
+			} while (!interrupt && !(before(deck) && Patience::Converge(deck, info) && after(deck, info)));
+		}
 
 	}
 
 }
-
-#include "generator.hpp"
 
 #endif /* MEDICI_GENERATOR_H */
 

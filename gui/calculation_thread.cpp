@@ -5,9 +5,13 @@ std::vector<CalculationThread::StandardDeck> CalculationThread::GetDecks() {
 	return allDecks;
 }
 
-CalculationThread::CalculationThread(const BeforeFunctor& beforeFunctor, const AfterFunctor& afterFunctor) : QThread(),
-	beforeFunctor(beforeFunctor), afterFunctor(afterFunctor), interrupt(false)
+CalculationThread::CalculationThread(const DeckSelectors& selectors) : QThread(),
+	deckSelectors(selectors), interrupt(false)
 {
+}
+
+void CalculationThread::Interrupt() {
+	interrupt = true;
 }
 
 void CalculationThread::run() {
@@ -15,8 +19,8 @@ void CalculationThread::run() {
 	while(!interrupt) {
 		medici::Patience::PatienceInfo info;
 		StandardMixer mixer;
-		medici::generator::Generate(deck, info, mixer, interrupt, beforeFunctor, afterFunctor);
-		if (!interrupt || (beforeFunctor(deck) && afterFunctor(deck, info))) {
+		medici::generator::Generate(deck, info, mixer, interrupt, deckSelectors);
+		if (!interrupt || deckSelectors(deck)) {
 			QMutexLocker locker(&accessDecks);
 			allDecks.push_back(deck);
 		}

@@ -3,6 +3,7 @@
 
 #include <medici/generator.h>
 #include <cards/standard-36-deck.h>
+#include <cards/deck-selector.h>
 
 #include <QMutex>
 #include <QThread>
@@ -14,16 +15,12 @@ public:
 
 	typedef StandardDeckType::ArrayType StandardDeck;
 	typedef Mixer<Card, StandardDeckType::N()> StandardMixer;
-	typedef medici::generator::BeforeFunctor<StandardDeckType::N()> BeforeFunctor;
-	typedef medici::generator::AfterFunctor<StandardDeckType::N()> AfterFunctor;
 
-	CalculationThread(const BeforeFunctor& beforeFunctor, const AfterFunctor& afterFunctor);
+	CalculationThread(const DeckSelectors&);
 	std::vector<StandardDeck> GetDecks();
 	void Interrupt();
 private:
-	const BeforeFunctor& beforeFunctor;
-	const AfterFunctor& afterFunctor;
-
+	const DeckSelectors& deckSelectors;
 	std::atomic_bool interrupt;
 
 	QMutex accessDecks;

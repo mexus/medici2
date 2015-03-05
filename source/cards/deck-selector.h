@@ -29,6 +29,11 @@ public:
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
 
+	template<std::size_t N>
+	bool operator()(const std::array<Card, N>& deck) const {
+		return Check(deck);
+	}
+
 	DeckSelectors() = default;
 	DeckSelectors(const DeckSelectors&) = delete;
 	DeckSelectors(DeckSelectors&&) = default;
