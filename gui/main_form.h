@@ -6,6 +6,7 @@
 #include <QSettings>
 
 #include "deck_selector.h"
+#include "calculation_controller.h"
 
 #include <logxx/logxx.h>
 
@@ -20,6 +21,7 @@ protected:
 
 	QTabWidget* tabs;
 	QPushButton* actionButton;
+	CalculationController* calculator;
 
 	void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
 	void RenameSelector(int index);
@@ -29,6 +31,7 @@ protected:
 	void LoadSelectorTabs(const QSettings&);
 	void SaveSelectorTabs(QSettings&);
 
+	DeckSelectors&& GetSelectors() const;
 	void ActivateCalculation();
 
 };

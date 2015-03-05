@@ -1,4 +1,5 @@
 #include "main_form.h"
+#include "settings_helper.h"
 
 #include <type_traits>
 
@@ -6,7 +7,7 @@
 #include <QPushButton>
 #include <QInputDialog>
 
-#include "settings_helper.h"
+#include <cards/deck-selector.h>
 
 logxx::Log MainForm::cLog("MainForm");
 
@@ -132,6 +133,19 @@ void MainForm::SaveSelectorTabs(QSettings& settings) {
 	
 }
 
+DeckSelectors&& MainForm::GetSelectors() const {
+	DeckSelectors selectors;
+	int tabsCount = tabs->count();
+	for (int i = 0; i != tabsCount; ++i) {
+		auto selectorGui = static_cast<GuiDeckSelector*>(tabs->widget(i));
+		auto selector = selectorGui->GetSelector();
+		selectors.AddDeckSelector(std::move(selector));
+	}
+	return std::move(selectors);
+}
+
 void MainForm::ActivateCalculation() {
+	calculator = new CalculationController(GetSelectors());
+	calculator->Start(4);
 }
 

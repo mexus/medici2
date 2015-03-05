@@ -13,7 +13,7 @@ class CalculationController : public QObject {
 public:
 	typedef CalculationThread::StandardDeck StandardDeck;
 
-	CalculationController(DeckSelectors&&);
+	CalculationController(DeckSelectors&&, QObject* parent = 0);
 	void Start(std::size_t threads);
 	void Interrupt();
 	void IncreaseThreads();
