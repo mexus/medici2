@@ -6,6 +6,9 @@ DeckAbstractSelector::DeckAbstractSelector(const std::vector<CardSelector>& sele
 DeckAbstractSelector::DeckAbstractSelector(std::vector<CardSelector>&& selectors, std::size_t from, std::size_t to) : cardSelectors(selectors), from(from), to(to){
 }
 
+void DeckSelectors::AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&& selector) {
+	deckSelectors.push_back(std::move(selector));
+}
 
 DeckAllSelector::DeckAllSelector(const std::vector<CardSelector>& selectors, std::size_t from, std::size_t to) : DeckAbstractSelector(selectors, from, to) {
 }

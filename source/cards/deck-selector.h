@@ -26,6 +26,8 @@ public:
 	typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type
 	AddDeckSelector(const T&);
 
+	void AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&&);
+
 	template<std::size_t N>
 	bool Check(const std::array<Card, N>& deck) const;
 
