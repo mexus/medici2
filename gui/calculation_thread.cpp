@@ -15,7 +15,7 @@ void CalculationThread::Interrupt() {
 }
 
 void CalculationThread::run() {
-	StandardDeck deck;
+	auto deck = StandardDeckType::cards;
 	while(!interrupt) {
 		medici::Patience::PatienceInfo info;
 		StandardMixer mixer;
