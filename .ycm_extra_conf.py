@@ -17,7 +17,6 @@ compilation_database_folder = os.path.join(DirectoryOfThisScript(), 'build/')
 flags = [
 '-std=c++11',
 '-x', 'c++',
-'-I', '/usr/lib/qt/mkspecs/linux-clang',
 '-I', 'source/',
 '-I', 'build/test/',
 ]

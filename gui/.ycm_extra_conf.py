@@ -10,16 +10,15 @@ def DirectoryOfThisScript():
 # more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
 # Most projects will NOT need to set this to anything; you can just change the
 # 'flags' list of compilation flags. Notice that YCM itself uses that approach.
-compilation_database_folder = os.path.join(DirectoryOfThisScript(), 'build/')
+compilation_database_folder = os.path.join(DirectoryOfThisScript(), '../build/')
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set.
 flags = [
 '-std=c++11',
 '-x', 'c++',
-'-I', '/usr/lib/qt/mkspecs/linux-clang',
 '-I', '../source/',
-'-I', '../build/test/',
+'-I', '/usr/include/c++/4.8/',
 
 '-DQT_CORE_LIB',
 '-DQT_GUI_LIB',
@@ -28,40 +27,33 @@ flags = [
 '-DQT_QUICK_LIB',
 '-DQT_SQL_LIB',
 '-DQT_WIDGETS_LIB',
-'-DQT_XML_LIB',
+'-DQT_XML_LIB'
 
-'-I', '/usr/include/qt',
-'-I', '/usr/include/qt/QtConcurrent',
-'-I', '/usr/include/qt/QtCore',
-'-I', '/usr/include/qt/QtDBus',
-'-I', '/usr/include/qt/QtGui',
-'-I', '/usr/include/qt/QtHelp',
-'-I', '/usr/include/qt/QtMultimedia',
-'-I', '/usr/include/qt/QtMultimediaWidgets',
-'-I', '/usr/include/qt/QtNetwork',
-'-I', '/usr/include/qt/QtOpenGL',
-'-I', '/usr/include/qt/QtPlatformSupport',
-'-I', '/usr/include/qt/QtPositioning',
-'-I', '/usr/include/qt/QtScript',
-'-I', '/usr/include/qt/QtScriptTools',
-'-I', '/usr/include/qt/QtSql',
-'-I', '/usr/include/qt/QtSvg',
-'-I', '/usr/include/qt/QtTest',
-'-I', '/usr/include/qt/QtUiTools',
-'-I', '/usr/include/qt/QtV8',
-'-I', '/usr/include/qt/QtWebKit',
-'-I', '/usr/include/qt/QtWebKitWidgets',
-'-I', '/usr/include/qt/QtWidgets',
-'-I', '/usr/include/qt/QtXml',
-'-I', '/usr/include/qt/QtXmlPatterns',
 ]
+
+def FindQt5Location():
+    prefixes = ["/usr/include/qt5", "/usr/include/qt"]
+    for prefix in prefixes:
+        if os.path.isdir(prefix + '/QtCore'):
+            return prefix
+    raise Exception('Not found qt')
+
+def FindQtComponents(prefix = "/usr/include/"):
+    if FindQtComponents.has_run:
+        return
+    FindQtComponents.has_run = True
+    location = FindQt5Location()
+    components = [ d for d in os.listdir(location) if os.path.isdir(os.path.join(location, d)) ]
+    flags.extend(['-I', location])
+    for component in components:
+        inclusion_path = os.path.join(location, component)
+        flags.extend(['-I', inclusion_path])
+FindQtComponents.has_run = False
 
 if compilation_database_folder:
   database = ycm_core.CompilationDatabase( compilation_database_folder )
 else:
   database = None
-
-
 
 def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
   if not working_directory:
@@ -93,6 +85,7 @@ def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
 
 
 def FlagsForFile( filename ):
+  FindQtComponents()
   if database:
     # Bear in mind that compilation_info.compiler_flags_ does NOT return a
     # python list, but a "list-like" StringVec object
@@ -110,4 +103,5 @@ def FlagsForFile( filename ):
     'flags': final_flags,
     'do_cache': True
   }
+i = 0
 
