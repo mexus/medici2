@@ -133,7 +133,7 @@ void MainForm::SaveSelectorTabs(QSettings& settings) {
 	
 }
 
-DeckSelectors&& MainForm::GetSelectors() const {
+DeckSelectors MainForm::GetSelectors() const {
 	DeckSelectors selectors;
 	int tabsCount = tabs->count();
 	for (int i = 0; i != tabsCount; ++i) {
@@ -141,7 +141,7 @@ DeckSelectors&& MainForm::GetSelectors() const {
 		auto selector = selectorGui->GetSelector();
 		selectors.AddDeckSelector(std::move(selector));
 	}
-	return std::move(selectors);
+	return selectors;
 }
 
 void MainForm::ActivateCalculation() {
