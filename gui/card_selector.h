@@ -6,6 +6,8 @@
 #include <QComboBox>
 #include <QCheckBox>
 
+#include <stdexcept>
+
 class GuiCardSelector : public QWidget {
 Q_OBJECT
 public:
@@ -13,6 +15,9 @@ public:
 		int suit;
 		int rank;
 		bool inversed;
+	};
+
+	class NothingSelected : public std::exception {
 	};
 
 	GuiCardSelector(const Config&, QWidget* parent = nullptr);

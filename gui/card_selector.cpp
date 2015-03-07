@@ -109,7 +109,7 @@ CardSelector GuiCardSelector::GetSelector() const {
 	} else if (rankSelected) {
 		return CardSelector(Card::Rank(rankData), isStraight);
 	} else {
-		throw std::runtime_error("No suit or rank selected");
+		throw NothingSelected();
 	}
 }
 

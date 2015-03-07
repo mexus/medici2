@@ -31,7 +31,7 @@ protected:
 	void LoadSelectorTabs(const QSettings&);
 	void SaveSelectorTabs(QSettings&);
 
-	DeckSelectors GetSelectors() const;
+	DeckSelectors GetSelectors();
 	void ActivateCalculation();
 
 };

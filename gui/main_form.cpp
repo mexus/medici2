@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QInputDialog>
+#include <QMessageBox>
 
 #include <cards/deck-selector.h>
 
@@ -133,19 +134,28 @@ void MainForm::SaveSelectorTabs(QSettings& settings) {
 	
 }
 
-DeckSelectors MainForm::GetSelectors() const {
+DeckSelectors MainForm::GetSelectors() {
 	DeckSelectors selectors;
 	int tabsCount = tabs->count();
 	for (int i = 0; i != tabsCount; ++i) {
 		auto selectorGui = static_cast<GuiDeckSelector*>(tabs->widget(i));
-		auto selector = selectorGui->GetSelector();
-		selectors.AddDeckSelector(std::move(selector));
+		try {
+			auto selector = selectorGui->GetSelector();
+			if (selector)
+				selectors.AddDeckSelector(std::move(selector));
+		} catch (const GuiCardSelector::NothingSelected&){
+			QMessageBox::critical(this, tabs->tabText(i), tr("You should select suit or rank for each card!"));
+			throw std::exception();
+		}
 	}
 	return selectors;
 }
 
 void MainForm::ActivateCalculation() {
-	calculator = new CalculationController(GetSelectors());
-	calculator->Start(4);
+	try {
+		calculator = new CalculationController(GetSelectors());
+		calculator->Start(1);
+	} catch (const std::exception&){
+	}
 }
 
