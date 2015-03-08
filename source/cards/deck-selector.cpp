@@ -10,6 +10,10 @@ void DeckSelectors::AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&& sele
 	deckSelectors.push_back(std::move(selector));
 }
 
+bool DeckSelectors::IsEmpty() const {
+	return deckSelectors.empty();
+}
+
 DeckAllSelector::DeckAllSelector(const std::vector<CardSelector>& selectors, std::size_t from, std::size_t to) : DeckAbstractSelector(selectors, from, to) {
 }
 

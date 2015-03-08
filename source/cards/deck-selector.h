@@ -39,6 +39,8 @@ public:
 	DeckSelectors() = default;
 	DeckSelectors(const DeckSelectors&) = delete;
 	DeckSelectors(DeckSelectors&&) = default;
+
+	bool IsEmpty() const;
 private:
 	std::vector<std::unique_ptr<DeckAbstractSelector>> deckSelectors;
 };
