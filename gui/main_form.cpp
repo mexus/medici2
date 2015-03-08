@@ -143,9 +143,9 @@ DeckSelectors MainForm::GetSelectors() {
 			auto selector = selectorGui->GetSelector();
 			if (selector)
 				selectors.AddDeckSelector(std::move(selector));
-		} catch (const GuiCardSelector::NothingSelected&){
+		} catch (const GuiCardSelector::NoSuitNoRank&){
 			QMessageBox::critical(this, tabs->tabText(i), tr("You should select suit or rank for each card!"));
-			throw std::exception();
+			return DeckSelectors();
 		}
 	}
 	return selectors;
@@ -153,9 +153,13 @@ DeckSelectors MainForm::GetSelectors() {
 
 void MainForm::ActivateCalculation() {
 	try {
-		calculator = new CalculationController(GetSelectors());
-		calculator->Start(1);
-	} catch (const std::exception&){
+		auto selectors = GetSelectors();
+		if (!selectors.IsEmpty()) {
+			calculator = new CalculationController(std::move(selectors));
+			calculator->Start(1);
+		}
+	} catch (const std::exception& e){
+		QMessageBox::critical(this, tr("Unhandled exception"), tr("Please report to developer: ") + QString(e.what()));
 	}
 }
 

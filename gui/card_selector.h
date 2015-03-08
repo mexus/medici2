@@ -1,33 +1,38 @@
 #ifndef GUI_CARD_SELECTOR_H
 #define GUI_CARD_SELECTOR_H
 
-#include <cards/card-selector.h>
 #include <QWidget>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QFrame>
 
-#include <stdexcept>
+#include <cards/card-selector.h>
+#include "exception.h"
 
 class GuiCardSelector : public QWidget {
 Q_OBJECT
 public:
+	class NoSuitNoRank : public GuiException {
+	public:
+		NoSuitNoRank(GuiCardSelector*);
+	};
+
 	struct Config {
 		int suit;
 		int rank;
 		bool inversed;
 	};
 
-	class NothingSelected : public std::exception {
-	};
-
 	GuiCardSelector(const Config&, QWidget* parent = nullptr);
 	GuiCardSelector(QWidget* parent = nullptr);
-	CardSelector GetSelector() const;
+	CardSelector GetSelector();
 
 	Config GetConfig() const;
+	void Highlight();
 private:
 	QComboBox *suit, *rank;
 	QCheckBox *inverse;
+	QFrame *frame;
 
 	void CreateElements();
 	void CreateLayout();

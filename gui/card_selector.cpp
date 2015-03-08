@@ -1,12 +1,13 @@
 #include "card_selector.h"
+
 #include <QLayout>
 #include <QVBoxLayout>
-#include <cards/standard-36-deck.h>
 #include <QPushButton>
-#include <type_traits>
-#include <exception>
+#include <QTimer>
 
-#include <QFrame>
+#include <type_traits>
+
+#include <cards/standard-36-deck.h>
 
 GuiCardSelector::Config GuiCardSelector::GetConfig() const {
 	return {suit->currentData().toInt(),
@@ -20,6 +21,10 @@ typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* c
 	if (index == -1)
 		throw std::runtime_error("Unknown data");
 	comboBox->setCurrentIndex(index);
+}
+
+GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) : GuiException(object) {
+	object->Highlight();
 }
 
 GuiCardSelector::GuiCardSelector(QWidget* parent) : QWidget(parent) {
@@ -86,7 +91,7 @@ void GuiCardSelector::CreateLayout() {
 	layout->addWidget(btn);
 	QObject::connect(btn, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
 
-	auto frame = new QFrame();
+	frame = new QFrame();
 	frame->setLayout(layout);
 	frame->setFrameStyle(QFrame::StyledPanel);
 	
@@ -94,7 +99,7 @@ void GuiCardSelector::CreateLayout() {
 	this->layout()->addWidget(frame);
 }
 
-CardSelector GuiCardSelector::GetSelector() const {
+CardSelector GuiCardSelector::GetSelector() {
 	int suitData = suit->currentData().toInt();
 	int rankData = rank->currentData().toInt();
 
@@ -109,7 +114,23 @@ CardSelector GuiCardSelector::GetSelector() const {
 	} else if (rankSelected) {
 		return CardSelector(Card::Rank(rankData), isStraight);
 	} else {
-		throw NothingSelected();
+		throw NoSuitNoRank(this);
 	}
+}
+
+void GuiCardSelector::Highlight() {
+	int style = frame->frameStyle();
+	int width = frame->lineWidth();
+	frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+	frame->setLineWidth(3);
+
+	QTimer *timer = new QTimer(this);
+	timer->setSingleShot(true);
+	QTimer::connect(timer, &QTimer::timeout, [style, width, timer, this](){
+			frame->setFrameStyle(style);
+			frame->setLineWidth(width);
+			timer->deleteLater();
+			});
+	timer->start(5000);
 }
 
