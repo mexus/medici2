@@ -110,27 +110,31 @@ void MainForm::LoadSelectorTabs(const QSettings& settings) {
 
 void MainForm::SaveSelectorTabs(QSettings& settings) {
 	SettingsSetHelper helper(settings);
-	std::size_t conditionsCount = tabs->count();
-	helper("conditions-count", (unsigned int)conditionsCount);
-	for (std::size_t i = 0; i != conditionsCount; ++i) {
-		SettingsSetHelper conditionHelper(helper, "condition-tab-" + QString::number(i) + ":");
-		auto config = static_cast<GuiDeckSelector*>(tabs->widget(i))->GetConfig();
-		conditionHelper("selector-mode", config.selectorMode);
-		conditionHelper("position-begin", (unsigned int)config.positionBegin);
-		conditionHelper("position-end", (unsigned int)config.positionEnd);
-		conditionHelper("enabled", config.enabled);
-		conditionHelper("cards-count", (unsigned int)config.cards.size());
-		conditionHelper("label", tabs->tabText(i));
+	std::size_t conditionNumber = 0;
+	for (int i = 0; i != tabs->count(); ++i) {
+		auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
+		if (selector) {
+			auto config = selector->GetConfig();
+			SettingsSetHelper conditionHelper(helper, "condition-tab-" + QString::number(conditionNumber) + ":");
+			conditionHelper("label", tabs->tabText(i));
+			conditionHelper("selector-mode", config.selectorMode);
+			conditionHelper("position-begin", (unsigned int) config.positionBegin);
+			conditionHelper("position-end", (unsigned int) config.positionEnd);
+			conditionHelper("enabled", config.enabled);
+			conditionHelper("cards-count", (unsigned int) config.cards.size());
 
-		std::size_t j(0);
-		for (auto &cardConfig: config.cards) {
-			SettingsSetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
-			cardHelper("suit", cardConfig.suit);
-			cardHelper("rank", cardConfig.rank);
-			cardHelper("inversed", cardConfig.inversed);
-			++j;
+			std::size_t j(0);
+			for (auto &cardConfig: config.cards) {
+				SettingsSetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
+				cardHelper("suit", cardConfig.suit);
+				cardHelper("rank", cardConfig.rank);
+				cardHelper("inversed", cardConfig.inversed);
+				++j;
+			}
+			++conditionNumber;
 		}
 	}
+	helper("conditions-count", (unsigned int)conditionNumber);
 	
 }
 
@@ -138,19 +142,21 @@ DeckSelectors MainForm::GetSelectors() {
 	DeckSelectors selectors;
 	int tabsCount = tabs->count();
 	for (int i = 0; i != tabsCount; ++i) {
-		auto selectorGui = static_cast<GuiDeckSelector*>(tabs->widget(i));
-		try {
-			auto selector = selectorGui->GetSelector();
-			if (selector)
-				selectors.AddDeckSelector(std::move(selector));
-		} catch (const GuiCardSelector::NoSuitNoRank&){
-			QMessageBox::critical(this, tabs->tabText(i), tr("You should select at least suit or rank for each card!"));
-			tabs->setCurrentIndex(i);
-			return DeckSelectors();
-		} catch (const GuiDeckSelector::NoCards&){
-			QMessageBox::critical(this, tabs->tabText(i), tr("You have not added any cards to a conditions set!"));
-			tabs->setCurrentIndex(i);
-			return DeckSelectors();
+		auto selectorGui = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
+		if (selectorGui) {
+			try {
+				auto selector = selectorGui->GetSelector();
+				if (selector)
+					selectors.AddDeckSelector(std::move(selector));
+			} catch (const GuiCardSelector::NoSuitNoRank &) {
+				QMessageBox::critical(this, tabs->tabText(i), tr("You should select at least suit or rank for each card!"));
+				tabs->setCurrentIndex(i);
+				return DeckSelectors();
+			} catch (const GuiDeckSelector::NoCards &) {
+				QMessageBox::critical(this, tabs->tabText(i), tr("You have not added any cards to a conditions set!"));
+				tabs->setCurrentIndex(i);
+				return DeckSelectors();
+			}
 		}
 	}
 	return selectors;

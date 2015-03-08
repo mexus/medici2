@@ -9,6 +9,8 @@ struct Card{
 	struct Rank;
 
 	struct Suit{
+		template<typename T>
+		Suit(typename std::enable_if<std::is_integral<T>::value, T>::type val) : Suit(static_cast<std::uint_fast8_t>(val)) {}
 		Suit(std::uint_fast8_t);
 		Suit(const Rank&) = delete;
 		Suit();
@@ -19,6 +21,8 @@ struct Card{
 	};
 
 	struct Rank{
+		template<typename T>
+		Rank(typename std::enable_if<std::is_integral<T>::value, T>::type val) : Rank(static_cast<std::uint_fast8_t>(val)) {}
 		Rank(std::uint_fast8_t);
 		Rank(const Suit&) = delete;
 		Rank();

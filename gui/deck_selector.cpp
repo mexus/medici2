@@ -27,8 +27,8 @@ GuiDeckSelector::GuiDeckSelector(const Config& config, QWidget *parent) : GuiDec
 	auto index = selectorMode->findData(config.selectorMode);
 	if (index != -1)
 		selectorMode->setCurrentIndex(index);
-	positionStart->setValue(config.positionBegin);
-	positionEnd->setValue(config.positionEnd);
+	positionStart->setValue(static_cast<int>(config.positionBegin));
+	positionEnd->setValue(static_cast<int>(config.positionEnd));
 	enabled->setChecked(config.enabled);
 	for (auto& cardConfig : config.cards) {
 		AddCardSelector(cardConfig);
@@ -117,8 +117,8 @@ std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
 	for (auto &guiCardSelector: selectors) {
 		cardSelectors.push_back(std::move(guiCardSelector->GetSelector()));
 	}
-	std::size_t from = positionStart->value();
-	std::size_t to = positionEnd->value();
+	std::size_t from = static_cast<std::size_t>(positionStart->value());
+	std::size_t to = static_cast<std::size_t>(positionEnd->value());
 
 	switch (mode) {
 		case SELECT_ONE:
