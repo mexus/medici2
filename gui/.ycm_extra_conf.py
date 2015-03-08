@@ -18,7 +18,6 @@ flags = [
 '-std=c++11',
 '-x', 'c++',
 '-I', '../source/',
-'-I', '/usr/include/c++/4.8/',
 
 '-DQT_CORE_LIB',
 '-DQT_GUI_LIB',
