@@ -6,10 +6,8 @@
 
 class GuiException : public std::exception {
 public:
-	GuiException(QObject* object) : object(object) {}
-	QObject* GetObject() const {return object;}
-private:
-	QObject* object;
+	GuiException() = default;
+	virtual ~GuiException() = default;
 };
 
 #endif /* GUI_EXCEPTION_H */

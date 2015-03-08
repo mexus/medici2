@@ -11,6 +11,7 @@
 
 #include <cards/deck-selector.h>
 #include "card_selector.h"
+#include "exception.h"
 
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
@@ -20,6 +21,9 @@ public:
 		std::size_t positionBegin, positionEnd;
 		bool enabled;
 		std::vector<GuiCardSelector::Config> cards;
+	};
+
+	class NoCards : public GuiException {
 	};
 
 	GuiDeckSelector(const Config&, QWidget* parent = 0);

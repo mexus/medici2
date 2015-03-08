@@ -144,7 +144,12 @@ DeckSelectors MainForm::GetSelectors() {
 			if (selector)
 				selectors.AddDeckSelector(std::move(selector));
 		} catch (const GuiCardSelector::NoSuitNoRank&){
-			QMessageBox::critical(this, tabs->tabText(i), tr("You should select suit or rank for each card!"));
+			QMessageBox::critical(this, tabs->tabText(i), tr("You should select at least suit or rank for each card!"));
+			tabs->setCurrentIndex(i);
+			return DeckSelectors();
+		} catch (const GuiDeckSelector::NoCards&){
+			QMessageBox::critical(this, tabs->tabText(i), tr("You have not added any cards to a conditions set!"));
+			tabs->setCurrentIndex(i);
 			return DeckSelectors();
 		}
 	}

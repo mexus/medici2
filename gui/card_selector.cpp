@@ -23,7 +23,7 @@ typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* c
 	comboBox->setCurrentIndex(index);
 }
 
-GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) : GuiException(object) {
+GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) {
 	object->Highlight();
 }
 

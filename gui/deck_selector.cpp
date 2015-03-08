@@ -46,6 +46,8 @@ void GuiDeckSelector::AddCardSelector(const GuiCardSelector::Config& config) {
 void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector) {
 	selectors.insert(selector);
 	QObject::connect(selector, &GuiCardSelector::DeleteClicked, [this, selector](){
+			if (selectors.size()==1)
+				return ;
 			selectors.erase(selector);
 			selector->disconnect();
 			selectorsLayout->removeWidget(selector);
@@ -105,6 +107,9 @@ void GuiDeckSelector::CreateLayout() {
 }
 
 std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
+	if (selectors.empty())
+		throw NoCards();
+
 	std::unique_ptr<DeckAbstractSelector> selector;
 	SelectorMode mode = static_cast<SelectorMode>(selectorMode->currentData().toUInt());
 
