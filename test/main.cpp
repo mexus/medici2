@@ -9,6 +9,8 @@
 #include "modules/medici.h"
 #include "modules/deck-selector.h"
 #include "modules/i-ching.h"
+#include "modules/calculator-thread.h"
+#include "modules/calculator-manager.h"
 
 logxx::Log cLog("testing");
 
@@ -59,7 +61,9 @@ int main(int argc, char **argv) {
 	AddTest<TestMixer>(false);
 	AddTest<TestMedici>(false);
 	AddTest<TestDeckSelector>(false);
-	AddTest<TestIChing>(true);
+	AddTest<TestIChing>(false);
+	AddTest<TestCalculatorThread>(false);
+	AddTest<TestCalculatorManager>(true);
         
         for (int i = 1; i < argc; ++i){
                 std::string arg(argv[i]);

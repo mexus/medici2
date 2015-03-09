@@ -11,5 +11,8 @@ add_library (source-library
 	medici/patience.cpp
 
 	i-ching/i-ching.cpp
+
+	calculator/thread.cpp
+	calculator/manager.cpp
 )
 

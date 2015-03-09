@@ -16,6 +16,8 @@ add_executable(${TEST_EXE}
 	modules/medici.cpp
 	modules/deck-selector.cpp
 	modules/i-ching.cpp
+	modules/calculator-thread.cpp
+	modules/calculator-manager.cpp
 )
 target_link_libraries (${TEST_EXE}
 	source-library

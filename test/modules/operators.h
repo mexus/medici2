@@ -6,9 +6,13 @@
 #include <cards/deck.h>
 #include <cards/deck-selector.h>
 #undef private
+#include <calculator/thread.h>
 
-std::ostream& operator<<(std::ostream& s, const Card& );
-std::ostream& operator<<(std::ostream& s, const CardSelector& cardSelector);
+namespace std {
+	ostream& operator<<(ostream& s, const Card& );
+	ostream& operator<<(ostream& s, const CardSelector& cardSelector);
+	ostream& operator<<(ostream& s, const calculator::Thread::RunParameters&);
+}
 
 #endif /* TEST_OPERATORS_H */
 
