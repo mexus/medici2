@@ -11,8 +11,8 @@ add_executable(${EXE_NAME}
 	card_selector.cpp
 	deck_selector.cpp
 
-	calculation_thread.cpp
-	calculation_controller.cpp
+	calculation.cpp
+	progress.cpp
 )
 
 target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )

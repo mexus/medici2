@@ -60,10 +60,13 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 	layout->addWidget(tabs);
 
 	{
-		actionButton = new QPushButton(tr("Calculate!"));
+		actionButton = new QPushButton(tr("Calculate"));
 		QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
 		layout->addWidget(actionButton);
+
 	}
+
+	calculator = new CalculatorWindow(this);
 
 	centralWidget()->setLayout(layout);
 }
@@ -165,10 +168,8 @@ DeckSelectors MainForm::GetSelectors() {
 void MainForm::ActivateCalculation() {
 	try {
 		auto selectors = GetSelectors();
-		if (!selectors.IsEmpty()) {
-			calculator = new CalculationController(std::move(selectors));
-			calculator->Start(1);
-		}
+		if (!selectors.IsEmpty())
+			calculator->Calculate(std::move(selectors));
 	} catch (const std::exception& e){
 		QMessageBox::critical(this, tr("Unhandled exception"), tr("Please report to developer: ") + QString(e.what()));
 	}
