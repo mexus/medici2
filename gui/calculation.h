@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTimer>
+#include <QTextEdit>
 
 #include <calculator/manager.h>
 
@@ -29,6 +30,7 @@ private:
 	QPushButton *interruptButton, *addThread, *removeThread;
 	QVBoxLayout *progressBoxes;
 	std::vector<Progress*> progressVector;
+	QTextEdit *foundDecks;
 
 	void InterruptCalculation();
 	void AddThread();
@@ -41,7 +43,9 @@ private:
 
 	QTimer *updateProgressTimer;
 	void ShowProgress();
-	void PopulateParameters(std::vector<calculator::Thread::RunParameters>&&);
+	void PopulateParameters(const std::vector<calculator::Thread::RunParameters>&);
+	void PopulateDecks(const calculator::Thread::FoundVector&);
+	void AddDeck(const calculator::Thread::StandardDeck&, const medici::Patience::PatienceInfo&);
 
 };
 

@@ -3,35 +3,46 @@
 #include <QMessageBox>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
-	auto layout = new QHBoxLayout();
+	auto layout = new QVBoxLayout();
 
-	interruptButton = new QPushButton(tr("Interrupt"));
-	QObject::connect(interruptButton, &QPushButton::clicked, [this]{
-			std::thread(&CalculatorWindow::InterruptCalculation, this).detach();
-			updateProgressTimer->stop();
-		});
-	layout->addWidget(interruptButton);
+	{
+		auto subLayout = new QHBoxLayout();
+	
+		interruptButton = new QPushButton(tr("Interrupt"));
+		QObject::connect(interruptButton, &QPushButton::clicked, this, &CalculatorWindow::InterruptCalculation);
+		subLayout->addWidget(interruptButton);
+	
+		addThread = new QPushButton(tr("Add a thread"));
+		QObject::connect(addThread, &QPushButton::clicked, [this]{
+				std::thread(&CalculatorWindow::AddThread, this).detach();
+			});
+		subLayout->addWidget(addThread);
+	
+		removeThread = new QPushButton(tr("Remove a thread"));
+		QObject::connect(removeThread, &QPushButton::clicked, [this]{
+				std::thread(&CalculatorWindow::RemoveThread, this).detach();
+			});
+		subLayout->addWidget(removeThread);
+	
+		updateProgressTimer = new QTimer();
+		updateProgressTimer->setInterval(1000);
+	
+		DisableButtons(true);
 
-	addThread = new QPushButton(tr("Add a thread"));
-	QObject::connect(addThread, &QPushButton::clicked, [this]{
-			std::thread(&CalculatorWindow::AddThread, this).detach();
-		});
-	layout->addWidget(addThread);
+		layout->addLayout(subLayout);
+	}
+	{
+		auto subLayout = new QHBoxLayout();
 
-	removeThread = new QPushButton(tr("Remove a thread"));
-	QObject::connect(removeThread, &QPushButton::clicked, [this]{
-			std::thread(&CalculatorWindow::RemoveThread, this).detach();
-		});
-	layout->addWidget(removeThread);
+		progressBoxes = new QVBoxLayout();
+		subLayout->addLayout(progressBoxes);
 
-	progressBoxes = new QVBoxLayout();
-	layout->addLayout(progressBoxes);
+		foundDecks = new QTextEdit(tr("Found decks:") + "\n");
+		subLayout->addWidget(foundDecks);
 
-	updateProgressTimer = new QTimer();
-	updateProgressTimer->setInterval(1000);
-
-	DisableButtons(true);
-
+		layout->addLayout(subLayout);
+	}
+	
 	setLayout(layout);
 }
 
@@ -51,11 +62,11 @@ void CalculatorWindow::Calculate(DeckSelectors&& selectors) {
 			launch = reply == QMessageBox::Yes;
 		}
 		if (launch){
+			DisableButtons(false);
 			std::thread([this](DeckSelectors&& selectors){
 					calculator::Manager::StandardMixer mixer;
 					calculatorManager.Interrupt();
 					calculatorManager.Launch(threadsCount, std::move(selectors), mixer);	
-					DisableButtons(false);
 					operationInProgress.store(false);
 				}, std::move(selectors)).detach();
 				QObject::connect(updateProgressTimer, &QTimer::timeout, this, &CalculatorWindow::ShowProgress);
@@ -68,10 +79,13 @@ void CalculatorWindow::Calculate(DeckSelectors&& selectors) {
 void CalculatorWindow::InterruptCalculation() {
 	bool isInProgress(false);
 	if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
-		QObject::disconnect(updateProgressTimer);
-		calculatorManager.Interrupt();
 		DisableButtons(true);
-		operationInProgress.store(false);
+		updateProgressTimer->stop();
+		QObject::disconnect(updateProgressTimer);
+		std::thread([this]{
+				calculatorManager.Interrupt();
+				operationInProgress.store(false);
+			}).detach();
 	}
 }
 
@@ -102,18 +116,19 @@ void CalculatorWindow::ShowProgress() {
 	if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
 		if (calculatorManager.Running()) {
 			auto allParameters = calculatorManager.GetRunParameters();
-			PopulateParameters(std::move(allParameters));
+			PopulateParameters(allParameters);
+			auto decks = calculatorManager.GetNewDecks();
+			PopulateDecks(decks);
 			operationInProgress.store(false);
 		} else
 			operationInProgress.store(false);
 	}
 }
 
-#include <QDebug>
-void CalculatorWindow::PopulateParameters(std::vector<calculator::Thread::RunParameters>&& allParameters){
+void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::RunParameters>& allParameters){
 	if (allParameters.size() > progressVector.size()) {
 		for (std::size_t i = progressVector.size(); i != allParameters.size(); ++i) {
-			auto progress = new Progress(i);
+			auto progress = new Progress(i + 1);
 			progressVector.push_back(progress);
 			progressBoxes->addWidget(progress);
 		}
@@ -128,5 +143,22 @@ void CalculatorWindow::PopulateParameters(std::vector<calculator::Thread::RunPar
 
 	for (std::size_t i = 0; i != allParameters.size(); ++i)
 		progressVector[i]->Set(allParameters[i]);
+}
+
+void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newDecks){
+	if (newDecks.size() > 10)
+		foundDecks->append("Too many decks found");
+	else {
+		for (auto& deck : newDecks)
+			AddDeck(deck.first, deck.second);
+	}
+}
+
+void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeck& deck, const medici::Patience::PatienceInfo& ) {
+	QString line("Deck: ");
+	for (auto &card : deck) {
+		line += "[S" + QString::number(card.suit.value) + ", R" + QString::number(card.rank.value) + "] ";
+	}
+	foundDecks->append(line);
 }
 
