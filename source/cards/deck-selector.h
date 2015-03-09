@@ -39,6 +39,7 @@ public:
 	DeckSelectors() = default;
 	DeckSelectors(const DeckSelectors&) = delete;
 	DeckSelectors(DeckSelectors&&) = default;
+	DeckSelectors& operator=(DeckSelectors&&) = default;
 
 	bool IsEmpty() const;
 private:
