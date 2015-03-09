@@ -22,6 +22,10 @@ namespace calculator {
 			this->selector = std::move(selector);
 	}
 
+	bool Manager::Running() const {
+		return !threads.empty();
+	}
+
 	void Manager::Interrupt() {
 		if (!threads.empty())
 			threads.clear();

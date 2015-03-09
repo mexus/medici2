@@ -20,6 +20,7 @@ namespace calculator {
 		void Launch(std::size_t threads, DeckSelectors&& selector, const StandardMixer& mixer);
 		void UpdateParameters(DeckSelectors&&);
 
+		bool Running() const;
 		void Interrupt();
 		void IncreaseThreads();
 		void DecreaseThreads();
