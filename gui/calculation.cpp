@@ -1,10 +1,19 @@
 #include "calculation.h"
 #include <QLabel>
 #include <QMessageBox>
+#include <random>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
-	auto layout = new QVBoxLayout();
+	{
+		std::random_device rd;
+		std::vector<std::uint_fast32_t> randomSeeds;
+		for (std::size_t i = 0; i < threadsCount * 2; ++i) {
+			randomSeeds.push_back(rd());
+		}
+		calculatorManager.SetRandomSeeds(randomSeeds);
+	}
 
+	auto layout = new QVBoxLayout();
 	{
 		auto subLayout = new QHBoxLayout();
 	
@@ -66,7 +75,7 @@ void CalculatorWindow::Calculate(DeckSelectors&& selectors) {
 			std::thread([this](DeckSelectors&& selectors){
 					calculator::Manager::StandardMixer mixer;
 					calculatorManager.Interrupt();
-					calculatorManager.Launch(threadsCount, std::move(selectors), mixer);	
+					calculatorManager.Launch(threadsCount, std::move(selectors), mixer);
 					operationInProgress.store(false);
 				}, std::move(selectors)).detach();
 				QObject::connect(updateProgressTimer, &QTimer::timeout, this, &CalculatorWindow::ShowProgress);
