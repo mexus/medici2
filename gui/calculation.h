@@ -13,6 +13,7 @@
 #include <atomic>
 
 #include "progress.h"
+#include "cards_translations.h"
 
 class CalculatorWindow : public QDialog {
 	Q_OBJECT
@@ -24,6 +25,7 @@ public:
 private:
 	std::atomic_bool operationInProgress;
 	calculator::Manager calculatorManager;
+	CardsTranslations cardsTranslations;
 
 	std::uint8_t threadsCount;
 	QHBoxLayout *layout;

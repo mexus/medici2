@@ -157,7 +157,7 @@ void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newD
 void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeck& deck, const medici::Patience::PatienceInfo& ) {
 	QString line("Deck: ");
 	for (auto &card : deck) {
-		line += "[S" + QString::number(card.suit.value) + ", R" + QString::number(card.rank.value) + "] ";
+		line += cardsTranslations.CardShortName(card) + " ";
 	}
 	foundDecks->append(line);
 }
