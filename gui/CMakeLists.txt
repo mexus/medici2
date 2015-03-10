@@ -15,6 +15,8 @@ add_executable(${EXE_NAME}
 	progress.cpp
 
 	cards_translations.cpp
+
+	deck_preference_tab.cpp
 )
 
 target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )

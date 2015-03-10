@@ -23,8 +23,8 @@ public:
 		bool inversed;
 	};
 
-	GuiCardSelector(const Config&, QWidget* parent = nullptr);
-	GuiCardSelector(QWidget* parent = nullptr);
+	GuiCardSelector(const Config&, bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
+	GuiCardSelector(bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
 	CardSelector GetSelector();
 
 	Config GetConfig() const;
@@ -33,6 +33,7 @@ private:
 	QComboBox *suit, *rank;
 	QCheckBox *inverse;
 	QFrame *frame;
+	bool anyAllowed, inverseAllowed;
 
 	void CreateElements();
 	void CreateLayout();

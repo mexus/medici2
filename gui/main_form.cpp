@@ -16,7 +16,7 @@ void MainForm::AddSelectorTab(GuiDeckSelector* selector, const QString& label) {
 	tabs->addTab(selector, label);
 
 	QObject::connect(selector, &GuiDeckSelector::DeleteClicked, [this, selector](){
-			if (tabs->count() != 1) {
+			if (tabs->count() > 2) {
 				auto index = tabs->indexOf(selector);
 				tabs->removeTab(index);
 				selector->deleteLater();
@@ -53,7 +53,10 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 		layout->addWidget(addButton);
 	}
 
+	deckPreferenceTab = new DeckPreference();
+
 	tabs = new QTabWidget();
+	tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
 	LoadSelectorTabs(settings);
 	QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
 
@@ -114,7 +117,7 @@ void MainForm::LoadSelectorTabs(const QSettings& settings) {
 void MainForm::SaveSelectorTabs(QSettings& settings) {
 	SettingsSetHelper helper(settings);
 	std::size_t conditionNumber = 0;
-	for (int i = 0; i != tabs->count(); ++i) {
+	for (int i = 1; i != tabs->count(); ++i) {
 		auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
 		if (selector) {
 			auto config = selector->GetConfig();

@@ -7,6 +7,7 @@
 
 #include "deck_selector.h"
 #include "calculation.h"
+#include "deck_preference_tab.h"
 
 #include <logxx/logxx.h>
 
@@ -22,6 +23,7 @@ protected:
 	QTabWidget* tabs;
 	QPushButton *actionButton;
 	CalculatorWindow *calculator;
+	DeckPreference *deckPreferenceTab;
 
 
 	void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));

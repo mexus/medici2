@@ -27,16 +27,20 @@ GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) {
 	object->Highlight();
 }
 
-GuiCardSelector::GuiCardSelector(QWidget* parent) : QWidget(parent) {
+GuiCardSelector::GuiCardSelector(bool anyAllowed, bool inverseAllowed, QWidget* parent) :
+	QWidget(parent), anyAllowed(anyAllowed), inverseAllowed(inverseAllowed)
+{
 	CreateElements();
 	PopulateSuits();
 	PopulateRanks();
 	CreateLayout();
-	SelectData(this->suit, -1);
-	SelectData(this->rank, -1);
+	SelectData(this->suit, anyAllowed ? -1 : 0);
+	SelectData(this->rank, anyAllowed ? -1 : 0);
 }
 
-GuiCardSelector::GuiCardSelector(const Config& config, QWidget* parent) : GuiCardSelector(parent) {
+GuiCardSelector::GuiCardSelector(const Config& config, bool anyAllowed, bool inverseAllowed, QWidget* parent) :
+	GuiCardSelector(anyAllowed, inverseAllowed, parent)
+{
 	SelectData(this->suit, config.suit);
 	SelectData(this->rank, config.rank);
 	inverse->setChecked(config.inversed);
@@ -46,6 +50,8 @@ void GuiCardSelector::CreateElements() {
 	suit = new QComboBox();
 	rank = new QComboBox();
 	inverse = new QCheckBox(tr("Inverse"));
+	if (!inverseAllowed)
+		inverse->setVisible(false);
 }
 
 class Populater {
@@ -60,7 +66,8 @@ private:
 
 void GuiCardSelector::PopulateSuits() {
 	Populater p(suit);
-	p.Add(tr("Any suit"), -1);
+	if (anyAllowed)
+		p.Add(tr("Any suit"), -1);
 	p.Add(tr("Diamond"), standard_36_deck::Suits::Diamonds);
 	p.Add(tr("Spade"), standard_36_deck::Suits::Spades);
 	p.Add(tr("Heart"), standard_36_deck::Suits::Hearts);
@@ -69,7 +76,8 @@ void GuiCardSelector::PopulateSuits() {
 
 void GuiCardSelector::PopulateRanks() {
 	Populater p(rank);
-	p.Add(tr("Any rank"), -1);
+	if (anyAllowed)
+		p.Add(tr("Any rank"), -1);
 	p.Add(tr("Six"), standard_36_deck::Ranks::Six);
 	p.Add(tr("Seven"), standard_36_deck::Ranks::Seven);
 	p.Add(tr("Eight"), standard_36_deck::Ranks::Eight);
