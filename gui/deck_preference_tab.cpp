@@ -8,13 +8,17 @@ DeckPreference::DeckPreference(QWidget* parent) : QWidget(parent)
 }
 
 DeckPreference::DeckPreference(const QJsonObject& config, QWidget *parent) : QWidget(parent) {
-    targetCard = new GuiCardSelector(config["targetCard"].toObject(), false, false);
+    targetCard = new GuiCardSelector(config["target-card"].toObject(), false, false);
     CreateLayout();
+    iChingCheck->setChecked(config["iching-check"].toBool());
+    findMaximumConvolutions->setChecked(config["find-maximum"].toBool());
 }
 
 QJsonObject DeckPreference::GetConfig() const {
     QJsonObject config;
-    config["targetCard"] = targetCard->GetConfig();
+    config["target-card"] = targetCard->GetConfig();
+    config["iching-check"] = iChingCheck->isChecked();
+    config["find-maximum"] = findMaximumConvolutions->isChecked();
     return config;
 }
 

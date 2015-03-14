@@ -51,12 +51,13 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
         layout->addWidget(addButton);
     }
 
-    deckPreferenceTab = new DeckPreference();
+    auto jsonConfig = QJsonDocument::fromBinaryData(settings.value("selector-tabs").toByteArray()).object();
+
+    deckPreferenceTab = new DeckPreference(jsonConfig["preference-tab"].toObject());
 
     tabs = new QTabWidget();
     tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
-    auto config = QJsonDocument::fromBinaryData(settings.value("selector-tabs").toByteArray());
-    LoadSelectorTabs(config.array());
+    LoadSelectorTabs(jsonConfig["selector-tabs"].toArray());
     QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
 
     layout->addWidget(tabs);
@@ -81,8 +82,10 @@ void MainForm::closeEvent(QCloseEvent*) {
     settings.setValue("main-window:geometry", saveGeometry());
     settings.setValue("main-window:state", saveState());
 
-    QJsonDocument config(SaveSelectorTabs());
-    settings.setValue("selector-tabs", config.toBinaryData());
+    QJsonObject config;
+    config["selector-tabs"] = SaveSelectorTabs();
+    config["preference-tab"] = deckPreferenceTab->GetConfig();
+    settings.setValue("selector-tabs", QJsonDocument(config).toBinaryData());
 }
 
 QJsonArray MainForm::SaveSelectorTabs() const {
