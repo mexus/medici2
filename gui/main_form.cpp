@@ -7,7 +7,6 @@
 #include <QJsonDocument>
 #include <type_traits>
 #include <cards/deck-selector.h>
-#include "settings_helper.h"
 
 logxx::Log MainForm::cLog("MainForm");
 
