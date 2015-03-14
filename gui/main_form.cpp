@@ -57,7 +57,7 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
     tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
     LoadSelectorTabs(jsonConfig["selector-tabs"].toArray());
     QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
-
+    tabs->setCurrentIndex(jsonConfig["last-selected-tab"].toInt());
     layout->addWidget(tabs);
 
     {
@@ -83,6 +83,7 @@ void MainForm::closeEvent(QCloseEvent*) {
     QJsonObject config;
     config["selector-tabs"] = SaveSelectorTabs();
     config["preference-tab"] = deckPreferenceTab->GetConfig();
+    config["last-selected-tab"] = tabs->currentIndex();
     settings.setValue("selector-tabs", QJsonDocument(config).toBinaryData());
 }
 
