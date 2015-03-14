@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 2.8.9)
 
 set(CMAKE_AUTOMOC ON)
-find_package(Qt5Widgets REQUIRED)
 
 SET (EXE_NAME medici-gui)
 add_executable(${EXE_NAME}
