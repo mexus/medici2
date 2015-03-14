@@ -7,13 +7,15 @@ DeckPreference::DeckPreference(QWidget* parent) : QWidget(parent)
     CreateLayout();
 }
 
-DeckPreference::DeckPreference(const Config& config, QWidget *parent) : QWidget(parent) {
-    targetCard = new GuiCardSelector({
-            config.targetCard.suit.value,
-            config.targetCard.rank.value,
-            false
-            }, false, false);
+DeckPreference::DeckPreference(const QJsonObject& config, QWidget *parent) : QWidget(parent) {
+    targetCard = new GuiCardSelector(config["targetCard"].toObject(), false, false);
     CreateLayout();
+}
+
+QJsonObject DeckPreference::GetConfig() const {
+    QJsonObject config;
+    config["targetCard"] = targetCard->GetConfig();
+    return config;
 }
 
 void DeckPreference::CreateLayout() {

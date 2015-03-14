@@ -3,18 +3,16 @@
 
 #include <QWidget>
 #include <QCheckBox>
+#include <QJsonObject>
 #include "card_selector.h"
 
 class DeckPreference : public QWidget {
     Q_OBJECT
 public:
-    struct Config {
-        bool checkIChing;
-        bool findMaximumConvolutions;
-        Card targetCard;
-    };
     DeckPreference(QWidget* parent = nullptr);
-    DeckPreference(const Config& config, QWidget* parent = nullptr);
+    DeckPreference(const QJsonObject&, QWidget* parent = nullptr);
+
+    QJsonObject GetConfig() const;
 private:
     QCheckBox* iChingCheck;
 

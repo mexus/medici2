@@ -2,19 +2,23 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QJsonArray>
 
-GuiDeckSelector::Config GuiDeckSelector::GetConfig() const {
-    std::vector<GuiCardSelector::Config> cards;
+QJsonObject GuiDeckSelector::GetConfig() const {
+    QJsonObject config;
+    QJsonArray cards;
     for (auto &guiCardSelector: selectors) {
-        cards.push_back(std::move(guiCardSelector->GetConfig()));
+        cards.append(guiCardSelector->GetConfig());
     }
-    return {
-        selectorMode->currentData().toInt(),
-        static_cast<std::size_t>(positionStart->value()),
-        static_cast<std::size_t>(positionEnd->value()),
-        enabled->isChecked(),
-        std::move(cards)
-    };
+    QJsonObject position;
+    position["start"] = positionStart->value();
+    position["end"] = positionEnd->value();
+
+    config["cards"] = cards;
+    config["selector_mode"] = selectorMode->currentData().toInt();
+    config["position"] = position;
+    config["enabled"] = enabled->isChecked();
+    return config;
 }
 
 GuiDeckSelector::GuiDeckSelector(QWidget *parent) : QWidget(parent) {
@@ -23,14 +27,20 @@ GuiDeckSelector::GuiDeckSelector(QWidget *parent) : QWidget(parent) {
     CreateLayout();
 }
 
-GuiDeckSelector::GuiDeckSelector(const Config& config, QWidget *parent) : GuiDeckSelector(parent) {
-    auto index = selectorMode->findData(config.selectorMode);
+GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : GuiDeckSelector(parent) {
+    auto index = selectorMode->findData(config["selector_mode"].toInt());
     if (index != -1)
         selectorMode->setCurrentIndex(index);
-    positionStart->setValue(static_cast<int>(config.positionBegin));
-    positionEnd->setValue(static_cast<int>(config.positionEnd));
-    enabled->setChecked(config.enabled);
-    for (auto& cardConfig : config.cards) {
+
+    auto positionConfig = config["position"].toObject();
+    positionStart->setValue(static_cast<int>(positionConfig["begin"].toInt()));
+    positionEnd->setValue(static_cast<int>(positionConfig["end"].toInt()));
+
+    enabled->setChecked(config["enabled"].toBool());
+
+    auto cards = config["cards"].toArray();
+    for (int i = 0; i != cards.size(); ++i) {
+        auto cardConfig = cards[i].toObject();
         AddCardSelector(cardConfig);
     }
 }
@@ -39,7 +49,7 @@ void GuiDeckSelector::AddCardSelector() {
     AddCardSelector(new GuiCardSelector());
 }
 
-void GuiDeckSelector::AddCardSelector(const GuiCardSelector::Config& config) {
+void GuiDeckSelector::AddCardSelector(const QJsonObject& config) {
     AddCardSelector(new GuiCardSelector(config));
 }
 

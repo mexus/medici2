@@ -2,9 +2,13 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <random>
+#include <QSettings>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
     {
+        QSettings settings;
+        restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
+
         std::random_device rd;
         std::vector<std::uint_fast32_t> randomSeeds;
         for (std::size_t i = 0; i < threadsCount * 2; ++i) {
@@ -58,6 +62,11 @@ CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operation
 CalculatorWindow::~CalculatorWindow() {
     while (operationInProgress)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}
+
+void CalculatorWindow::closeEvent(QCloseEvent*) {
+    QSettings settings;
+    settings.setValue("calculator-window:geometry", saveGeometry());
 }
 
 void CalculatorWindow::Calculate(DeckSelectors&& selectors) {

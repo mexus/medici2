@@ -4,6 +4,7 @@
 #include <QTabWidget>
 #include <QPushButton>
 #include <QSettings>
+#include <QJsonArray>
 
 #include "deck_selector.h"
 #include "calculation.h"
@@ -12,13 +13,13 @@
 #include <logxx/logxx.h>
 
 class MainForm : public QMainWindow {
-        Q_OBJECT
+    Q_OBJECT
 public:
-        MainForm(QWidget *parent = 0);
-        virtual ~MainForm();
+    MainForm(QWidget *parent = 0);
+    virtual ~MainForm();
         
 protected:
-        virtual void closeEvent(QCloseEvent*);
+    virtual void closeEvent(QCloseEvent*);
 
     QTabWidget* tabs;
     QPushButton *actionButton;
@@ -29,10 +30,10 @@ protected:
     void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
     void RenameSelector(int index);
         
-        static logxx::Log cLog;
+    static logxx::Log cLog;
 
-    void LoadSelectorTabs(const QSettings&);
-    void SaveSelectorTabs(QSettings&);
+    void LoadSelectorTabs(const QJsonArray&);
+    QJsonArray SaveSelectorTabs() const;
 
     DeckSelectors GetSelectors();
     void ActivateCalculation();

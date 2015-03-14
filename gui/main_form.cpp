@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QJsonDocument>
 
 #include <cards/deck-selector.h>
 
@@ -37,12 +38,9 @@ void MainForm::RenameSelector(int index) {
 }
 
 MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
-        QSettings settings;
-    {
-        SettingsGetHelper helper(settings, "main-window:");
-            restoreGeometry(helper("geometry").toByteArray());
-            restoreState(helper("state").toByteArray());
-    }
+    QSettings settings;
+    restoreGeometry(settings.value("main-window:geometry").toByteArray());
+    restoreState(settings.value("main-window:state").toByteArray());
 
     setCentralWidget(new QWidget());
     auto layout = new QVBoxLayout();
@@ -57,7 +55,8 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 
     tabs = new QTabWidget();
     tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
-    LoadSelectorTabs(settings);
+    auto config = QJsonDocument::fromBinaryData(settings.value("selector-tabs").toByteArray());
+    LoadSelectorTabs(config.array());
     QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
 
     layout->addWidget(tabs);
@@ -79,69 +78,37 @@ MainForm::~MainForm() {
 
 void MainForm::closeEvent(QCloseEvent*) {
     QSettings settings;
-    {
-        SettingsSetHelper helper(settings, "main-window:");
-            helper("geometry", saveGeometry());
-            helper("state", saveState());
-    }
-    SaveSelectorTabs(settings);
+    settings.setValue("main-window:geometry", saveGeometry());
+    settings.setValue("main-window:state", saveState());
+
+    QJsonDocument config(SaveSelectorTabs());
+    settings.setValue("selector-tabs", config.toBinaryData());
 }
 
-void MainForm::LoadSelectorTabs(const QSettings& settings) {
-    SettingsGetHelper helper(settings);
-    std::size_t conditionsCount = helper("conditions-count").toUInt();
-    if (conditionsCount == 0)
-        AddSelectorTab();
-    for (std::size_t i = 0; i != conditionsCount; ++i) {
-        SettingsGetHelper conditionHelper(helper, "condition-tab-" + QString::number(i) + ":");
-        GuiDeckSelector::Config config;
-        config.selectorMode = conditionHelper("selector-mode").toInt();
-        config.positionBegin = conditionHelper("position-begin").toUInt();
-        config.positionEnd = conditionHelper("position-end").toUInt();
-        config.enabled = conditionHelper("enabled").toBool();
-        QString label = conditionHelper("label").toString();
-
-        std::size_t cardsCount = conditionHelper("cards-count").toUInt();
-        for (std::size_t j = 0; j != cardsCount; ++j) {
-            SettingsGetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
-            config.cards.push_back({
-                cardHelper("suit").toInt(),
-                cardHelper("rank").toInt(),
-                cardHelper("inversed").toBool()
-            });
-        }
-        AddSelectorTab(new GuiDeckSelector(config), label);
-    }
-}
-
-void MainForm::SaveSelectorTabs(QSettings& settings) {
-    SettingsSetHelper helper(settings);
-    std::size_t conditionNumber = 0;
-    for (int i = 1; i != tabs->count(); ++i) {
+QJsonArray MainForm::SaveSelectorTabs() const {
+    QJsonArray array;
+    for (int i = 0; i != tabs->count(); ++i) {
         auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
         if (selector) {
-            auto config = selector->GetConfig();
-            SettingsSetHelper conditionHelper(helper, "condition-tab-" + QString::number(conditionNumber) + ":");
-            conditionHelper("label", tabs->tabText(i));
-            conditionHelper("selector-mode", config.selectorMode);
-            conditionHelper("position-begin", (unsigned int) config.positionBegin);
-            conditionHelper("position-end", (unsigned int) config.positionEnd);
-            conditionHelper("enabled", config.enabled);
-            conditionHelper("cards-count", (unsigned int) config.cards.size());
-
-            std::size_t j(0);
-            for (auto &cardConfig: config.cards) {
-                SettingsSetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
-                cardHelper("suit", cardConfig.suit);
-                cardHelper("rank", cardConfig.rank);
-                cardHelper("inversed", cardConfig.inversed);
-                ++j;
-            }
-            ++conditionNumber;
+            QJsonObject selectorTab;
+            selectorTab["label"] = tabs->tabText(i);
+            selectorTab["selector"] = selector->GetConfig();
+            array.append(selectorTab);
         }
     }
-    helper("conditions-count", (unsigned int)conditionNumber);
-    
+    return array;
+}
+
+void MainForm::LoadSelectorTabs(const QJsonArray& array) {
+    std::size_t selectorsCount = array.size();
+    if (selectorsCount == 0)
+        AddSelectorTab();
+    for (std::size_t i = 0; i != selectorsCount; ++i) {
+        auto selectorTab = array[i].toObject();
+        auto selector = selectorTab["selector"].toObject();
+        auto label = selectorTab["label"].toString();
+        AddSelectorTab(new GuiDeckSelector(selector), label);
+    }
 }
 
 DeckSelectors MainForm::GetSelectors() {

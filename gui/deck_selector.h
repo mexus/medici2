@@ -16,23 +16,23 @@
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
 public:
-    struct Config {
+    /*struct Config {
         int selectorMode;
         std::size_t positionBegin, positionEnd;
         bool enabled;
         std::vector<GuiCardSelector::Config> cards;
-    };
+    };*/
 
     class NoCards : public GuiException {
     };
 
-    GuiDeckSelector(const Config&, QWidget* parent = 0);
+    GuiDeckSelector(const QJsonObject&, QWidget* parent = 0);
     GuiDeckSelector(QWidget* parent = 0);
 
     std::unique_ptr<DeckAbstractSelector> GetSelector() const;
-    Config GetConfig() const;
+    QJsonObject GetConfig() const;
 private:
-    void AddCardSelector(const GuiCardSelector::Config&);
+    void AddCardSelector(const QJsonObject&);
     void AddCardSelector();
     void AddCardSelector(GuiCardSelector*);
     std::set<GuiCardSelector*> selectors;

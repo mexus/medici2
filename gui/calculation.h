@@ -22,6 +22,9 @@ public:
     ~CalculatorWindow();
     void Calculate(DeckSelectors&&);
 
+protected:
+    virtual void closeEvent(QCloseEvent*) override;
+
 private:
     std::atomic_bool operationInProgress;
     calculator::Manager calculatorManager;

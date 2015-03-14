@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include <QFrame>
+#include <QJsonObject>
 
 #include <cards/card-selector.h>
 #include "exception.h"
@@ -17,17 +18,11 @@ public:
         NoSuitNoRank(GuiCardSelector*);
     };
 
-    struct Config {
-        int suit;
-        int rank;
-        bool inversed;
-    };
-
-    GuiCardSelector(const Config&, bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
+    GuiCardSelector(const QJsonObject&, bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
     GuiCardSelector(bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
     CardSelector GetSelector();
 
-    Config GetConfig() const;
+    QJsonObject GetConfig() const;
     void Highlight();
 private:
     QComboBox *suit, *rank;

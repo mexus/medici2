@@ -9,12 +9,6 @@
 
 #include <cards/standard-36-deck.h>
 
-GuiCardSelector::Config GuiCardSelector::GetConfig() const {
-    return {suit->currentData().toInt(),
-        rank->currentData().toInt(),
-        inverse->isChecked()};
-}
-
 template<class T>
 typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* comboBox, int data) {
     int index = comboBox->findData(data);
@@ -38,12 +32,20 @@ GuiCardSelector::GuiCardSelector(bool anyAllowed, bool inverseAllowed, QWidget* 
     SelectData(this->rank, anyAllowed ? -1 : 0);
 }
 
-GuiCardSelector::GuiCardSelector(const Config& config, bool anyAllowed, bool inverseAllowed, QWidget* parent) :
+GuiCardSelector::GuiCardSelector(const QJsonObject& config, bool anyAllowed, bool inverseAllowed, QWidget* parent) :
     GuiCardSelector(anyAllowed, inverseAllowed, parent)
 {
-    SelectData(this->suit, config.suit);
-    SelectData(this->rank, config.rank);
-    inverse->setChecked(config.inversed);
+    SelectData(this->suit, config["suit"].toInt());
+    SelectData(this->rank, config["rank"].toInt());
+    inverse->setChecked(config["inversed"].toBool());
+}
+
+QJsonObject GuiCardSelector::GetConfig() const {
+    QJsonObject config;
+    config["suit"] = suit->currentData().toInt();
+    config["rank"] = rank->currentData().toInt();
+    config["inversed"] = inverse->isChecked();
+    return config;
 }
 
 void GuiCardSelector::CreateElements() {
