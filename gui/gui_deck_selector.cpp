@@ -34,7 +34,7 @@ GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : G
         selectorMode->setCurrentIndex(index);
 
     auto positionConfig = config["position"].toObject();
-    positionStart->setValue(static_cast<int>(positionConfig["begin"].toInt()));
+    positionStart->setValue(static_cast<int>(positionConfig["start"].toInt()));
     positionEnd->setValue(static_cast<int>(positionConfig["end"].toInt()));
 
     enabled->setChecked(config["enabled"].toBool());
