@@ -18,7 +18,7 @@ public:
     };
 
     GuiDeckSelector(const QJsonObject&, QWidget* parent = 0);
-    GuiDeckSelector(QWidget* parent = 0);
+    GuiDeckSelector(bool newCard = true, QWidget* parent = 0);
 
     std::unique_ptr<DeckAbstractSelector> GetSelector() const;
     QJsonObject GetConfig() const;

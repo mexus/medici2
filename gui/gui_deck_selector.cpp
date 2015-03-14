@@ -5,13 +5,15 @@
 #include <QPushButton>
 #include <QJsonArray>
 
-GuiDeckSelector::GuiDeckSelector(QWidget *parent) : QWidget(parent) {
+GuiDeckSelector::GuiDeckSelector(bool newCard, QWidget *parent) : QWidget(parent) {
     CreateObjects();
     SetSpinBoxes();
     CreateLayout();
+    if (newCard)
+        AddCardSelector();
 }
 
-GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : GuiDeckSelector(parent) {
+GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : GuiDeckSelector(false, parent) {
     auto index = selectorMode->findData(config["selector_mode"].toInt());
     if (index != -1)
         selectorMode->setCurrentIndex(index);
