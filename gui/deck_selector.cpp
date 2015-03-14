@@ -106,6 +106,7 @@ void GuiDeckSelector::CreateLayout() {
             selectorsLayout->addWidget(button);
             QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
         }
+        selectorsLayout->setSizeConstraint(QLayout::SetFixedSize);
         mainLayout->addLayout(selectorsLayout);
     }
     {

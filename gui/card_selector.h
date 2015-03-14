@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QPushButton>
 #include <QFrame>
 #include <QJsonObject>
 
@@ -24,10 +25,12 @@ public:
 
     QJsonObject GetConfig() const;
     void Highlight();
+    void HideRemoveButton();
 private:
     QComboBox *suit, *rank;
     QCheckBox *inverse;
     QFrame *frame;
+    QPushButton *removeButton;
     bool anyAllowed, inverseAllowed;
 
     void CreateElements();

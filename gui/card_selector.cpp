@@ -2,7 +2,6 @@
 
 #include <QLayout>
 #include <QVBoxLayout>
-#include <QPushButton>
 #include <QTimer>
 
 #include <type_traits>
@@ -97,9 +96,9 @@ void GuiCardSelector::CreateLayout() {
     layout->addWidget(rank);
     layout->addWidget(inverse);
 
-    QPushButton *btn = new QPushButton(tr("Remove"));
-    layout->addWidget(btn);
-    QObject::connect(btn, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
+    removeButton = new QPushButton(tr("Remove"));
+    layout->addWidget(removeButton);
+    QObject::connect(removeButton, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
 
     frame = new QFrame();
     frame->setLayout(layout);
@@ -107,6 +106,11 @@ void GuiCardSelector::CreateLayout() {
     
     setLayout(new QGridLayout());
     this->layout()->addWidget(frame);
+    this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+}
+
+void GuiCardSelector::HideRemoveButton() {
+    removeButton->hide();
 }
 
 CardSelector GuiCardSelector::GetSelector() {

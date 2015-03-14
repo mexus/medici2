@@ -28,11 +28,13 @@ void DeckPreference::CreateLayout() {
     iChingCheck = new QCheckBox(tr("Deck should be I-Ching balanced"));
     layout->addWidget(iChingCheck);
 
+    targetCard->HideRemoveButton();
     layout->addWidget(targetCard);
 
     findMaximumConvolutions = new QCheckBox(tr("Find maximum convolutions"));
     layout->addWidget(findMaximumConvolutions);
 
+    layout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(layout);
 }
 
