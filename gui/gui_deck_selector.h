@@ -39,7 +39,7 @@ private:
 
     QHBoxLayout* selectorsLayout;
 
-    void CreateElements();
+    void CreateObjects();
     virtual void SetSpinBoxes();
     void CreateLayout();
 

@@ -6,57 +6,60 @@
 #include <random>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
-    {
-        QSettings settings;
-        restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
+    QSettings settings;
+    restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
 
-        std::random_device rd;
-        std::vector<std::uint_fast32_t> randomSeeds;
-        for (std::size_t i = 0; i < threadsCount * 2; ++i) {
-            randomSeeds.push_back(rd());
-        }
-        calculatorManager.SetRandomSeeds(randomSeeds);
+    CreateObjects();
+    CreateLayout();
+
+    GenerateSeeds();
+    DisableButtons(true);
+}
+
+void CalculatorWindow::CreateObjects() {
+    interruptButton = new QPushButton(tr("Interrupt"));
+    QObject::connect(interruptButton, &QPushButton::clicked, this, &CalculatorWindow::InterruptCalculation);
+
+    addThread = new QPushButton(tr("Add a thread"));
+    QObject::connect(addThread, &QPushButton::clicked, [this]{
+            std::thread(&CalculatorWindow::AddThread, this).detach();
+        });
+    removeThread = new QPushButton(tr("Remove a thread"));
+    QObject::connect(removeThread, &QPushButton::clicked, [this]{
+            std::thread(&CalculatorWindow::RemoveThread, this).detach();
+        });
+
+    updateProgressTimer = new QTimer();
+    updateProgressTimer->setInterval(1000);
+
+    progressBoxes = new QVBoxLayout();
+    foundDecks = new QTextEdit(tr("Found decks:") + "\n");
+}
+
+void CalculatorWindow::GenerateSeeds() {
+    std::random_device rd;
+    std::vector<std::uint_fast32_t> randomSeeds;
+    for (std::size_t i = 0; i < threadsCount * 2; ++i) {
+        randomSeeds.push_back(rd());
     }
+    calculatorManager.SetRandomSeeds(randomSeeds);
+}
 
+void CalculatorWindow::CreateLayout() {
     auto layout = new QVBoxLayout();
     {
         auto subLayout = new QHBoxLayout();
-    
-        interruptButton = new QPushButton(tr("Interrupt"));
-        QObject::connect(interruptButton, &QPushButton::clicked, this, &CalculatorWindow::InterruptCalculation);
         subLayout->addWidget(interruptButton);
-    
-        addThread = new QPushButton(tr("Add a thread"));
-        QObject::connect(addThread, &QPushButton::clicked, [this]{
-                std::thread(&CalculatorWindow::AddThread, this).detach();
-            });
         subLayout->addWidget(addThread);
-    
-        removeThread = new QPushButton(tr("Remove a thread"));
-        QObject::connect(removeThread, &QPushButton::clicked, [this]{
-                std::thread(&CalculatorWindow::RemoveThread, this).detach();
-            });
         subLayout->addWidget(removeThread);
-    
-        updateProgressTimer = new QTimer();
-        updateProgressTimer->setInterval(1000);
-    
-        DisableButtons(true);
-
         layout->addLayout(subLayout);
     }
     {
         auto subLayout = new QHBoxLayout();
-
-        progressBoxes = new QVBoxLayout();
         subLayout->addLayout(progressBoxes);
-
-        foundDecks = new QTextEdit(tr("Found decks:") + "\n");
         subLayout->addWidget(foundDecks);
-
         layout->addLayout(subLayout);
     }
-    
     setLayout(layout);
 }
 

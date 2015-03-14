@@ -21,7 +21,7 @@ GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) {
 GuiCardSelector::GuiCardSelector(bool anyAllowed, bool inverseAllowed, QWidget* parent) :
     QWidget(parent), anyAllowed(anyAllowed), inverseAllowed(inverseAllowed)
 {
-    CreateElements();
+    CreateObjects();
     PopulateSuits();
     PopulateRanks();
     CreateLayout();
@@ -45,7 +45,7 @@ QJsonObject GuiCardSelector::GetConfig() const {
     return config;
 }
 
-void GuiCardSelector::CreateElements() {
+void GuiCardSelector::CreateObjects() {
     suit = new QComboBox();
     rank = new QComboBox();
     inverse = new QCheckBox(tr("Inverse"));

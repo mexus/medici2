@@ -23,6 +23,10 @@ protected:
     virtual void closeEvent(QCloseEvent*) override;
 
 private:
+    void GenerateSeeds();
+    void CreateObjects();
+    void CreateLayout();
+
     std::atomic_bool operationInProgress;
     calculator::Manager calculatorManager;
     CardsTranslations cardsTranslations;

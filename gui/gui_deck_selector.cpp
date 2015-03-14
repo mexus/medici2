@@ -5,25 +5,8 @@
 #include <QPushButton>
 #include <QJsonArray>
 
-QJsonObject GuiDeckSelector::GetConfig() const {
-    QJsonObject config;
-    QJsonArray cards;
-    for (auto &guiCardSelector: selectors) {
-        cards.append(guiCardSelector->GetConfig());
-    }
-    QJsonObject position;
-    position["start"] = positionStart->value();
-    position["end"] = positionEnd->value();
-
-    config["cards"] = cards;
-    config["selector_mode"] = selectorMode->currentData().toInt();
-    config["position"] = position;
-    config["enabled"] = enabled->isChecked();
-    return config;
-}
-
 GuiDeckSelector::GuiDeckSelector(QWidget *parent) : QWidget(parent) {
-    CreateElements();
+    CreateObjects();
     SetSpinBoxes();
     CreateLayout();
 }
@@ -44,6 +27,23 @@ GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : G
         auto cardConfig = cards[i].toObject();
         AddCardSelector(cardConfig);
     }
+}
+
+QJsonObject GuiDeckSelector::GetConfig() const {
+    QJsonObject config;
+    QJsonArray cards;
+    for (auto &guiCardSelector: selectors) {
+        cards.append(guiCardSelector->GetConfig());
+    }
+    QJsonObject position;
+    position["start"] = positionStart->value();
+    position["end"] = positionEnd->value();
+
+    config["cards"] = cards;
+    config["selector_mode"] = selectorMode->currentData().toInt();
+    config["position"] = position;
+    config["enabled"] = enabled->isChecked();
+    return config;
 }
 
 void GuiDeckSelector::AddCardSelector() {
@@ -74,7 +74,7 @@ QSpinBox* GuiDeckSelector::CreateSpinBox(int min, int max) {
     return box;
 }
 
-void GuiDeckSelector::CreateElements() {
+void GuiDeckSelector::CreateObjects() {
     selectorMode = new QComboBox();
     selectorMode->addItem(tr("At least one of conditions must match"), SELECT_ONE);
     selectorMode->addItem(tr("All conditions must match"), SELECT_ALL);

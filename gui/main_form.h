@@ -25,6 +25,8 @@ protected:
     CalculatorWindow *calculator;
     DeckPreference *deckPreferenceTab;
 
+    void CreateObjects(const QJsonObject&);
+    void CreateLayout();
 
     void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
     void RenameSelector(int index);

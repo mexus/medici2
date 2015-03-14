@@ -13,6 +13,9 @@ public:
     void Set(const calculator::Thread::RunParameters&);
 private:
     QLabel *totalDecks, *suitableDecks, *runningTime;
+
+    void CreateObjects();
+    void CreateLayout();
 };
 
 #endif /* GUI_PROGRESS_WIDGET_H */

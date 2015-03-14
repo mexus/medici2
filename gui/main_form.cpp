@@ -39,34 +39,36 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
     restoreGeometry(settings.value("main-window:geometry").toByteArray());
     restoreState(settings.value("main-window:state").toByteArray());
 
-    setCentralWidget(new QWidget());
-    auto layout = new QVBoxLayout();
-
-    {
-        auto addButton = new QPushButton(tr("Add conditions set"));
-        QObject::connect(addButton, &QPushButton::clicked, [this](){AddSelectorTab();});
-        layout->addWidget(addButton);
-    }
-
     auto jsonConfig = QJsonDocument::fromBinaryData(settings.value("selector-tabs").toByteArray()).object();
+    CreateObjects(jsonConfig);
+    CreateLayout();
+    tabs->setCurrentIndex(settings.value("main-window:last-selected-tab").toInt());
+}
 
-    deckPreferenceTab = new DeckPreference(jsonConfig["preference-tab"].toObject());
+void MainForm::CreateObjects(const QJsonObject& config) {
+    setCentralWidget(new QWidget());
+
+    deckPreferenceTab = new DeckPreference(config["preference-tab"].toObject());
 
     tabs = new QTabWidget();
     tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
-    LoadSelectorTabs(jsonConfig["selector-tabs"].toArray());
+    LoadSelectorTabs(config["selector-tabs"].toArray());
     QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
-    tabs->setCurrentIndex(jsonConfig["last-selected-tab"].toInt());
-    layout->addWidget(tabs);
 
-    {
-        actionButton = new QPushButton(tr("Calculate"));
-        QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
-        layout->addWidget(actionButton);
-
-    }
+    actionButton = new QPushButton(tr("Calculate"));
+    QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
 
     calculator = new CalculatorWindow(this);
+}
+
+void MainForm::CreateLayout() {
+    auto layout = new QVBoxLayout();
+    auto addButton = new QPushButton(tr("Add conditions set"));
+    QObject::connect(addButton, &QPushButton::clicked, [this](){AddSelectorTab();});
+    layout->addWidget(addButton);
+
+    layout->addWidget(tabs);
+    layout->addWidget(actionButton);
 
     centralWidget()->setLayout(layout);
 }
@@ -82,7 +84,7 @@ void MainForm::closeEvent(QCloseEvent*) {
     QJsonObject config;
     config["selector-tabs"] = SaveSelectorTabs();
     config["preference-tab"] = deckPreferenceTab->GetConfig();
-    config["last-selected-tab"] = tabs->currentIndex();
+    settings.setValue("main-window:last-selected-tab", tabs->currentIndex());
     settings.setValue("selector-tabs", QJsonDocument(config).toBinaryData());
 }
 

@@ -32,7 +32,7 @@ private:
     QPushButton *removeButton;
     bool anyAllowed, inverseAllowed;
 
-    void CreateElements();
+    void CreateObjects();
     void CreateLayout();
     virtual void PopulateSuits();
     virtual void PopulateRanks();
