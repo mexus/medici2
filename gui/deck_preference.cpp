@@ -1,4 +1,5 @@
-#include "deck_preference_tab.h"
+#include "deck_preference.h"
+
 #include <QVBoxLayout>
 
 DeckPreference::DeckPreference(QWidget* parent) : QWidget(parent)

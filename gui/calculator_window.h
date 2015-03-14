@@ -1,5 +1,5 @@
-#ifndef GUI_CALCULATION_H
-#define GUI_CALCULATION_H
+#ifndef GUI_CALCULATOR_WINDOW
+#define GUI_CALCULATOR_WINDOW
 
 #include <QDialog>
 #include <QPushButton>
@@ -7,12 +7,9 @@
 #include <QHBoxLayout>
 #include <QTimer>
 #include <QTextEdit>
-
-#include <calculator/manager.h>
-
 #include <atomic>
-
-#include "progress.h"
+#include <calculator/manager.h>
+#include "progress_widget.h"
 #include "cards_translations.h"
 
 class CalculatorWindow : public QDialog {
@@ -34,7 +31,7 @@ private:
     QHBoxLayout *layout;
     QPushButton *interruptButton, *addThread, *removeThread;
     QVBoxLayout *progressBoxes;
-    std::vector<Progress*> progressVector;
+    std::vector<ProgressWidget*> progressVector;
     QTextEdit *foundDecks;
 
     void InterruptCalculation();
@@ -54,4 +51,4 @@ private:
 
 };
 
-#endif /* GUI_CALCULATION_H */
+#endif /* GUI_CALCULATOR_WINDOW */

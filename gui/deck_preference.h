@@ -1,10 +1,10 @@
-#ifndef GUI_DECK_PREFERENCE_TAB_H
-#define GUI_DECK_PREFERENCE_TAB_H
+#ifndef GUI_DECK_PREFERENCE_H
+#define GUI_DECK_PREFERENCE_H
 
 #include <QWidget>
 #include <QCheckBox>
 #include <QJsonObject>
-#include "card_selector.h"
+#include "gui_card_selector.h"
 
 class DeckPreference : public QWidget {
     Q_OBJECT
@@ -22,4 +22,4 @@ private:
     void CreateLayout();
 };
 
-#endif /* GUI_DECK_PREFERENCE_TAB_H */
+#endif /* GUI_DECK_PREFERENCE_H */

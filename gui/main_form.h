@@ -5,12 +5,11 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QJsonArray>
-
-#include "deck_selector.h"
-#include "calculation.h"
-#include "deck_preference_tab.h"
-
 #include <logxx/logxx.h>
+#include "gui_deck_selector.h"
+#include "calculator_window.h"
+#include "deck_preference.h"
+
 
 class MainForm : public QMainWindow {
     Q_OBJECT

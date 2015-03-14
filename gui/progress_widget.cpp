@@ -1,8 +1,8 @@
-#include "progress.h"
+#include "progress_widget.h"
 
 #include <QGridLayout>
 
-Progress::Progress(std::uint8_t threadNumber, QWidget *parent) : QGroupBox(tr("Thread #") + QString::number(threadNumber), parent)
+ProgressWidget::ProgressWidget(std::uint8_t threadNumber, QWidget *parent) : QGroupBox(tr("Thread #") + QString::number(threadNumber), parent)
 {
     auto layout = new QGridLayout();
     layout->addWidget(new QLabel(tr("Total decks:")),      0, 0);
@@ -20,7 +20,7 @@ Progress::Progress(std::uint8_t threadNumber, QWidget *parent) : QGroupBox(tr("T
     setLayout(layout);
 }
 
-void Progress::Set(const calculator::Thread::RunParameters& params) {
+void ProgressWidget::Set(const calculator::Thread::RunParameters& params) {
     totalDecks->setText(QString::number(params.checkedDecks));
     suitableDecks->setText(QString::number(params.suitableDecks));
     auto seconds = std::chrono::duration_cast<std::chrono::duration<float>>(params.runningTime).count();;

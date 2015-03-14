@@ -1,4 +1,5 @@
-#include "deck_selector.h"
+#include "gui_deck_selector.h"
+
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>

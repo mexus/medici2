@@ -1,11 +1,9 @@
-#include "card_selector.h"
+#include "gui_card_selector.h"
 
 #include <QLayout>
 #include <QVBoxLayout>
 #include <QTimer>
-
 #include <type_traits>
-
 #include <cards/standard-36-deck.h>
 
 template<class T>

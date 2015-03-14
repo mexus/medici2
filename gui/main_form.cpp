@@ -1,15 +1,13 @@
 #include "main_form.h"
-#include "settings_helper.h"
-
-#include <type_traits>
 
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QJsonDocument>
-
+#include <type_traits>
 #include <cards/deck-selector.h>
+#include "settings_helper.h"
 
 logxx::Log MainForm::cLog("MainForm");
 

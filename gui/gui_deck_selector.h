@@ -1,28 +1,19 @@
-#ifndef GUI_DECK_SELECTOR_H
-#define GUI_DECK_SELECTOR_H
+#ifndef GUI_GUI_DECK_SELECTOR_H
+#define GUI_GUI_DECK_SELECTOR_H
 
 #include <QWidget>
 #include <QComboBox>
 #include <QSpinBox>
 #include <QHBoxLayout>
 #include <QCheckBox>
-
 #include <set>
-
 #include <cards/deck-selector.h>
-#include "card_selector.h"
-#include "exception.h"
+#include "gui_card_selector.h"
+#include "gui_exception.h"
 
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
 public:
-    /*struct Config {
-        int selectorMode;
-        std::size_t positionBegin, positionEnd;
-        bool enabled;
-        std::vector<GuiCardSelector::Config> cards;
-    };*/
-
     class NoCards : public GuiException {
     };
 
@@ -58,4 +49,4 @@ signals:
     void DeleteClicked();
 };
 
-#endif /* GUI_DECK_SELECTOR_H */
+#endif /* GUI_GUI_DECK_SELECTOR_H */

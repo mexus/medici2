@@ -4,18 +4,18 @@ set(CMAKE_AUTOMOC ON)
 
 SET (EXE_NAME medici-gui)
 add_executable(${EXE_NAME}
-        main.cpp
-        main_form.cpp
+    main.cpp
+    main_form.cpp
 
-    card_selector.cpp
-    deck_selector.cpp
+    gui_card_selector.cpp
+    gui_deck_selector.cpp
 
-    calculation.cpp
-    progress.cpp
+    calculator_window.cpp
+    progress_widget.cpp
 
     cards_translations.cpp
 
-    deck_preference_tab.cpp
+    deck_preference.cpp
 )
 
 target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )

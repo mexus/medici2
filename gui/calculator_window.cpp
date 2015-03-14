@@ -1,8 +1,9 @@
-#include "calculation.h"
+#include "calculator_window.h"
+
 #include <QLabel>
 #include <QMessageBox>
-#include <random>
 #include <QSettings>
+#include <random>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
     {
@@ -146,7 +147,7 @@ void CalculatorWindow::ShowProgress() {
 void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::RunParameters>& allParameters){
     if (allParameters.size() > progressVector.size()) {
         for (std::size_t i = progressVector.size(); i != allParameters.size(); ++i) {
-            auto progress = new Progress(i + 1);
+            auto progress = new ProgressWidget(i + 1);
             progressVector.push_back(progress);
             progressBoxes->addWidget(progress);
         }
