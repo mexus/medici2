@@ -11,15 +11,15 @@ TestFW::~TestFW() {
 }
 
 bool TestFW::RunTests(bool colouredOutput) {
-	static const std::map<bool, std::string> colouredResult {
-		{true, "\033[1;32mPASSED\033[0m"},
-		{false, "\033[1;31mFAILED\033[0m"}
-	};
-	static const std::map<bool, std::string> nonColouredResult {
-		{true, "PASSED"},
-		{false, "FAILED"}
-	};
-	
+    static const std::map<bool, std::string> colouredResult {
+        {true, "\033[1;32mPASSED\033[0m"},
+        {false, "\033[1;31mFAILED\033[0m"}
+    };
+    static const std::map<bool, std::string> nonColouredResult {
+        {true, "PASSED"},
+        {false, "FAILED"}
+    };
+    
         static logxx::Log log("TestFw::RunTests");
         log(logxx::info, label) << "Starting test" << logxx::endl;
         TimeMeasure timeMeasure;
@@ -44,25 +44,25 @@ std::string TestFW::GetLabel() const {
 }
 
 bool TestFW::CompareFiles(const std::string& testName, const std::string& etalonName) {
-	std::ifstream test(testName), etalon(etalonName);
-	if (!test || !etalon)
-		return false;
-	else {
-		while (true) {
-			static const std::size_t chunk = 1024;
-			char testData[chunk] = {0};
-			char etalonData[chunk] = {0};
-			test.read(testData, chunk);
-			etalon.read(etalonData, chunk);
-			if (std::strncmp(testData, etalonData, chunk) != 0)
-				return false;
+    std::ifstream test(testName), etalon(etalonName);
+    if (!test || !etalon)
+        return false;
+    else {
+        while (true) {
+            static const std::size_t chunk = 1024;
+            char testData[chunk] = {0};
+            char etalonData[chunk] = {0};
+            test.read(testData, chunk);
+            etalon.read(etalonData, chunk);
+            if (std::strncmp(testData, etalonData, chunk) != 0)
+                return false;
 
-			if (!test && !etalon)
-				break ;
-			else if (!test || !etalon)
-				return false;
-		}
-		return true;
-	}
+            if (!test && !etalon)
+                break ;
+            else if (!test || !etalon)
+                return false;
+        }
+        return true;
+    }
 }
 

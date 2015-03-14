@@ -8,32 +8,32 @@
 
 class Performance {
 public:
-	void Run();
+    void Run();
 private:
-	typedef standard_36_deck::Deck::ArrayType StandardDeck;
-	typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
+    typedef standard_36_deck::Deck::ArrayType StandardDeck;
+    typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
 
-	class CheckOperand {
-	public:
-		CheckOperand(DeckSelectors&&);
-		bool operator()(const StandardDeck&) const;
-	private:
-		DeckSelectors deckSelectors;
-	};
+    class CheckOperand {
+    public:
+        CheckOperand(DeckSelectors&&);
+        bool operator()(const StandardDeck&) const;
+    private:
+        DeckSelectors deckSelectors;
+    };
 
-	static logxx::Log cLog;
+    static logxx::Log cLog;
 
-	static std::atomic_bool interrupt;
+    static std::atomic_bool interrupt;
 
-	static void Mixing();
-	static std::vector<StandardDeck> PregenerateConvergableDecks();
-	static void MediciGenerator();
-	static void MediciWithConditions();
-	static void MediciWithConditionsAndIChing();
-	static void IChingBalancedPercent();
+    static void Mixing();
+    static std::vector<StandardDeck> PregenerateConvergableDecks();
+    static void MediciGenerator();
+    static void MediciWithConditions();
+    static void MediciWithConditionsAndIChing();
+    static void IChingBalancedPercent();
 
-	static DeckSelectors DefaultSelectors();
-	static CheckOperand DefaultCheckOperand();
+    static DeckSelectors DefaultSelectors();
+    static CheckOperand DefaultCheckOperand();
 };
 
 #endif /* PERFORMANCE_H */

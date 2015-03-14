@@ -5,14 +5,14 @@
 
 class TestCalculatorThread : public TestFW {
 public:
-	TestCalculatorThread();
+    TestCalculatorThread();
 protected:
-	static logxx::Log cLog;
+    static logxx::Log cLog;
 
-	bool Tests() override;
+    bool Tests() override;
 
-	static bool TestRunning();
-	static bool TestRunningMultithreaded();
+    static bool TestRunning();
+    static bool TestRunningMultithreaded();
 };
 
 #endif /* TEST_CALCULATOR_THREAD_H */

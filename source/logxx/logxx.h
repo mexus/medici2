@@ -1,5 +1,5 @@
 #ifndef LOG_HELPER_H
-#define	LOG_HELPER_H
+#define LOG_HELPER_H
 
 #include <mutex>
 #include <string>
@@ -9,14 +9,14 @@
 
 namespace logxx {
 
-	enum LogLevel {
-		debug = 10,
-		notice = 20,
-		warning = 30,
-		info = 40,
-		error = 50,
-		nothing = 60
-	};
+    enum LogLevel {
+        debug = 10,
+        notice = 20,
+        warning = 30,
+        info = 40,
+        error = 50,
+        nothing = 60
+    };
 
         class Log {
         public:
@@ -73,5 +73,5 @@ namespace logxx {
 
 #include "logxx.tcc"
 
-#endif	/* LOG_HELPER_H */
+#endif /* LOG_HELPER_H */
 

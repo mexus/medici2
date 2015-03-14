@@ -6,22 +6,22 @@
 #include "card_selector.h"
 
 class DeckPreference : public QWidget {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	struct Config {
-		bool checkIChing;
-		bool findMaximumConvolutions;
-		Card targetCard;
-	};
-	DeckPreference(QWidget* parent = nullptr);
-	DeckPreference(const Config& config, QWidget* parent = nullptr);
+    struct Config {
+        bool checkIChing;
+        bool findMaximumConvolutions;
+        Card targetCard;
+    };
+    DeckPreference(QWidget* parent = nullptr);
+    DeckPreference(const Config& config, QWidget* parent = nullptr);
 private:
-	QCheckBox* iChingCheck;
+    QCheckBox* iChingCheck;
 
-	GuiCardSelector* targetCard;
-	QCheckBox* findMaximumConvolutions;
-	
-	void CreateLayout();
+    GuiCardSelector* targetCard;
+    QCheckBox* findMaximumConvolutions;
+    
+    void CreateLayout();
 };
 
 #endif /* GUI_DECK_PREFERENCE_TAB_H */

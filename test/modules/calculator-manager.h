@@ -5,16 +5,16 @@
 
 class TestCalculatorManager : public TestFW {
 public:
-	TestCalculatorManager();
+    TestCalculatorManager();
 protected:
-	static logxx::Log cLog;
+    static logxx::Log cLog;
 
-	bool Tests() override;
+    bool Tests() override;
 
-	static bool TestLaunch();
-	static bool TestIncrease();
-	static bool TestDecrease();
-	static bool TestInterrupt();
+    static bool TestLaunch();
+    static bool TestIncrease();
+    static bool TestDecrease();
+    static bool TestInterrupt();
 
 };
 

@@ -10,18 +10,18 @@ typedef std::array<int, 5> Int5Deck;
 
 class TestMixer : public TestFW {
 public:
-	TestMixer();
+    TestMixer();
 protected:
-	static logxx::Log cLog;
-	bool Tests();
+    static logxx::Log cLog;
+    bool Tests();
 
-	bool TestStatistics();
+    bool TestStatistics();
 
-	std::size_t CalculateLoops(Int5Mixer&);
-	float CalculateAverageLoops(Int5Mixer&);
+    std::size_t CalculateLoops(Int5Mixer&);
+    float CalculateAverageLoops(Int5Mixer&);
 
-	std::size_t CalculateDuplicates(Int5Mixer&);
-	float CalculateAverageDuplicates(Int5Mixer&);
+    std::size_t CalculateDuplicates(Int5Mixer&);
+    float CalculateAverageDuplicates(Int5Mixer&);
 
 };
 

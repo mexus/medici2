@@ -7,15 +7,15 @@ add_executable(${EXE_NAME}
         main.cpp
         main_form.cpp
 
-	card_selector.cpp
-	deck_selector.cpp
+    card_selector.cpp
+    deck_selector.cpp
 
-	calculation.cpp
-	progress.cpp
+    calculation.cpp
+    progress.cpp
 
-	cards_translations.cpp
+    cards_translations.cpp
 
-	deck_preference_tab.cpp
+    deck_preference_tab.cpp
 )
 
 target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )

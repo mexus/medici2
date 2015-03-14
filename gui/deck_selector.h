@@ -16,46 +16,46 @@
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
 public:
-	struct Config {
-		int selectorMode;
-		std::size_t positionBegin, positionEnd;
-		bool enabled;
-		std::vector<GuiCardSelector::Config> cards;
-	};
+    struct Config {
+        int selectorMode;
+        std::size_t positionBegin, positionEnd;
+        bool enabled;
+        std::vector<GuiCardSelector::Config> cards;
+    };
 
-	class NoCards : public GuiException {
-	};
+    class NoCards : public GuiException {
+    };
 
-	GuiDeckSelector(const Config&, QWidget* parent = 0);
-	GuiDeckSelector(QWidget* parent = 0);
+    GuiDeckSelector(const Config&, QWidget* parent = 0);
+    GuiDeckSelector(QWidget* parent = 0);
 
-	std::unique_ptr<DeckAbstractSelector> GetSelector() const;
-	Config GetConfig() const;
+    std::unique_ptr<DeckAbstractSelector> GetSelector() const;
+    Config GetConfig() const;
 private:
-	void AddCardSelector(const GuiCardSelector::Config&);
-	void AddCardSelector();
-	void AddCardSelector(GuiCardSelector*);
-	std::set<GuiCardSelector*> selectors;
-	
-	enum SelectorMode {
-		SELECT_ALL,
-		SELECT_ONE
-	};
+    void AddCardSelector(const GuiCardSelector::Config&);
+    void AddCardSelector();
+    void AddCardSelector(GuiCardSelector*);
+    std::set<GuiCardSelector*> selectors;
+    
+    enum SelectorMode {
+        SELECT_ALL,
+        SELECT_ONE
+    };
 
-	QComboBox* selectorMode;
-	QSpinBox *positionStart, *positionEnd;
-	QCheckBox *enabled;
+    QComboBox* selectorMode;
+    QSpinBox *positionStart, *positionEnd;
+    QCheckBox *enabled;
 
-	QHBoxLayout* selectorsLayout;
+    QHBoxLayout* selectorsLayout;
 
-	void CreateElements();
-	virtual void SetSpinBoxes();
-	void CreateLayout();
+    void CreateElements();
+    virtual void SetSpinBoxes();
+    void CreateLayout();
 
-	static QSpinBox* CreateSpinBox(int min, int max);
+    static QSpinBox* CreateSpinBox(int min, int max);
 
 signals:
-	void DeleteClicked();
+    void DeleteClicked();
 };
 
 #endif /* GUI_DECK_SELECTOR_H */

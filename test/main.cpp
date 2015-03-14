@@ -56,14 +56,14 @@ int main(int argc, char **argv) {
         S_LOG("main");
         logxx::GlobalLogLevel(logxx::warning);
         bool res(true);
-	bool colouredOutput(true);
+    bool colouredOutput(true);
         
-	AddTest<TestMixer>(false);
-	AddTest<TestMedici>(false);
-	AddTest<TestDeckSelector>(false);
-	AddTest<TestIChing>(false);
-	AddTest<TestCalculatorThread>(false);
-	AddTest<TestCalculatorManager>(true);
+    AddTest<TestMixer>(false);
+    AddTest<TestMedici>(false);
+    AddTest<TestDeckSelector>(false);
+    AddTest<TestIChing>(false);
+    AddTest<TestCalculatorThread>(false);
+    AddTest<TestCalculatorManager>(true);
         
         for (int i = 1; i < argc; ++i){
                 std::string arg(argv[i]);
@@ -91,27 +91,27 @@ int main(int argc, char **argv) {
                 }
         }
         
-	if (colouredOutput){
-		if (!passed.empty())
-			log(logxx::info) << "\033[1;32mPASSED\033[0m tests: " << passed << logxx::endl;
-		else
-			log(logxx::info) << "\033[0;31mNo tests passed\033[0m" << logxx::endl;
+    if (colouredOutput){
+        if (!passed.empty())
+            log(logxx::info) << "\033[1;32mPASSED\033[0m tests: " << passed << logxx::endl;
+        else
+            log(logxx::info) << "\033[0;31mNo tests passed\033[0m" << logxx::endl;
 
-		if (!failed.empty())
-			log(logxx::info) << "\033[1;31mFAILED\033[0m tests: " << failed << logxx::endl;
-		else
-			log(logxx::info) << "\033[0;36mNo tests failed\033[0m" << logxx::endl;
-	} else {
-		if (!passed.empty())
-			log(logxx::info) << "PASSED tests: " << passed << logxx::endl;
-		else
-			log(logxx::info) << "No tests passed" << logxx::endl;
+        if (!failed.empty())
+            log(logxx::info) << "\033[1;31mFAILED\033[0m tests: " << failed << logxx::endl;
+        else
+            log(logxx::info) << "\033[0;36mNo tests failed\033[0m" << logxx::endl;
+    } else {
+        if (!passed.empty())
+            log(logxx::info) << "PASSED tests: " << passed << logxx::endl;
+        else
+            log(logxx::info) << "No tests passed" << logxx::endl;
 
-		if (!failed.empty())
-			log(logxx::info) << "FAILED tests: " << failed << logxx::endl;
-		else
-			log(logxx::info) << "No tests failed" << logxx::endl;
-	}
+        if (!failed.empty())
+            log(logxx::info) << "FAILED tests: " << failed << logxx::endl;
+        else
+            log(logxx::info) << "No tests failed" << logxx::endl;
+    }
         
         return res ? 0 : 1;
 }

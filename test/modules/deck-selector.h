@@ -9,19 +9,19 @@
 
 class TestDeckSelector : public TestFW{
 public:
-	typedef standard_36_deck::Deck DeckType;
-	typedef standard_36_deck::Deck::ArrayType ArrayType;
+    typedef standard_36_deck::Deck DeckType;
+    typedef standard_36_deck::Deck::ArrayType ArrayType;
 
-	TestDeckSelector();
+    TestDeckSelector();
 protected:
-	static logxx::Log cLog;
-	bool Tests();
+    static logxx::Log cLog;
+    bool Tests();
 
-	bool TestAllSelector();
-	bool TestOneSelector();
-	bool TestComplex();
+    bool TestAllSelector();
+    bool TestOneSelector();
+    bool TestComplex();
 
-	static bool TestSelector(const ArrayType& deck, const DeckAbstractSelector&, bool etalonResult);
+    static bool TestSelector(const ArrayType& deck, const DeckAbstractSelector&, bool etalonResult);
 };
 
 #endif /* TEST_DECK_SELECTOR */

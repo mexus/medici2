@@ -1,18 +1,18 @@
 add_library (source-library
-	logxx/logxx.cpp
+    logxx/logxx.cpp
 
-	helpers/time_measure.cpp
+    helpers/time_measure.cpp
 
-	cards/card-selector.cpp
-	cards/deck.cpp
-	cards/deck-selector.cpp
-	cards/standard-36-deck.cpp
+    cards/card-selector.cpp
+    cards/deck.cpp
+    cards/deck-selector.cpp
+    cards/standard-36-deck.cpp
 
-	medici/patience.cpp
+    medici/patience.cpp
 
-	i-ching/i-ching.cpp
+    i-ching/i-ching.cpp
 
-	calculator/thread.cpp
-	calculator/manager.cpp
+    calculator/thread.cpp
+    calculator/manager.cpp
 )
 

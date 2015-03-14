@@ -13,168 +13,168 @@
 logxx::Log MainForm::cLog("MainForm");
 
 void MainForm::AddSelectorTab(GuiDeckSelector* selector, const QString& label) {
-	tabs->addTab(selector, label);
+    tabs->addTab(selector, label);
 
-	QObject::connect(selector, &GuiDeckSelector::DeleteClicked, [this, selector](){
-			if (tabs->count() > 2) {
-				auto index = tabs->indexOf(selector);
-				tabs->removeTab(index);
-				selector->deleteLater();
-			}
-			});
+    QObject::connect(selector, &GuiDeckSelector::DeleteClicked, [this, selector](){
+            if (tabs->count() > 2) {
+                auto index = tabs->indexOf(selector);
+                tabs->removeTab(index);
+                selector->deleteLater();
+            }
+            });
 }
 
 void MainForm::RenameSelector(int index) {
-	auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(index));
-	if (selector) {
-		bool ok;
-		QString text = QInputDialog::getText(this, tr("Conditions name"),
-				tr("Condition name:"), QLineEdit::Normal,
-				tabs->tabText(index), &ok);
-		if (ok && !text.isEmpty())
-		tabs->setTabText(index, text);
-	}
+    auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(index));
+    if (selector) {
+        bool ok;
+        QString text = QInputDialog::getText(this, tr("Conditions name"),
+                tr("Condition name:"), QLineEdit::Normal,
+                tabs->tabText(index), &ok);
+        if (ok && !text.isEmpty())
+        tabs->setTabText(index, text);
+    }
 }
 
 MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
         QSettings settings;
-	{
-		SettingsGetHelper helper(settings, "main-window:");
-	        restoreGeometry(helper("geometry").toByteArray());
-	        restoreState(helper("state").toByteArray());
-	}
+    {
+        SettingsGetHelper helper(settings, "main-window:");
+            restoreGeometry(helper("geometry").toByteArray());
+            restoreState(helper("state").toByteArray());
+    }
 
-	setCentralWidget(new QWidget());
-	auto layout = new QVBoxLayout();
+    setCentralWidget(new QWidget());
+    auto layout = new QVBoxLayout();
 
-	{
-		auto addButton = new QPushButton(tr("Add conditions set"));
-		QObject::connect(addButton, &QPushButton::clicked, [this](){AddSelectorTab();});
-		layout->addWidget(addButton);
-	}
+    {
+        auto addButton = new QPushButton(tr("Add conditions set"));
+        QObject::connect(addButton, &QPushButton::clicked, [this](){AddSelectorTab();});
+        layout->addWidget(addButton);
+    }
 
-	deckPreferenceTab = new DeckPreference();
+    deckPreferenceTab = new DeckPreference();
 
-	tabs = new QTabWidget();
-	tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
-	LoadSelectorTabs(settings);
-	QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
+    tabs = new QTabWidget();
+    tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
+    LoadSelectorTabs(settings);
+    QObject::connect(tabs, &QTabWidget::tabBarDoubleClicked, this, &MainForm::RenameSelector);
 
-	layout->addWidget(tabs);
+    layout->addWidget(tabs);
 
-	{
-		actionButton = new QPushButton(tr("Calculate"));
-		QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
-		layout->addWidget(actionButton);
+    {
+        actionButton = new QPushButton(tr("Calculate"));
+        QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
+        layout->addWidget(actionButton);
 
-	}
+    }
 
-	calculator = new CalculatorWindow(this);
+    calculator = new CalculatorWindow(this);
 
-	centralWidget()->setLayout(layout);
+    centralWidget()->setLayout(layout);
 }
 
 MainForm::~MainForm() {
 }
 
 void MainForm::closeEvent(QCloseEvent*) {
-	QSettings settings;
-	{
-		SettingsSetHelper helper(settings, "main-window:");
-	        helper("geometry", saveGeometry());
-	        helper("state", saveState());
-	}
-	SaveSelectorTabs(settings);
+    QSettings settings;
+    {
+        SettingsSetHelper helper(settings, "main-window:");
+            helper("geometry", saveGeometry());
+            helper("state", saveState());
+    }
+    SaveSelectorTabs(settings);
 }
 
 void MainForm::LoadSelectorTabs(const QSettings& settings) {
-	SettingsGetHelper helper(settings);
-	std::size_t conditionsCount = helper("conditions-count").toUInt();
-	if (conditionsCount == 0)
-		AddSelectorTab();
-	for (std::size_t i = 0; i != conditionsCount; ++i) {
-		SettingsGetHelper conditionHelper(helper, "condition-tab-" + QString::number(i) + ":");
-		GuiDeckSelector::Config config;
-		config.selectorMode = conditionHelper("selector-mode").toInt();
-		config.positionBegin = conditionHelper("position-begin").toUInt();
-		config.positionEnd = conditionHelper("position-end").toUInt();
-		config.enabled = conditionHelper("enabled").toBool();
-		QString label = conditionHelper("label").toString();
+    SettingsGetHelper helper(settings);
+    std::size_t conditionsCount = helper("conditions-count").toUInt();
+    if (conditionsCount == 0)
+        AddSelectorTab();
+    for (std::size_t i = 0; i != conditionsCount; ++i) {
+        SettingsGetHelper conditionHelper(helper, "condition-tab-" + QString::number(i) + ":");
+        GuiDeckSelector::Config config;
+        config.selectorMode = conditionHelper("selector-mode").toInt();
+        config.positionBegin = conditionHelper("position-begin").toUInt();
+        config.positionEnd = conditionHelper("position-end").toUInt();
+        config.enabled = conditionHelper("enabled").toBool();
+        QString label = conditionHelper("label").toString();
 
-		std::size_t cardsCount = conditionHelper("cards-count").toUInt();
-		for (std::size_t j = 0; j != cardsCount; ++j) {
-			SettingsGetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
-			config.cards.push_back({
-				cardHelper("suit").toInt(),
-				cardHelper("rank").toInt(),
-				cardHelper("inversed").toBool()
-			});
-		}
-		AddSelectorTab(new GuiDeckSelector(config), label);
-	}
+        std::size_t cardsCount = conditionHelper("cards-count").toUInt();
+        for (std::size_t j = 0; j != cardsCount; ++j) {
+            SettingsGetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
+            config.cards.push_back({
+                cardHelper("suit").toInt(),
+                cardHelper("rank").toInt(),
+                cardHelper("inversed").toBool()
+            });
+        }
+        AddSelectorTab(new GuiDeckSelector(config), label);
+    }
 }
 
 void MainForm::SaveSelectorTabs(QSettings& settings) {
-	SettingsSetHelper helper(settings);
-	std::size_t conditionNumber = 0;
-	for (int i = 1; i != tabs->count(); ++i) {
-		auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
-		if (selector) {
-			auto config = selector->GetConfig();
-			SettingsSetHelper conditionHelper(helper, "condition-tab-" + QString::number(conditionNumber) + ":");
-			conditionHelper("label", tabs->tabText(i));
-			conditionHelper("selector-mode", config.selectorMode);
-			conditionHelper("position-begin", (unsigned int) config.positionBegin);
-			conditionHelper("position-end", (unsigned int) config.positionEnd);
-			conditionHelper("enabled", config.enabled);
-			conditionHelper("cards-count", (unsigned int) config.cards.size());
+    SettingsSetHelper helper(settings);
+    std::size_t conditionNumber = 0;
+    for (int i = 1; i != tabs->count(); ++i) {
+        auto selector = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
+        if (selector) {
+            auto config = selector->GetConfig();
+            SettingsSetHelper conditionHelper(helper, "condition-tab-" + QString::number(conditionNumber) + ":");
+            conditionHelper("label", tabs->tabText(i));
+            conditionHelper("selector-mode", config.selectorMode);
+            conditionHelper("position-begin", (unsigned int) config.positionBegin);
+            conditionHelper("position-end", (unsigned int) config.positionEnd);
+            conditionHelper("enabled", config.enabled);
+            conditionHelper("cards-count", (unsigned int) config.cards.size());
 
-			std::size_t j(0);
-			for (auto &cardConfig: config.cards) {
-				SettingsSetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
-				cardHelper("suit", cardConfig.suit);
-				cardHelper("rank", cardConfig.rank);
-				cardHelper("inversed", cardConfig.inversed);
-				++j;
-			}
-			++conditionNumber;
-		}
-	}
-	helper("conditions-count", (unsigned int)conditionNumber);
-	
+            std::size_t j(0);
+            for (auto &cardConfig: config.cards) {
+                SettingsSetHelper cardHelper(conditionHelper, "card-" + QString::number(j) + "-");
+                cardHelper("suit", cardConfig.suit);
+                cardHelper("rank", cardConfig.rank);
+                cardHelper("inversed", cardConfig.inversed);
+                ++j;
+            }
+            ++conditionNumber;
+        }
+    }
+    helper("conditions-count", (unsigned int)conditionNumber);
+    
 }
 
 DeckSelectors MainForm::GetSelectors() {
-	DeckSelectors selectors;
-	int tabsCount = tabs->count();
-	for (int i = 0; i != tabsCount; ++i) {
-		auto selectorGui = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
-		if (selectorGui) {
-			try {
-				auto selector = selectorGui->GetSelector();
-				if (selector)
-					selectors.AddDeckSelector(std::move(selector));
-			} catch (const GuiCardSelector::NoSuitNoRank &) {
-				QMessageBox::critical(this, tabs->tabText(i), tr("You should select at least suit or rank for each card!"));
-				tabs->setCurrentIndex(i);
-				return DeckSelectors();
-			} catch (const GuiDeckSelector::NoCards &) {
-				QMessageBox::critical(this, tabs->tabText(i), tr("You have not added any cards to a conditions set!"));
-				tabs->setCurrentIndex(i);
-				return DeckSelectors();
-			}
-		}
-	}
-	return selectors;
+    DeckSelectors selectors;
+    int tabsCount = tabs->count();
+    for (int i = 0; i != tabsCount; ++i) {
+        auto selectorGui = dynamic_cast<GuiDeckSelector*>(tabs->widget(i));
+        if (selectorGui) {
+            try {
+                auto selector = selectorGui->GetSelector();
+                if (selector)
+                    selectors.AddDeckSelector(std::move(selector));
+            } catch (const GuiCardSelector::NoSuitNoRank &) {
+                QMessageBox::critical(this, tabs->tabText(i), tr("You should select at least suit or rank for each card!"));
+                tabs->setCurrentIndex(i);
+                return DeckSelectors();
+            } catch (const GuiDeckSelector::NoCards &) {
+                QMessageBox::critical(this, tabs->tabText(i), tr("You have not added any cards to a conditions set!"));
+                tabs->setCurrentIndex(i);
+                return DeckSelectors();
+            }
+        }
+    }
+    return selectors;
 }
 
 void MainForm::ActivateCalculation() {
-	try {
-		auto selectors = GetSelectors();
-		if (!selectors.IsEmpty())
-			calculator->Calculate(std::move(selectors));
-	} catch (const std::exception& e){
-		QMessageBox::critical(this, tr("Unhandled exception"), tr("Please report to developer: ") + QString(e.what()));
-	}
+    try {
+        auto selectors = GetSelectors();
+        if (!selectors.IsEmpty())
+            calculator->Calculate(std::move(selectors));
+    } catch (const std::exception& e){
+        QMessageBox::critical(this, tr("Unhandled exception"), tr("Please report to developer: ") + QString(e.what()));
+    }
 }
 

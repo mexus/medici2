@@ -10,9 +10,9 @@ CardSelector::CardSelector(const Card::Suit& suit, bool straight) : suit(suit), 
 }
 
 bool CardSelector::Check(const Card& card) const {
-	bool match = 
-		(!rankSet || rank == card.rank) &&
-		(!suitSet || suit == card.suit);
-	return (straight == match);
+    bool match = 
+        (!rankSet || rank == card.rank) &&
+        (!suitSet || suit == card.suit);
+    return (straight == match);
 }
 

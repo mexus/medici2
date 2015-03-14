@@ -14,47 +14,47 @@
 
 namespace calculator {
 
-	class Thread {
-	public:
-		typedef standard_36_deck::Deck::ArrayType StandardDeck;
-		typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
+    class Thread {
+    public:
+        typedef standard_36_deck::Deck::ArrayType StandardDeck;
+        typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
 
-		typedef std::pair<StandardDeck, medici::Patience::PatienceInfo> FoundType;
-		typedef std::vector<FoundType> FoundVector;
+        typedef std::pair<StandardDeck, medici::Patience::PatienceInfo> FoundType;
+        typedef std::vector<FoundType> FoundVector;
 
-		struct RunParameters {
-			std::uintmax_t checkedDecks, suitableDecks;
-			std::chrono::steady_clock::duration runningTime;
-		};
+        struct RunParameters {
+            std::uintmax_t checkedDecks, suitableDecks;
+            std::chrono::steady_clock::duration runningTime;
+        };
 
-		Thread(const DeckSelectors&, const StandardMixer& mixer);
-		~Thread();
+        Thread(const DeckSelectors&, const StandardMixer& mixer);
+        ~Thread();
 
-		void Launch();
-		RunParameters GetRunParameters() const;
-		FoundVector GetNewDecks();
+        void Launch();
+        RunParameters GetRunParameters() const;
+        FoundVector GetNewDecks();
 
-	private:
-		const DeckSelectors& selector;
-		StandardMixer mixer;
+    private:
+        const DeckSelectors& selector;
+        StandardMixer mixer;
 
-		std::atomic_bool localInterrupt;
-		std::atomic_bool inSchedule;
+        std::atomic_bool localInterrupt;
+        std::atomic_bool inSchedule;
 
-		std::mutex threadStartedMutex;
-		std::condition_variable threadStarted;
+        std::mutex threadStartedMutex;
+        std::condition_variable threadStarted;
 
-		std::atomic_uintmax_t checkedDecks, suitableDecks;
-		std::thread* thread;
+        std::atomic_uintmax_t checkedDecks, suitableDecks;
+        std::thread* thread;
 
-		std::chrono::steady_clock::time_point launchedAt;
+        std::chrono::steady_clock::time_point launchedAt;
 
-		FoundVector foundDecks;
-		std::mutex accessDecks;
-		std::size_t givenAwayDecks = 0;
+        FoundVector foundDecks;
+        std::mutex accessDecks;
+        std::size_t givenAwayDecks = 0;
 
-		void Run();
-	};
+        void Run();
+    };
 
 }
 

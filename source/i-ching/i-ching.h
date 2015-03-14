@@ -7,27 +7,27 @@
 
 namespace i_ching {
 
-	enum Line {
-		Yang,
-		Yin
-	};
-	typedef std::array<Line, 6> Hexagram;
-	typedef std::array<Hexagram, 4> SuitsHexagrams;
+    enum Line {
+        Yang,
+        Yin
+    };
+    typedef std::array<Line, 6> Hexagram;
+    typedef std::array<Hexagram, 4> SuitsHexagrams;
 
-	struct BalanceChecker{
-		bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
-	};
+    struct BalanceChecker{
+        bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
+    };
 
-	class BalanceAndSuitChecker{
-	public:
-		BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram&);
-		bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
-	private:
-		std::uint_fast8_t suit;
-		Hexagram hexagram;
-	};
+    class BalanceAndSuitChecker{
+    public:
+        BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram&);
+        bool operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo&) const;
+    private:
+        std::uint_fast8_t suit;
+        Hexagram hexagram;
+    };
 
-	SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info);
+    SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info);
 
 
 }

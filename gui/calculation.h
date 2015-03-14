@@ -16,38 +16,38 @@
 #include "cards_translations.h"
 
 class CalculatorWindow : public QDialog {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	CalculatorWindow(QWidget* parent = 0);
-	~CalculatorWindow();
-	void Calculate(DeckSelectors&&);
+    CalculatorWindow(QWidget* parent = 0);
+    ~CalculatorWindow();
+    void Calculate(DeckSelectors&&);
 
 private:
-	std::atomic_bool operationInProgress;
-	calculator::Manager calculatorManager;
-	CardsTranslations cardsTranslations;
+    std::atomic_bool operationInProgress;
+    calculator::Manager calculatorManager;
+    CardsTranslations cardsTranslations;
 
-	std::uint8_t threadsCount;
-	QHBoxLayout *layout;
-	QPushButton *interruptButton, *addThread, *removeThread;
-	QVBoxLayout *progressBoxes;
-	std::vector<Progress*> progressVector;
-	QTextEdit *foundDecks;
+    std::uint8_t threadsCount;
+    QHBoxLayout *layout;
+    QPushButton *interruptButton, *addThread, *removeThread;
+    QVBoxLayout *progressBoxes;
+    std::vector<Progress*> progressVector;
+    QTextEdit *foundDecks;
 
-	void InterruptCalculation();
-	void AddThread();
-	void RemoveThread();
+    void InterruptCalculation();
+    void AddThread();
+    void RemoveThread();
 
-	void DisableButtons(bool disabled);
+    void DisableButtons(bool disabled);
 
-	template<class T, class ...Args>
-	void DefferedCommand(T t, Args&&... args);
+    template<class T, class ...Args>
+    void DefferedCommand(T t, Args&&... args);
 
-	QTimer *updateProgressTimer;
-	void ShowProgress();
-	void PopulateParameters(const std::vector<calculator::Thread::RunParameters>&);
-	void PopulateDecks(const calculator::Thread::FoundVector&);
-	void AddDeck(const calculator::Thread::StandardDeck&, const medici::Patience::PatienceInfo&);
+    QTimer *updateProgressTimer;
+    void ShowProgress();
+    void PopulateParameters(const std::vector<calculator::Thread::RunParameters>&);
+    void PopulateDecks(const calculator::Thread::FoundVector&);
+    void AddDeck(const calculator::Thread::StandardDeck&, const medici::Patience::PatienceInfo&);
 
 };
 

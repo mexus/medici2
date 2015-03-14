@@ -7,11 +7,11 @@ DeckAbstractSelector::DeckAbstractSelector(std::vector<CardSelector>&& selectors
 }
 
 void DeckSelectors::AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&& selector) {
-	deckSelectors.push_back(std::move(selector));
+    deckSelectors.push_back(std::move(selector));
 }
 
 bool DeckSelectors::IsEmpty() const {
-	return deckSelectors.empty();
+    return deckSelectors.empty();
 }
 
 DeckAllSelector::DeckAllSelector(const std::vector<CardSelector>& selectors, std::size_t from, std::size_t to) : DeckAbstractSelector(selectors, from, to) {
@@ -21,13 +21,13 @@ DeckAllSelector::DeckAllSelector(std::vector<CardSelector>&& selectors, std::siz
 }
 
 bool DeckAllSelector::Check(const std::vector<Card>& deckPart) const{
-	for (auto &selector : cardSelectors){
-		for (auto &card : deckPart){
-			if (!selector.Check(card))
-				return false;
-		}
-	}
-	return true;
+    for (auto &selector : cardSelectors){
+        for (auto &card : deckPart){
+            if (!selector.Check(card))
+                return false;
+        }
+    }
+    return true;
 }
 
 
@@ -38,12 +38,12 @@ DeckOneSelector::DeckOneSelector(std::vector<CardSelector>&& selectors, std::siz
 }
 
 bool DeckOneSelector::Check(const std::vector<Card>& deckPart) const{
-	for (auto &selector : cardSelectors){
-		for (auto &card : deckPart){
-			if (selector.Check(card))
-				return true;
-		}
-	}
-	return false;
+    for (auto &selector : cardSelectors){
+        for (auto &card : deckPart){
+            if (selector.Check(card))
+                return true;
+        }
+    }
+    return false;
 }
 

@@ -1,5 +1,5 @@
 #ifndef GUI_MAIN_FORM_H
-#define	GUI_MAIN_FORM_H
+#define GUI_MAIN_FORM_H
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QPushButton>
@@ -20,24 +20,24 @@ public:
 protected:
         virtual void closeEvent(QCloseEvent*);
 
-	QTabWidget* tabs;
-	QPushButton *actionButton;
-	CalculatorWindow *calculator;
-	DeckPreference *deckPreferenceTab;
+    QTabWidget* tabs;
+    QPushButton *actionButton;
+    CalculatorWindow *calculator;
+    DeckPreference *deckPreferenceTab;
 
 
-	void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
-	void RenameSelector(int index);
+    void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
+    void RenameSelector(int index);
         
         static logxx::Log cLog;
 
-	void LoadSelectorTabs(const QSettings&);
-	void SaveSelectorTabs(QSettings&);
+    void LoadSelectorTabs(const QSettings&);
+    void SaveSelectorTabs(QSettings&);
 
-	DeckSelectors GetSelectors();
-	void ActivateCalculation();
+    DeckSelectors GetSelectors();
+    void ActivateCalculation();
 
 };
 
-#endif	/* GUI_MAIN_FORM_H */
+#endif  /* GUI_MAIN_FORM_H */
 

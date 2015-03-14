@@ -6,8 +6,8 @@
 
 class GuiException : public std::exception {
 public:
-	GuiException() = default;
-	virtual ~GuiException() = default;
+    GuiException() = default;
+    virtual ~GuiException() = default;
 };
 
 #endif /* GUI_EXCEPTION_H */
