@@ -3,6 +3,8 @@
 
 #include <array>
 #include <memory>
+#include <atomic>
+#include <mutex>
 #include <cards/deck.h>
 #include <i-ching/i-ching.h>
 #include "patience.h"
@@ -23,8 +25,9 @@ namespace medici {
     protected:
         const Card target;
     private:
-        bool strictComparison;
-        std::size_t currentConvolutions = 0;
+        const bool strictComparison;
+        std::mutex accessConvolutions;
+        std::atomic_size_t currentConvolutions;
     };
 
     class PatienceIChingSelector : public PatienceSelector {
@@ -33,8 +36,8 @@ namespace medici {
         PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent = PPatienceSelector());
         virtual bool Check(const Patience::PatienceInfo&) override;
     private:
-        PPatienceSelector parent;
-        std::unique_ptr<i_ching::BalanceChecker> checker;
+        const PPatienceSelector parent;
+        const std::unique_ptr<const i_ching::BalanceChecker> checker;
     };
 
 }

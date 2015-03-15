@@ -1,5 +1,7 @@
 #include "patience-selector.h"
 
+typedef std::lock_guard<std::mutex> Guard;
+
 namespace medici {
 
     PatienceTargetSelector::PatienceTargetSelector(const Card& target, bool strictComparison) :
@@ -11,11 +13,14 @@ namespace medici {
         auto it = info.convolutions.find(target);
         if (it != info.convolutions.end()) {
             std::size_t targetConvolutions = it->second;
-            if ((strictComparison && targetConvolutions > currentConvolutions) ||
-                (!strictComparison && targetConvolutions >= currentConvolutions))
-            {
-                currentConvolutions = targetConvolutions;
-                return true;
+            std::size_t max = currentConvolutions.load();
+            if (targetConvolutions >= max) {
+                Guard lock(accessConvolutions);
+                max = currentConvolutions.load();
+                if (targetConvolutions > max || (!strictComparison && targetConvolutions == max)) {
+                    currentConvolutions.store(targetConvolutions);
+                    return true;
+                }
             }
         }
         return false;
