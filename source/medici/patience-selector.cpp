@@ -13,7 +13,7 @@ namespace medici {
     }
 
     PatienceMaxSelector::PatienceMaxSelector(const Card& target, bool strictComparison) :
-        PatienceTargetSelector(target), strictComparison(strictComparison)
+        PatienceTargetSelector(target), strictComparison(strictComparison), maxConvolutions(0)
     {
     }
 
@@ -21,12 +21,12 @@ namespace medici {
         auto it = info.convolutions.find(target);
         if (it != info.convolutions.end() && it->second != 0) {
             std::size_t targetConvolutions = it->second;
-            std::size_t max = currentConvolutions.load();
+            std::size_t max = maxConvolutions.load();
             if (targetConvolutions >= max) {
                 Guard lock(accessConvolutions);
-                max = currentConvolutions.load();
+                max = maxConvolutions.load();
                 if (targetConvolutions > max || (!strictComparison && targetConvolutions == max)) {
-                    currentConvolutions.store(targetConvolutions);
+                    maxConvolutions.store(targetConvolutions);
                     return true;
                 }
             }

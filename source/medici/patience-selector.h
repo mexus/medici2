@@ -34,7 +34,7 @@ namespace medici {
     private:
         const bool strictComparison;
         std::mutex accessConvolutions;
-        std::atomic_size_t currentConvolutions;
+        std::atomic_size_t maxConvolutions;
     };
 
     class PatienceIChingSelector : public PatienceSelector {
