@@ -142,7 +142,7 @@ void MainForm::ActivateCalculation() {
     try {
         auto selectors = GetSelectors();
         if (!selectors.IsEmpty())
-            calculator->Calculate(std::move(selectors));
+            calculator->Calculate(std::move(selectors), deckPreferenceTab->GetSelector());
     } catch (const std::exception& e){
         QMessageBox::critical(this, tr("Unhandled exception"), tr("Please report to developer: ") + QString(e.what()));
     }

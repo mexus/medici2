@@ -73,7 +73,7 @@ void CalculatorWindow::closeEvent(QCloseEvent*) {
     settings.setValue("calculator-window:geometry", saveGeometry());
 }
 
-void CalculatorWindow::Calculate(DeckSelectors&& selectors) {
+void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector) {
     if (isHidden())
         show();
     bool isInProgress(false);
@@ -85,12 +85,12 @@ void CalculatorWindow::Calculate(DeckSelectors&& selectors) {
         }
         if (launch){
             DisableButtons(false);
-            std::thread([this](DeckSelectors&& selectors){
+            std::thread([this](DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector){
                     calculator::Manager::StandardMixer mixer;
                     calculatorManager.Interrupt();
-                    calculatorManager.Launch(threadsCount, std::move(selectors), mixer);
+                    calculatorManager.Launch(threadsCount, std::move(deckSelectors), std::move(patienceSelector), mixer);
                     operationInProgress.store(false);
-                }, std::move(selectors)).detach();
+                }, std::move(deckSelectors), std::move(patienceSelector)).detach();
                 QObject::connect(updateProgressTimer, &QTimer::timeout, this, &CalculatorWindow::ShowProgress);
                 updateProgressTimer->start();
         } else

@@ -17,7 +17,7 @@ class CalculatorWindow : public QDialog {
 public:
     CalculatorWindow(QWidget* parent = 0);
     ~CalculatorWindow();
-    void Calculate(DeckSelectors&&);
+    void Calculate(DeckSelectors&&, medici::PPatienceSelector&&);
 
 protected:
     virtual void closeEvent(QCloseEvent*) override;

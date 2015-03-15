@@ -130,6 +130,16 @@ CardSelector GuiCardSelector::GetSelector() {
     }
 }
 
+Card GuiCardSelector::GetCard() const {
+    int suitData = suit->currentData().toInt();
+    if (suitData == -1)
+        throw std::logic_error("Can't detect a suit");
+    int rankData = rank->currentData().toInt();
+    if (rankData == -1)
+        throw std::logic_error("Can't detect a rank");
+    return {suitData, rankData};
+}
+
 void GuiCardSelector::Highlight() {
     int style = frame->frameStyle();
     int width = frame->lineWidth();

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCheckBox>
 #include <QJsonObject>
+#include <medici/patience-selector.h>
 #include "gui_card_selector.h"
 
 class DeckPreference : public QWidget {
@@ -13,6 +14,7 @@ public:
     DeckPreference(const QJsonObject&, QWidget* parent = nullptr);
 
     QJsonObject GetConfig() const;
+    medici::PPatienceSelector GetSelector() const;
 private:
     QCheckBox* iChingCheck;
 

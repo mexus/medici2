@@ -23,6 +23,7 @@ public:
     CardSelector GetSelector();
 
     QJsonObject GetConfig() const;
+    Card GetCard() const;
     void Highlight();
     void HideRemoveButton();
 private:

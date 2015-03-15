@@ -41,3 +41,17 @@ void DeckPreference::CreateLayout() {
     setLayout(layout);
 }
 
+medici::PPatienceSelector DeckPreference::GetSelector() const {
+    using namespace medici;
+    PPatienceSelector selector;
+    auto card = targetCard->GetCard();
+    if (findMaximumConvolutions->isChecked())
+        selector.reset(new PatienceMaxSelector(card, true));
+    else
+        selector.reset(new PatienceTargetSelector(card));
+    if (iChingCheck->isChecked())
+        return PPatienceSelector(new PatienceIChingSelector(std::move(selector)));
+    else
+        return selector;
+}
+
