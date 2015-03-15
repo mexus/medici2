@@ -1,5 +1,6 @@
 #include "calculator-manager.h"
 #include <calculator/manager.h>
+#include "calculator-thread.h"
 #include "operators.h"
 
 logxx::Log TestCalculatorManager::cLog("TestCalculatorManager");
@@ -15,14 +16,14 @@ bool TestCalculatorManager::Tests() {
 
 bool TestCalculatorManager::TestLaunch() {
     S_LOG("TestLaunch");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
     Thread::StandardMixer mixer;
 
     Manager manager;
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(selectors), mixer);
+    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector(), mixer);
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto allParams = manager.GetRunParameters();
     if (allParams.size() != testThreadsCount) {
@@ -41,18 +42,18 @@ bool TestCalculatorManager::TestLaunch() {
 
 bool TestCalculatorManager::TestIncrease() {
     S_LOG("TestIncrease");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
     Thread::StandardMixer mixer;
 
     Manager manager;
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(selectors), mixer);
+    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector(), mixer);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     manager.IncreaseThreads();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto allParams = manager.GetRunParameters();
     if (allParams.size() != testThreadsCount + 1) {
@@ -71,18 +72,18 @@ bool TestCalculatorManager::TestIncrease() {
 
 bool TestCalculatorManager::TestDecrease() {
     S_LOG("TestDecrease");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
     Thread::StandardMixer mixer;
 
     Manager manager;
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(selectors), mixer);
+    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector(), mixer);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     manager.DecreaseThreads();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto allParams = manager.GetRunParameters();
     if (allParams.size() != testThreadsCount - 1) {
@@ -101,18 +102,18 @@ bool TestCalculatorManager::TestDecrease() {
 
 bool TestCalculatorManager::TestInterrupt() {
     S_LOG("TestInterrupt");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
     Thread::StandardMixer mixer;
 
     Manager manager;
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(selectors), mixer);
+    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector(), mixer);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     manager.Interrupt();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto allParams = manager.GetRunParameters();
     if (!allParams.empty()) {

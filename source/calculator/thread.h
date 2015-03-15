@@ -7,9 +7,9 @@
 #include <vector>
 #include <condition_variable>
 #include <chrono>
-
 #include <cards/standard-36-deck.h>
 #include <cards/deck-selector.h>
+#include <medici/patience-selector.h>
 #include <medici/generator.h>
 
 namespace calculator {
@@ -27,7 +27,7 @@ namespace calculator {
             std::chrono::steady_clock::duration runningTime;
         };
 
-        Thread(const DeckSelectors&, const StandardMixer& mixer);
+        Thread(const DeckSelectors&, const medici::PPatienceSelector&, const StandardMixer& mixer);
         ~Thread();
 
         void Launch();
@@ -35,7 +35,8 @@ namespace calculator {
         FoundVector GetNewDecks();
 
     private:
-        const DeckSelectors& selector;
+        const DeckSelectors& deckSelector;
+        const medici::PPatienceSelector& patienceSelector;
         StandardMixer mixer;
 
         std::atomic_bool localInterrupt;

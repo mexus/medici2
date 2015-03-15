@@ -5,7 +5,6 @@
 #include <vector>
 #include <memory>
 #include <vector>
-
 #include "thread.h"
 
 namespace calculator {
@@ -18,8 +17,7 @@ namespace calculator {
         Manager() = default;
         Manager(const Manager&) = delete;
 
-        void Launch(std::size_t threads, DeckSelectors&& selector, const StandardMixer& mixer);
-        void UpdateParameters(DeckSelectors&&);
+        void Launch(std::size_t threads, DeckSelectors&&, medici::PPatienceSelector&&, const StandardMixer& mixer);
         void SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds);
 
         bool Running() const;
@@ -31,7 +29,8 @@ namespace calculator {
         std::vector<Thread::RunParameters> GetRunParameters() const;
     private:
         std::vector<std::uint_fast32_t> seeds;
-        DeckSelectors selector;
+        DeckSelectors deckSelector;
+        medici::PPatienceSelector patienceSelector;
         StandardMixer mixer;
 
         std::vector<std::unique_ptr<Thread>> threads;

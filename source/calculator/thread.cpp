@@ -4,8 +4,9 @@ typedef std::lock_guard<std::mutex> Guard;
 
 namespace calculator {
 
-    Thread::Thread(const DeckSelectors& selector, const StandardMixer& mixer) :
-        selector(selector), mixer(mixer), localInterrupt(false), inSchedule(false), checkedDecks(0), suitableDecks(0), thread(nullptr)
+    Thread::Thread(const DeckSelectors& deckSelector, const medici::PPatienceSelector& patienceSelector, const StandardMixer& mixer) :
+        deckSelector(deckSelector), patienceSelector(patienceSelector), mixer(mixer), localInterrupt(false),
+        inSchedule(false), checkedDecks(0), suitableDecks(0), thread(nullptr)
     {
     }
 
@@ -25,8 +26,7 @@ namespace calculator {
         localInterrupt = true;
         if (thread && thread->joinable())
             thread->join();
-        if (thread)
-            delete thread;
+        delete thread;
     }
 
     void Thread::Run() {
@@ -39,7 +39,7 @@ namespace calculator {
         while (!localInterrupt){
             mixer.Mix(deck);
             ++checkedDecks;
-            if (selector.Check(deck) && medici::Patience::Converge(deck, patienceInfo)) {
+            if (deckSelector.Check(deck) && medici::Patience::Converge(deck, patienceInfo) && patienceSelector->Check(patienceInfo)) {
                 ++suitableDecks;
                 Guard guard(accessDecks);
                 foundDecks.push_back({deck, patienceInfo});

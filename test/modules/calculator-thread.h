@@ -2,10 +2,13 @@
 #define TEST_CALCULATOR_THREAD_H
 
 #include "../test_fw.h"
+#include <medici/patience-selector.h>
 
 class TestCalculatorThread : public TestFW {
 public:
     TestCalculatorThread();
+
+    static medici::PPatienceSelector DefaultPatienceSelector();
 protected:
     static logxx::Log cLog;
 

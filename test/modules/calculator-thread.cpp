@@ -21,13 +21,14 @@ bool TestCalculatorThread::Tests() {
 
 bool TestCalculatorThread::TestRunning() {
     S_LOG("TestRunning");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
+    auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
     Thread::StandardMixer mixer;
 
-    Thread thread(selectors, mixer);
+    Thread thread(deckSelector, patienceSelector, mixer);
     thread.Launch();
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto params = thread.GetRunParameters();
     log(logxx::debug) << "Parameters: " << params << logxx::endl;
@@ -37,17 +38,18 @@ bool TestCalculatorThread::TestRunning() {
 
 bool TestCalculatorThread::TestRunningMultithreaded() {
     S_LOG("TestRunningMultithreaded");
-    DeckSelectors selectors;
+    DeckSelectors deckSelector;
+    auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
     Thread::StandardMixer mixer;
 
     static const std::size_t testThreadsCount = 4;
     std::vector<std::unique_ptr<Thread>> threads;
     for (std::size_t i = 0; i != testThreadsCount; ++i){
-        threads.emplace_back(new Thread(selectors, mixer));
+        threads.emplace_back(new Thread(deckSelector, patienceSelector, mixer));
         threads.back()->Launch();
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     for (auto & thread : threads) {
         auto params = thread->GetRunParameters();
@@ -56,5 +58,10 @@ bool TestCalculatorThread::TestRunningMultithreaded() {
             return false;
     }
     return true;
+}
+
+
+medici::PPatienceSelector TestCalculatorThread::DefaultPatienceSelector() {
+    return medici::PPatienceSelector(new medici::PatienceSelector());
 }
 

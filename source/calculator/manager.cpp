@@ -7,23 +7,21 @@ namespace calculator {
     }
 
     void Manager::CreateThread(std::size_t number) {
-        auto thread = new Thread(selector, StandardMixer(mixer, GetSeed(number)));
+        auto thread = new Thread(deckSelector, patienceSelector, StandardMixer(mixer, GetSeed(number)));
         threads.emplace_back(thread);
         thread->Launch();
     }
 
-    void Manager::Launch(std::size_t threadsCount, DeckSelectors&& selector, const StandardMixer& mixer) {
+    void Manager::Launch(std::size_t threadsCount, DeckSelectors&& deckSelector, medici::PPatienceSelector&& patienceSelector, const StandardMixer& mixer) {
         if (threads.empty()){
-            this->selector = std::move(selector);
+            this->deckSelector = std::move(deckSelector);
+            if (!patienceSelector)
+                throw std::logic_error("null patienceSelector supplied");
+            this->patienceSelector = std::move(patienceSelector);
             this->mixer = mixer;
             for (std::size_t i = 0; i!= threadsCount; ++i)
                 CreateThread(i);
         }
-    }
-
-    void Manager::UpdateParameters(DeckSelectors&& selector) {
-        if (threads.empty())
-            this->selector = std::move(selector);
     }
 
     bool Manager::Running() const {

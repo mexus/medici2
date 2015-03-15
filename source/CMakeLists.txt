@@ -9,6 +9,7 @@ add_library (source-library
     cards/standard-36-deck.cpp
 
     medici/patience.cpp
+    medici/patience-selector.cpp
 
     i-ching/i-ching.cpp
 
