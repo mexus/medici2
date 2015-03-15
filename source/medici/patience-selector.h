@@ -20,10 +20,17 @@ namespace medici {
 
     class PatienceTargetSelector : public PatienceSelector {
     public:
-        PatienceTargetSelector(const Card& target, bool strictComparison);
-        virtual bool Check(const Patience::PatienceInfo& info) override;
+        PatienceTargetSelector(const Card& target);
+        virtual ~PatienceTargetSelector() = default;
+        virtual bool Check(const Patience::PatienceInfo&);
     protected:
         const Card target;
+    };
+
+    class PatienceMaxSelector : public PatienceTargetSelector {
+    public:
+        PatienceMaxSelector(const Card& target, bool strictComparison);
+        virtual bool Check(const Patience::PatienceInfo& info) override;
     private:
         const bool strictComparison;
         std::mutex accessConvolutions;

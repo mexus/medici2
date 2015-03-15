@@ -4,14 +4,22 @@ typedef std::lock_guard<std::mutex> Guard;
 
 namespace medici {
 
-    PatienceTargetSelector::PatienceTargetSelector(const Card& target, bool strictComparison) :
-        target(target), strictComparison(strictComparison)
-    {
+    PatienceTargetSelector::PatienceTargetSelector(const Card& target) : target(target) {
     }
 
     bool PatienceTargetSelector::Check(const Patience::PatienceInfo& info) {
         auto it = info.convolutions.find(target);
-        if (it != info.convolutions.end()) {
+        return it != info.convolutions.end() && it->second != 0;
+    }
+
+    PatienceMaxSelector::PatienceMaxSelector(const Card& target, bool strictComparison) :
+        PatienceTargetSelector(target), strictComparison(strictComparison)
+    {
+    }
+
+    bool PatienceMaxSelector::Check(const Patience::PatienceInfo& info) {
+        auto it = info.convolutions.find(target);
+        if (it != info.convolutions.end() && it->second != 0) {
             std::size_t targetConvolutions = it->second;
             std::size_t max = currentConvolutions.load();
             if (targetConvolutions >= max) {
