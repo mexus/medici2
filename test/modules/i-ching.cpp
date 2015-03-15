@@ -72,7 +72,7 @@ bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon){
         return false;
     } else {
         BalanceChecker checker;
-        bool balancedResult = checker(deck, info);
+        bool balancedResult = checker.Check(info);
         if (balancedResult != balancedEtalon){
             auto &s = log(logxx::error) << "Deck is";
             if (!balancedResult)
@@ -104,7 +104,7 @@ bool TestIChing::TestBalanceAndSuit(const ArrayType& deck, const Card::Suit& sui
         return false;
     } else {
         BalanceAndSuitChecker checker(suit, etalonHexagram);
-        bool checkResult = checker(deck, info);
+        bool checkResult = checker.Check(info);
         if (!checkResult){
             log(logxx::error) << "Deck doesn't match, but it should" <<
             "\nDeck: " << deck << logxx::endl;

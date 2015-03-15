@@ -131,7 +131,7 @@ void Performance::MediciWithConditionsAndIChing(){
     TimeMeasure timer;
     for (std::size_t i = 0; i != totalDecks; ++i){
         generator::Generate(deck, info, mixer, interrupt, checker);
-        if (iChingChecker(deck, info))
+        if (iChingChecker.Check(info))
             ++balanced;
     }
     double elapsed = timer.Elapsed();
@@ -152,7 +152,7 @@ void Performance::IChingBalancedPercent(){
     std::size_t balanced = 0;
     for (std::size_t i = 0; i != totalDecks; ++i){
         generator::Generate(deck, info, mixer, interrupt);
-        if (iChingChecker(deck, info))
+        if (iChingChecker.Check(info))
             ++balanced;
     }
     log(logxx::info) << static_cast<double>(balanced) / totalDecks * 100.0 << "% balanced decks" << logxx::endl;

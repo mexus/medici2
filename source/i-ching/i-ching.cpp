@@ -48,7 +48,7 @@ namespace i_ching{
         return true;
     }
 
-    bool BalanceChecker::operator()(const standard_36_deck::Deck::ArrayType&, const medici::Patience::PatienceInfo& info) const{
+    bool BalanceChecker::Check(const medici::Patience::PatienceInfo& info) const{
         auto hexagrams = CalculateHexagrams(info);
         return CheckBalance(hexagrams);
     }
@@ -56,7 +56,7 @@ namespace i_ching{
     BalanceAndSuitChecker::BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram& hexagram) : suit(suit.value), hexagram(hexagram) {
     }
 
-    bool BalanceAndSuitChecker::operator()(const standard_36_deck::Deck::ArrayType& , const medici::Patience::PatienceInfo& info) const{
+    bool BalanceAndSuitChecker::Check(const medici::Patience::PatienceInfo& info) const{
         auto hexagrams = CalculateHexagrams(info);
         return hexagrams[suit] == hexagram && CheckBalance(hexagrams);
     }
