@@ -2,10 +2,6 @@
 
 namespace medici {
 
-    bool PatienceSelector::Check(const Patience::PatienceInfo&) {
-        return true;
-    }
-
     PatienceTargetSelector::PatienceTargetSelector(const Card& target, bool strictComparison) :
         target(target), strictComparison(strictComparison)
     {
@@ -24,5 +20,20 @@ namespace medici {
         }
         return false;
     }
+
+    PatienceIChingSelector::PatienceIChingSelector(PPatienceSelector&& parent) :
+        parent(std::move(parent)), checker(new i_ching::BalanceChecker())
+    {
+    }
+
+    PatienceIChingSelector::PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent) : 
+        parent(std::move(parent)), checker(new i_ching::BalanceAndSuitChecker(suit, targetHex))
+    {
+    }
+
+    bool PatienceIChingSelector::Check(const Patience::PatienceInfo& info) {
+            return parent->Check(info) && checker->Check(info);
+    }
+
 }
 

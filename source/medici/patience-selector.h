@@ -12,7 +12,7 @@ namespace medici {
     class PatienceSelector {
     public:
         virtual ~PatienceSelector() = default;
-        virtual bool Check(const Patience::PatienceInfo&);
+        virtual bool Check(const Patience::PatienceInfo&) { return true; }
     };
     typedef std::unique_ptr<PatienceSelector> PPatienceSelector;
 
@@ -29,21 +29,12 @@ namespace medici {
 
     class PatienceIChingSelector : public PatienceSelector {
     public:
-        virtual bool Check(const Patience::PatienceInfo& info) override {
-            return checker.Check(info);
-        }
+        PatienceIChingSelector(PPatienceSelector&& parent = PPatienceSelector());
+        PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent = PPatienceSelector());
+        virtual bool Check(const Patience::PatienceInfo&) override;
     private:
-        i_ching::BalanceChecker checker;
-    };
-
-    class PatienceIChingSuitSelector : public PatienceSelector {
-    public:
-        PatienceIChingSuitSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex) : checker(suit, targetHex) {}
-        virtual bool Check(const Patience::PatienceInfo& info) override {
-            return checker.Check(info);
-        }
-    private:
-        i_ching::BalanceAndSuitChecker checker;
+        PPatienceSelector parent;
+        std::unique_ptr<i_ching::BalanceChecker> checker;
     };
 
 }

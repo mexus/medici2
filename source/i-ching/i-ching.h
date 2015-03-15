@@ -15,13 +15,14 @@ namespace i_ching {
     typedef std::array<Hexagram, 4> SuitsHexagrams;
 
     struct BalanceChecker{
-        bool Check(const medici::Patience::PatienceInfo&) const;
+        virtual bool Check(const medici::Patience::PatienceInfo&) const;
+        virtual ~BalanceChecker() = default;
     };
 
-    class BalanceAndSuitChecker{
+    class BalanceAndSuitChecker : public BalanceChecker{
     public:
         BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram&);
-        bool Check(const medici::Patience::PatienceInfo&) const;
+        bool Check(const medici::Patience::PatienceInfo&) const override;
     private:
         std::uint_fast8_t suit;
         Hexagram hexagram;
