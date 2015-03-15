@@ -102,5 +102,4 @@ def FlagsForFile( filename ):
     'flags': final_flags,
     'do_cache': True
   }
-i = 0
 
