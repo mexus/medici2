@@ -5,7 +5,7 @@
 #include <QCheckBox>
 #include <QJsonObject>
 #include <medici/patience-selector.h>
-#include "gui_card_selector.h"
+#include "selectors/gui_card_selector.h"
 
 class DeckPreference : public QWidget {
     Q_OBJECT

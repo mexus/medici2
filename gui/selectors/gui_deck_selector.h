@@ -1,5 +1,5 @@
-#ifndef GUI_GUI_DECK_SELECTOR_H
-#define GUI_GUI_DECK_SELECTOR_H
+#ifndef GUI_SELECTORS_GUI_DECK_SELECTOR_H
+#define GUI_SELECTORS_GUI_DECK_SELECTOR_H
 
 #include <QWidget>
 #include <QComboBox>
@@ -9,7 +9,7 @@
 #include <set>
 #include <cards/deck-selector.h>
 #include "gui_card_selector.h"
-#include "gui_exception.h"
+#include "../gui_exception.h"
 
 class GuiDeckSelector : public QWidget {
 Q_OBJECT
@@ -49,4 +49,4 @@ signals:
     void DeleteClicked();
 };
 
-#endif /* GUI_GUI_DECK_SELECTOR_H */
+#endif /* GUI_SELECTORS_GUI_DECK_SELECTOR_H */

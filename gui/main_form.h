@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QJsonArray>
 #include <logxx/logxx.h>
-#include "gui_deck_selector.h"
+#include "selectors/gui_deck_selector.h"
 #include "calculator_window.h"
 #include "deck_preference.h"
 

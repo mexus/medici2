@@ -1,5 +1,5 @@
-#ifndef GUI_GUI_CARD_SELECTOR_H
-#define GUI_GUI_CARD_SELECTOR_H
+#ifndef GUI_SELECTORS_GUI_CARD_SELECTOR_H
+#define GUI_SELECTORS_GUI_CARD_SELECTOR_H
 
 #include <QWidget>
 #include <QComboBox>
@@ -8,7 +8,7 @@
 #include <QFrame>
 #include <QJsonObject>
 #include <cards/card-selector.h>
-#include "gui_exception.h"
+#include "../gui_exception.h"
 
 class GuiCardSelector : public QWidget {
 Q_OBJECT
@@ -42,4 +42,4 @@ signals:
     void DeleteClicked();
 };
 
-#endif /* GUI_GUI_CARD_SELECTOR_H */
+#endif /* GUI_SELECTORS_GUI_CARD_SELECTOR_H */
