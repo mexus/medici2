@@ -1,5 +1,5 @@
-#ifndef GUI_PROGRESS_WIDGET_H
-#define GUI_PROGRESS_WIDGET_H
+#ifndef GUI_WIDGETS_PROGRESS_WIDGET_H
+#define GUI_WIDGETS_PROGRESS_WIDGET_H
 
 #include <QGroupBox>
 #include <QLabel>
@@ -18,4 +18,4 @@ private:
     void CreateLayout();
 };
 
-#endif /* GUI_PROGRESS_WIDGET_H */
+#endif /* GUI_WIDGETS_PROGRESS_WIDGET_H */

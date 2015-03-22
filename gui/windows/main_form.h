@@ -1,14 +1,14 @@
-#ifndef GUI_MAIN_FORM_H
-#define GUI_MAIN_FORM_H
+#ifndef GUI_WINDOWS_MAIN_FORM_H
+#define GUI_WINDOWS_MAIN_FORM_H
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QPushButton>
 #include <QSettings>
 #include <QJsonArray>
 #include <logxx/logxx.h>
-#include "selectors/gui_deck_selector.h"
+#include <selectors/gui_deck_selector.h>
 #include "calculator_window.h"
-#include "deck_preference.h"
+#include <widgets/deck_preference.h>
 
 
 class MainForm : public QMainWindow {
@@ -41,5 +41,5 @@ protected:
 
 };
 
-#endif  /* GUI_MAIN_FORM_H */
+#endif  /* GUI_WINDOWS_MAIN_FORM_H */
 

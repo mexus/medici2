@@ -9,7 +9,7 @@
 #include <set>
 #include <cards/deck-selector.h>
 #include "gui_card_selector.h"
-#include "../gui_exception.h"
+#include <helpers/gui_exception.h>
 
 class GuiDeckSelector : public QWidget {
 Q_OBJECT

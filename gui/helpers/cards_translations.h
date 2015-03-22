@@ -1,5 +1,5 @@
-#ifndef GUI_CARDS_TRANSLATIONS_H
-#define GUI_CARDS_TRANSLATIONS_H
+#ifndef GUI_HELPERS_CARDS_TRANSLATIONS_H
+#define GUI_HELPERS_CARDS_TRANSLATIONS_H
 
 #include <QObject>
 #include <map>
@@ -27,4 +27,4 @@ private:
     static const QString& CardName(const std::map<Card, QString>& translations, const Card&);
 };
 
-#endif /* GUI_CARDS_TRANSLATIONS_H */
+#endif /* GUI_HELPERS_CARDS_TRANSLATIONS_H */

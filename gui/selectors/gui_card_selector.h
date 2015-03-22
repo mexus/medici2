@@ -8,7 +8,7 @@
 #include <QFrame>
 #include <QJsonObject>
 #include <cards/card-selector.h>
-#include "../gui_exception.h"
+#include <helpers/gui_exception.h>
 
 class GuiCardSelector : public QWidget {
 Q_OBJECT

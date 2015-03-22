@@ -1,5 +1,5 @@
-#ifndef GUI_CALCULATOR_WINDOW
-#define GUI_CALCULATOR_WINDOW
+#ifndef GUI_WINDOWS_CALCULATOR_WINDOW
+#define GUI_WINDOWS_CALCULATOR_WINDOW
 
 #include <QDialog>
 #include <QPushButton>
@@ -9,8 +9,8 @@
 #include <QTextEdit>
 #include <atomic>
 #include <calculator/manager.h>
-#include "progress_widget.h"
-#include "cards_translations.h"
+#include <widgets/progress_widget.h>
+#include <helpers/cards_translations.h>
 
 class CalculatorWindow : public QDialog {
     Q_OBJECT
@@ -55,4 +55,4 @@ private:
 
 };
 
-#endif /* GUI_CALCULATOR_WINDOW */
+#endif /* GUI_WINDOWS_CALCULATOR_WINDOW */

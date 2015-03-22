@@ -1,11 +1,11 @@
-#ifndef GUI_DECK_PREFERENCE_H
-#define GUI_DECK_PREFERENCE_H
+#ifndef GUI_WIDGETS_DECK_PREFERENCE_H
+#define GUI_WIDGETS_DECK_PREFERENCE_H
 
 #include <QWidget>
 #include <QCheckBox>
 #include <QJsonObject>
 #include <medici/patience-selector.h>
-#include "selectors/gui_card_selector.h"
+#include <selectors/gui_card_selector.h>
 
 class DeckPreference : public QWidget {
     Q_OBJECT
@@ -24,4 +24,4 @@ private:
     void CreateLayout();
 };
 
-#endif /* GUI_DECK_PREFERENCE_H */
+#endif /* GUI_WIDGETS_DECK_PREFERENCE_H */

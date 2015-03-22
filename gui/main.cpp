@@ -3,7 +3,7 @@
 #include <QSettings>
 #include <logxx/logxx.h>
 
-#include "main_form.h"
+#include <windows/main_form.h>
 
 int main(int argc, char** argv) {
         logxx::GlobalLogLevel(logxx::debug);

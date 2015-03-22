@@ -1,5 +1,5 @@
-#ifndef GUI_EXCEPTION_H
-#define GUI_EXCEPTION_H
+#ifndef GUI_HELPERS_GUI_EXCEPTION_H
+#define GUI_HELPERS_GUI_EXCEPTION_H
 
 #include <QObject>
 #include <stdexcept>
@@ -10,4 +10,4 @@ public:
     virtual ~GuiException() = default;
 };
 
-#endif /* GUI_EXCEPTION_H */
+#endif /* GUI_HELPERS_GUI_EXCEPTION_H */
