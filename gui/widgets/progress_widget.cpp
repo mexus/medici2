@@ -25,6 +25,7 @@ void ProgressWidget::CreateLayout() {
     layout->addWidget(new QLabel(tr("Running time:")),     2, 0);
     layout->addWidget(runningTime,                         2, 1);
 
+    layout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(layout);
 }
 

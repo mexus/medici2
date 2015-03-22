@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QSettings>
+#include <QCloseEvent>
 #include <random>
 
 CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
@@ -14,6 +15,8 @@ CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operation
 
     GenerateSeeds();
     DisableButtons(true);
+
+    setModal(true);
 }
 
 void CalculatorWindow::CreateObjects() {
@@ -33,7 +36,7 @@ void CalculatorWindow::CreateObjects() {
     updateProgressTimer->setInterval(1000);
 
     progressBoxes = new QVBoxLayout();
-    foundDecks = new QTextEdit(tr("Found decks:") + "\n");
+    foundDecks = new QTextEdit();
 }
 
 void CalculatorWindow::GenerateSeeds() {
@@ -50,14 +53,24 @@ void CalculatorWindow::CreateLayout() {
     {
         auto subLayout = new QHBoxLayout();
         subLayout->addWidget(interruptButton);
-        subLayout->addWidget(addThread);
-        subLayout->addWidget(removeThread);
         layout->addLayout(subLayout);
     }
     {
         auto subLayout = new QHBoxLayout();
-        subLayout->addLayout(progressBoxes);
-        subLayout->addWidget(foundDecks);
+        {
+            auto subSubLayout = new QVBoxLayout();
+            subSubLayout->addLayout(progressBoxes);
+            subSubLayout->addWidget(addThread);
+            subSubLayout->addWidget(removeThread);
+            subLayout->addLayout(subSubLayout);
+            subLayout->setSizeConstraint(QLayout::SetFixedSize);
+        }
+        {
+            auto subSubLayout = new QVBoxLayout();
+            subSubLayout->addWidget(new QLabel(tr("Found decks")));
+            subSubLayout->addWidget(foundDecks);
+            subLayout->addLayout(subSubLayout);
+        }
         layout->addLayout(subLayout);
     }
     setLayout(layout);
@@ -68,9 +81,13 @@ CalculatorWindow::~CalculatorWindow() {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
-void CalculatorWindow::closeEvent(QCloseEvent*) {
-    QSettings settings;
-    settings.setValue("calculator-window:geometry", saveGeometry());
+void CalculatorWindow::closeEvent(QCloseEvent* e) {
+    if (QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        InterruptCalculation();
+        QSettings settings;
+        settings.setValue("calculator-window:geometry", saveGeometry());
+    } else
+        e->ignore();
 }
 
 void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector) {
@@ -84,7 +101,6 @@ void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienc
             launch = reply == QMessageBox::Yes;
         }
         if (launch){
-            DisableButtons(false);
             std::thread([this](DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector){
                     calculator::Manager::StandardMixer mixer;
                     calculatorManager.Interrupt();
@@ -128,9 +144,9 @@ void CalculatorWindow::RemoveThread() {
 }
 
 void CalculatorWindow::DisableButtons(bool disabled) {
-    interruptButton->setDisabled(disabled);
-    addThread->setDisabled(disabled);
-    removeThread->setDisabled(disabled);
+    interruptButton->setVisible(!disabled);
+    addThread->setVisible(!disabled);
+    removeThread->setVisible(!disabled);
 }
 
 void CalculatorWindow::ShowProgress() {
@@ -162,6 +178,9 @@ void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::
             delete last;
         }
     }
+
+    if (!allParameters.empty())
+        DisableButtons(false);
 
     for (std::size_t i = 0; i != allParameters.size(); ++i)
         progressVector[i]->Set(allParameters[i]);
