@@ -6,7 +6,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTimer>
-#include <QTextEdit>
+//#include <QTextEdit>
+#include <QListWidget>
 #include <atomic>
 #include <calculator/manager.h>
 #include <widgets/progress_widget.h>
@@ -36,7 +37,7 @@ private:
     QPushButton *interruptButton, *addThread, *removeThread;
     QVBoxLayout *progressBoxes;
     std::vector<ProgressWidget*> progressVector;
-    QTextEdit *foundDecks;
+    QListWidget *foundDecks;
 
     void InterruptCalculation();
     void AddThread();

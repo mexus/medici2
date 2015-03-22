@@ -36,7 +36,7 @@ void CalculatorWindow::CreateObjects() {
     updateProgressTimer->setInterval(1000);
 
     progressBoxes = new QVBoxLayout();
-    foundDecks = new QTextEdit();
+    foundDecks = new QListWidget();
 }
 
 void CalculatorWindow::GenerateSeeds() {
@@ -82,12 +82,16 @@ CalculatorWindow::~CalculatorWindow() {
 }
 
 void CalculatorWindow::closeEvent(QCloseEvent* e) {
-    if (QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
-        InterruptCalculation();
-        QSettings settings;
-        settings.setValue("calculator-window:geometry", saveGeometry());
-    } else
-        e->ignore();
+    if (calculatorManager.Running()) {
+        if (QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?")) == QMessageBox::No) {
+            e->ignore();
+            return ;
+        } else
+            InterruptCalculation();
+    }
+    foundDecks->clear();
+    QSettings settings;
+    settings.setValue("calculator-window:geometry", saveGeometry());
 }
 
 void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector) {
@@ -187,19 +191,19 @@ void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::
 }
 
 void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newDecks){
-    if (newDecks.size() > 10)
-        foundDecks->append("Too many decks found");
-    else {
-        for (auto& deck : newDecks)
-            AddDeck(deck.first, deck.second);
+    static const std::size_t maxDecksAtOnce = 10;
+    for (std::size_t i = 0, l = std::min(maxDecksAtOnce, newDecks.size()); i != l; ++i) {
+        auto &deck = newDecks[i];
+        AddDeck(deck.first, deck.second);
     }
+
 }
 
-void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeck& deck, const medici::Patience::PatienceInfo& ) {
-    QString line("Deck: ");
+void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeck& deck, const medici::Patience::PatienceInfo&) {
+    QString line;
     for (auto &card : deck) {
         line += cardsTranslations.CardShortName(card) + " ";
     }
-    foundDecks->append(line);
+    foundDecks->addItem(line);
 }
 
