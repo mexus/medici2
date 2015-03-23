@@ -2,14 +2,17 @@
 
 #include <QVBoxLayout>
 
-DeckPreference::DeckPreference(QWidget* parent) : QWidget(parent)
+DeckPreference::DeckPreference(const CardsTranslations& cardsTranslations) :
+    QWidget()
 {
-    targetCard = new GuiCardSelector(false, false);
+    targetCard = new GuiCardSelector(cardsTranslations, false);
     CreateLayout();
 }
 
-DeckPreference::DeckPreference(const QJsonObject& config, QWidget *parent) : QWidget(parent) {
-    targetCard = new GuiCardSelector(config["target-card"].toObject(), false, false);
+DeckPreference::DeckPreference(const CardsTranslations& cardsTranslations, const QJsonObject& config) :
+    QWidget()
+{
+    targetCard = new GuiCardSelector(cardsTranslations, config["target-card"].toObject(), false);
 
     CreateLayout();
 
@@ -31,7 +34,6 @@ void DeckPreference::CreateLayout() {
     iChingCheck = new QCheckBox(tr("Deck should be I-Ching balanced"));
     layout->addWidget(iChingCheck);
 
-    targetCard->HideRemoveButton();
     layout->addWidget(targetCard);
 
     findMaximumConvolutions = new QCheckBox(tr("Find maximum convolutions"));

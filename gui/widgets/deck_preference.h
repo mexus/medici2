@@ -10,8 +10,8 @@
 class DeckPreference : public QWidget {
     Q_OBJECT
 public:
-    DeckPreference(QWidget* parent = nullptr);
-    DeckPreference(const QJsonObject&, QWidget* parent = nullptr);
+    DeckPreference(const CardsTranslations&);
+    DeckPreference(const CardsTranslations&, const QJsonObject&);
 
     QJsonObject GetConfig() const;
     medici::PPatienceSelector GetSelector() const;

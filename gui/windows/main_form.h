@@ -9,6 +9,7 @@
 #include <selectors/gui_deck_selector.h>
 #include "calculator_window.h"
 #include <widgets/deck_preference.h>
+#include <helpers/cards_translations.h>
 
 
 class MainForm : public QMainWindow {
@@ -19,6 +20,7 @@ public:
         
 protected:
     virtual void closeEvent(QCloseEvent*);
+    CardsTranslations cardsTranslations;
 
     QTabWidget* tabs;
     QPushButton *actionButton;
@@ -28,7 +30,8 @@ protected:
     void CreateObjects(const QJsonObject&);
     void CreateLayout();
 
-    void AddSelectorTab(GuiDeckSelector* = new GuiDeckSelector(), const QString& label = tr("New"));
+    void AddSelectorTab(GuiDeckSelector*, const QString& label);
+    void AddSelectorTab();
     void RenameSelector(int index);
         
     static logxx::Log cLog;

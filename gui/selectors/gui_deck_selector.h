@@ -17,12 +17,14 @@ public:
     class NoCards : public GuiException {
     };
 
-    GuiDeckSelector(const QJsonObject&, QWidget* parent = 0);
-    GuiDeckSelector(bool newCard = true, QWidget* parent = 0);
+    GuiDeckSelector(const CardsTranslations&, const QJsonObject&);
+    GuiDeckSelector(const CardsTranslations&, bool newCard = true);
 
     std::unique_ptr<DeckAbstractSelector> GetSelector() const;
     QJsonObject GetConfig() const;
+    void AddWidget(QWidget*);
 private:
+    const CardsTranslations& cardsTranslations;
     void AddCardSelector(const QJsonObject&);
     void AddCardSelector();
     void AddCardSelector(GuiCardSelector*);
@@ -44,9 +46,6 @@ private:
     void CreateLayout();
 
     static QSpinBox* CreateSpinBox(int min, int max);
-
-signals:
-    void DeleteClicked();
 };
 
 #endif /* GUI_SELECTORS_GUI_DECK_SELECTOR_H */

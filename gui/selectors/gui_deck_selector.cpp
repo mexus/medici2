@@ -5,7 +5,9 @@
 #include <QPushButton>
 #include <QJsonArray>
 
-GuiDeckSelector::GuiDeckSelector(bool newCard, QWidget *parent) : QWidget(parent) {
+GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, bool newCard) :
+    QWidget(), cardsTranslations(cardsTranslations)
+{
     CreateObjects();
     SetSpinBoxes();
     CreateLayout();
@@ -13,7 +15,9 @@ GuiDeckSelector::GuiDeckSelector(bool newCard, QWidget *parent) : QWidget(parent
         AddCardSelector();
 }
 
-GuiDeckSelector::GuiDeckSelector(const QJsonObject& config, QWidget *parent) : GuiDeckSelector(false, parent) {
+GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, const QJsonObject& config) :
+    GuiDeckSelector(cardsTranslations, false)
+{
     auto index = selectorMode->findData(config["selector_mode"].toInt());
     if (index != -1)
         selectorMode->setCurrentIndex(index);
@@ -49,16 +53,18 @@ QJsonObject GuiDeckSelector::GetConfig() const {
 }
 
 void GuiDeckSelector::AddCardSelector() {
-    AddCardSelector(new GuiCardSelector());
+    AddCardSelector(new GuiCardSelector(cardsTranslations));
 }
 
 void GuiDeckSelector::AddCardSelector(const QJsonObject& config) {
-    AddCardSelector(new GuiCardSelector(config));
+    AddCardSelector(new GuiCardSelector(cardsTranslations, config));
 }
 
 void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector) {
     selectors.insert(selector);
-    QObject::connect(selector, &GuiCardSelector::DeleteClicked, [this, selector](){
+    auto *deleteCard = new QPushButton(tr("Remove the card"));
+    selector->AddWidget(deleteCard);
+    QObject::connect(deleteCard, &QPushButton::clicked, [this, selector](){
             if (selectors.size()==1)
                 return ;
             selectors.erase(selector);
@@ -112,12 +118,12 @@ void GuiDeckSelector::CreateLayout() {
         selectorsLayout->setSizeConstraint(QLayout::SetFixedSize);
         mainLayout->addLayout(selectorsLayout);
     }
-    {
-        auto deleteButton = new QPushButton(tr("Remove conditions set"));
-        QObject::connect(deleteButton, &QPushButton::clicked, this, &GuiDeckSelector::DeleteClicked);
-        mainLayout->addWidget(deleteButton);
-    }
+
     setLayout(mainLayout);
+}
+
+void GuiDeckSelector::AddWidget(QWidget* widget) {
+    layout()->addWidget(widget);
 }
 
 std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {

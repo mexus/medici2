@@ -13,13 +13,19 @@ logxx::Log MainForm::cLog("MainForm");
 void MainForm::AddSelectorTab(GuiDeckSelector* selector, const QString& label) {
     tabs->addTab(selector, label);
 
-    QObject::connect(selector, &GuiDeckSelector::DeleteClicked, [this, selector](){
+    auto deleteDeck = new QPushButton(tr("Remove the deck"));
+    selector->AddWidget(deleteDeck);
+    QObject::connect(deleteDeck, &QPushButton::clicked, [this, selector](){
             if (tabs->count() > 2) {
                 auto index = tabs->indexOf(selector);
                 tabs->removeTab(index);
                 selector->deleteLater();
             }
             });
+}
+
+void MainForm::AddSelectorTab() {
+    AddSelectorTab(new GuiDeckSelector(cardsTranslations), tr("New"));
 }
 
 void MainForm::RenameSelector(int index) {
@@ -48,7 +54,7 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
 void MainForm::CreateObjects(const QJsonObject& config) {
     setCentralWidget(new QWidget());
 
-    deckPreferenceTab = new DeckPreference(config["preference-tab"].toObject());
+    deckPreferenceTab = new DeckPreference(cardsTranslations, config["preference-tab"].toObject());
 
     tabs = new QTabWidget();
     tabs->addTab(deckPreferenceTab, tr("Deck preferences"));
@@ -58,7 +64,7 @@ void MainForm::CreateObjects(const QJsonObject& config) {
     actionButton = new QPushButton(tr("Calculate"));
     QObject::connect(actionButton, &QPushButton::clicked, this, &MainForm::ActivateCalculation);
 
-    calculator = new CalculatorWindow(this);
+    calculator = new CalculatorWindow(cardsTranslations, this);
 }
 
 void MainForm::CreateLayout() {
@@ -110,7 +116,7 @@ void MainForm::LoadSelectorTabs(const QJsonArray& array) {
         auto selectorTab = array[i].toObject();
         auto selector = selectorTab["selector"].toObject();
         auto label = selectorTab["label"].toString();
-        AddSelectorTab(new GuiDeckSelector(selector), label);
+        AddSelectorTab(new GuiDeckSelector(cardsTranslations, selector), label);
     }
 }
 

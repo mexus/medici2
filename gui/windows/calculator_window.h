@@ -6,7 +6,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTimer>
-//#include <QTextEdit>
 #include <QListWidget>
 #include <atomic>
 #include <calculator/manager.h>
@@ -16,7 +15,7 @@
 class CalculatorWindow : public QDialog {
     Q_OBJECT
 public:
-    CalculatorWindow(QWidget* parent = 0);
+    CalculatorWindow(const CardsTranslations&, QWidget* parent = 0);
     ~CalculatorWindow();
     void Calculate(DeckSelectors&&, medici::PPatienceSelector&&);
 
@@ -30,7 +29,7 @@ private:
 
     std::atomic_bool operationInProgress;
     calculator::Manager calculatorManager;
-    CardsTranslations cardsTranslations;
+    const CardsTranslations& cardsTranslations;
 
     std::uint8_t threadsCount;
     QHBoxLayout *layout;

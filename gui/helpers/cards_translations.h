@@ -11,6 +11,9 @@ class CardsTranslations : QObject {
 public:
     CardsTranslations();
 
+    const QString& SuitLongName(const Card::Suit&) const;
+    const QString& RankLongName(const Card::Rank&) const;
+
     const QString& CardShortName(const Card&) const;
     const QString& CardLongName(const Card&) const;
     void PopulateTranslations();
@@ -24,7 +27,8 @@ private:
     void PopulateSuits();
     void AddCard(const Card&);
 
-    static const QString& CardName(const std::map<Card, QString>& translations, const Card&);
+    template<class T>
+    static const QString& Name(const std::map<T, QString>& translations, const T&);
 };
 
 #endif /* GUI_HELPERS_CARDS_TRANSLATIONS_H */

@@ -1,7 +1,6 @@
 #include "gui_card_selector.h"
 
 #include <QLayout>
-#include <QVBoxLayout>
 #include <QTimer>
 #include <type_traits>
 #include <cards/standard-36-deck.h>
@@ -18,19 +17,19 @@ GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) {
     object->Highlight();
 }
 
-GuiCardSelector::GuiCardSelector(bool anyAllowed, bool inverseAllowed, QWidget* parent) :
-    QWidget(parent), anyAllowed(anyAllowed), inverseAllowed(inverseAllowed)
+GuiCardSelector::GuiCardSelector(const CardsTranslations& cardsTranslations, bool multipleAllowed) :
+    QWidget(), cardsTranslations(cardsTranslations), multipleAllowed(multipleAllowed)
 {
     CreateObjects();
     PopulateSuits();
     PopulateRanks();
     CreateLayout();
-    SelectData(this->suit, anyAllowed ? -1 : 0);
-    SelectData(this->rank, anyAllowed ? -1 : 0);
+    SelectData(this->suit, multipleAllowed ? -1 : 0);
+    SelectData(this->rank, multipleAllowed ? -1 : 0);
 }
 
-GuiCardSelector::GuiCardSelector(const QJsonObject& config, bool anyAllowed, bool inverseAllowed, QWidget* parent) :
-    GuiCardSelector(anyAllowed, inverseAllowed, parent)
+GuiCardSelector::GuiCardSelector(const CardsTranslations& cardsTranslations, const QJsonObject& config, bool multipleAllowed) :
+    GuiCardSelector(cardsTranslations, multipleAllowed)
 {
     SelectData(this->suit, config["suit"].toInt());
     SelectData(this->rank, config["rank"].toInt());
@@ -49,7 +48,7 @@ void GuiCardSelector::CreateObjects() {
     suit = new QComboBox();
     rank = new QComboBox();
     inverse = new QCheckBox(tr("Inverse"));
-    if (!inverseAllowed)
+    if (!multipleAllowed)
         inverse->setVisible(false);
 }
 
@@ -65,50 +64,54 @@ private:
 
 void GuiCardSelector::PopulateSuits() {
     Populater p(suit);
-    if (anyAllowed)
+    if (multipleAllowed)
         p.Add(tr("Any suit"), -1);
-    p.Add(tr("Diamond"), standard_36_deck::Suits::Diamonds);
-    p.Add(tr("Spade"), standard_36_deck::Suits::Spades);
-    p.Add(tr("Heart"), standard_36_deck::Suits::Hearts);
-    p.Add(tr("Clubs"), standard_36_deck::Suits::Clubs);
+    std::array<standard_36_deck::Suits, 4> suits {{
+        standard_36_deck::Suits::Diamonds,
+        standard_36_deck::Suits::Spades,
+        standard_36_deck::Suits::Hearts,
+        standard_36_deck::Suits::Clubs
+    }};
+    for (auto &suit : suits)
+        p.Add(cardsTranslations.SuitLongName(suit), suit);
 }
 
 void GuiCardSelector::PopulateRanks() {
     Populater p(rank);
-    if (anyAllowed)
+    if (multipleAllowed)
         p.Add(tr("Any rank"), -1);
-    p.Add(tr("Six"), standard_36_deck::Ranks::Six);
-    p.Add(tr("Seven"), standard_36_deck::Ranks::Seven);
-    p.Add(tr("Eight"), standard_36_deck::Ranks::Eight);
-    p.Add(tr("Nine"), standard_36_deck::Ranks::Nine);
-    p.Add(tr("Ten"), standard_36_deck::Ranks::Ten);
-    p.Add(tr("Jack"), standard_36_deck::Ranks::Jack);
-    p.Add(tr("Queen"), standard_36_deck::Ranks::Queen);
-    p.Add(tr("King"), standard_36_deck::Ranks::King);
-    p.Add(tr("Ace"), standard_36_deck::Ranks::Ace);
+    std::array<standard_36_deck::Ranks, 9> ranks {{
+        standard_36_deck::Ranks::Six,
+        standard_36_deck::Ranks::Seven,
+        standard_36_deck::Ranks::Eight,
+        standard_36_deck::Ranks::Nine,
+        standard_36_deck::Ranks::Ten,
+        standard_36_deck::Ranks::Jack,
+        standard_36_deck::Ranks::Queen,
+        standard_36_deck::Ranks::King,
+        standard_36_deck::Ranks::Ace
+    }};
+    for (auto &rank : ranks)
+        p.Add(cardsTranslations.RankLongName(rank), rank);
 }
 
 void GuiCardSelector::CreateLayout() {
-    auto layout = new QVBoxLayout();
-    layout->addWidget(suit);
-    layout->addWidget(rank);
-    layout->addWidget(inverse);
-
-    removeButton = new QPushButton(tr("Remove"));
-    layout->addWidget(removeButton);
-    QObject::connect(removeButton, &QPushButton::clicked, this, &GuiCardSelector::DeleteClicked);
+    innerLayout = new QVBoxLayout();
+    innerLayout->addWidget(suit);
+    innerLayout->addWidget(rank);
+    innerLayout->addWidget(inverse);
 
     frame = new QFrame();
-    frame->setLayout(layout);
+    frame->setLayout(innerLayout);
     frame->setFrameStyle(QFrame::StyledPanel);
+    innerLayout->setSizeConstraint(QLayout::SetFixedSize);
     
     setLayout(new QGridLayout());
     this->layout()->addWidget(frame);
-    this->layout()->setSizeConstraint(QLayout::SetFixedSize);
 }
 
-void GuiCardSelector::HideRemoveButton() {
-    removeButton->hide();
+void GuiCardSelector::AddWidget(QWidget *widget) {
+    innerLayout->addWidget(widget);
 }
 
 CardSelector GuiCardSelector::GetSelector() {
@@ -141,18 +144,21 @@ Card GuiCardSelector::GetCard() const {
 }
 
 void GuiCardSelector::Highlight() {
+    static const int highlightedStyle = QFrame::Panel | QFrame::Sunken;
     int style = frame->frameStyle();
-    int width = frame->lineWidth();
-    frame->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    frame->setLineWidth(3);
-
-    QTimer *timer = new QTimer(this);
-    timer->setSingleShot(true);
-    QTimer::connect(timer, &QTimer::timeout, [style, width, timer, this](){
-            frame->setFrameStyle(style);
-            frame->setLineWidth(width);
-            timer->deleteLater();
-            });
-    timer->start(5000);
+    if (style != highlightedStyle) {
+        int width = frame->lineWidth();
+        frame->setFrameStyle(highlightedStyle);
+        frame->setLineWidth(3);
+    
+        QTimer *timer = new QTimer(this);
+        timer->setSingleShot(true);
+        QTimer::connect(timer, &QTimer::timeout, [=](){
+                frame->setFrameStyle(style);
+                frame->setLineWidth(width);
+                timer->deleteLater();
+                });
+        timer->start(5000);
+    }
 }
 

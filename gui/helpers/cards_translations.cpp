@@ -80,7 +80,8 @@ void CardsTranslations::PopulateTranslations() {
         AddCard(card);
 }
 
-const QString& CardsTranslations::CardName(const std::map<Card, QString>& translations, const Card& card) {
+template<class T>
+const QString& CardsTranslations::Name(const std::map<T, QString>& translations, const T& card) {
     auto it = translations.find(card);
     if (it == translations.end())
         throw std::logic_error("Unknown card");
@@ -89,10 +90,18 @@ const QString& CardsTranslations::CardName(const std::map<Card, QString>& transl
 }
 
 const QString& CardsTranslations::CardShortName(const Card& card) const {
-    return CardName(cardsTranslationsShort, card);
+    return Name(cardsTranslationsShort, card);
 }
 
 const QString& CardsTranslations::CardLongName(const Card& card) const {
-    return CardName(cardsTranslationsLong, card);
+    return Name(cardsTranslationsLong, card);
+}
+
+const QString& CardsTranslations::SuitLongName(const Card::Suit& suit) const {
+    return Name(suitsTranslationsLong, suit);
+}
+
+const QString& CardsTranslations::RankLongName(const Card::Rank& rank) const {
+    return Name(ranksTranslationsLong, rank);
 }
 

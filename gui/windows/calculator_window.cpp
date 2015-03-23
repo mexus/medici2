@@ -6,7 +6,9 @@
 #include <QCloseEvent>
 #include <random>
 
-CalculatorWindow::CalculatorWindow(QWidget* parent) : QDialog(parent), operationInProgress(false), threadsCount(4) {
+CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations, QWidget* parent) :
+    QDialog(parent), operationInProgress(false), cardsTranslations(cardsTranslations), threadsCount(4)
+{
     QSettings settings;
     restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
 

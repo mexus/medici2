@@ -7,8 +7,10 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QJsonObject>
+#include <QVBoxLayout>
 #include <cards/card-selector.h>
 #include <helpers/gui_exception.h>
+#include <helpers/cards_translations.h>
 
 class GuiCardSelector : public QWidget {
 Q_OBJECT
@@ -18,28 +20,26 @@ public:
         NoSuitNoRank(GuiCardSelector*);
     };
 
-    GuiCardSelector(const QJsonObject&, bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
-    GuiCardSelector(bool anyAllowed = true, bool inverseAllowed = true, QWidget* parent = nullptr);
+    GuiCardSelector(const CardsTranslations&, const QJsonObject&, bool multipleAllowed = true);
+    GuiCardSelector(const CardsTranslations&, bool multipleAllowed = true);
     CardSelector GetSelector();
 
     QJsonObject GetConfig() const;
     Card GetCard() const;
     void Highlight();
-    void HideRemoveButton();
+    void AddWidget(QWidget*);
 private:
+    const CardsTranslations& cardsTranslations;
+    QVBoxLayout *innerLayout;
     QComboBox *suit, *rank;
     QCheckBox *inverse;
     QFrame *frame;
-    QPushButton *removeButton;
-    bool anyAllowed, inverseAllowed;
+    bool multipleAllowed;
 
     void CreateObjects();
     void CreateLayout();
     virtual void PopulateSuits();
     virtual void PopulateRanks();
-
-signals:
-    void DeleteClicked();
 };
 
 #endif /* GUI_SELECTORS_GUI_CARD_SELECTOR_H */
