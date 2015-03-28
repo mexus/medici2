@@ -6,5 +6,5 @@ sys.path.insert(0, os.path.normpath(os.path.join(here, '../ycm')))
 import ycmflags
 
 def FlagsForFile( filename ):
-    flags = ycmflags.YcmFlags(['gui'], enable_qt = True)
+    flags = ycmflags.YcmFlags()
     return flags.flags_for_file(filename)
