@@ -13,12 +13,8 @@ typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* c
     comboBox->setCurrentIndex(index);
 }
 
-GuiCardSelector::NoSuitNoRank::NoSuitNoRank(GuiCardSelector* object) {
-    object->Highlight();
-}
-
 GuiCardSelector::GuiCardSelector(const CardsTranslations& cardsTranslations, bool multipleAllowed) :
-    QWidget(), cardsTranslations(cardsTranslations), multipleAllowed(multipleAllowed)
+    QFrame(), cardsTranslations(cardsTranslations), multipleAllowed(multipleAllowed)
 {
     CreateObjects();
     PopulateSuits();
@@ -101,35 +97,33 @@ void GuiCardSelector::CreateLayout() {
     innerLayout->addWidget(rank);
     innerLayout->addWidget(inverse);
 
-    frame = new QFrame();
-    frame->setLayout(innerLayout);
-    frame->setFrameStyle(QFrame::StyledPanel);
     innerLayout->setSizeConstraint(QLayout::SetFixedSize);
     
-    setLayout(new QGridLayout());
-    this->layout()->addWidget(frame);
+    setLayout(innerLayout);
+
+    setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
 }
 
 void GuiCardSelector::AddWidget(QWidget *widget) {
     innerLayout->addWidget(widget);
 }
 
-CardSelector GuiCardSelector::GetSelector() {
+CardSelector GuiCardSelector::GetSelector(bool &ok) {
     int suitData = suit->currentData().toInt();
     int rankData = rank->currentData().toInt();
 
-    bool suitSelected = suitData != -1;
-    bool rankSelected = rankData != -1;
+    ok = true;
     bool isStraight = !inverse->isChecked();
-
-    if (suitSelected && rankSelected) {
+    if (suitData != -1 && rankData != -1) {
         return CardSelector(suitData, rankData, isStraight);
-    } else if (suitSelected) {
+    } else if (suitData != -1) {
         return CardSelector(Card::Suit(suitData), isStraight);
-    } else if (rankSelected) {
+    } else if (rankData != -1) {
         return CardSelector(Card::Rank(rankData), isStraight);
     } else {
-        throw NoSuitNoRank(this);
+        Highlight();
+        ok = false;
+        return CardSelector(0, 0, true);
     }
 }
 
@@ -145,17 +139,17 @@ Card GuiCardSelector::GetCard() const {
 
 void GuiCardSelector::Highlight() {
     static const int highlightedStyle = QFrame::Panel | QFrame::Sunken;
-    int style = frame->frameStyle();
+    int style = frameStyle();
     if (style != highlightedStyle) {
-        int width = frame->lineWidth();
-        frame->setFrameStyle(highlightedStyle);
-        frame->setLineWidth(3);
+        int width = lineWidth();
+        setFrameStyle(highlightedStyle);
+        setLineWidth(3);
     
         QTimer *timer = new QTimer(this);
         timer->setSingleShot(true);
         QTimer::connect(timer, &QTimer::timeout, [=](){
-                frame->setFrameStyle(style);
-                frame->setLineWidth(width);
+                setFrameStyle(style);
+                setLineWidth(width);
                 timer->deleteLater();
                 });
         timer->start(5000);

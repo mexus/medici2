@@ -6,13 +6,19 @@
 #include <QJsonArray>
 
 GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, bool newCard) :
-    QWidget(), cardsTranslations(cardsTranslations)
+    QFrame(), cardsTranslations(cardsTranslations)
 {
     CreateObjects();
     SetSpinBoxes();
     CreateLayout();
     if (newCard)
         AddCardSelector();
+}
+
+GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, GuiCardSelector* cardSelector) : 
+    GuiDeckSelector(cardsTranslations, false)
+{
+    AddCardSelector(cardSelector, false);
 }
 
 GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, const QJsonObject& config) :
@@ -60,19 +66,21 @@ void GuiDeckSelector::AddCardSelector(const QJsonObject& config) {
     AddCardSelector(new GuiCardSelector(cardsTranslations, config));
 }
 
-void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector) {
+void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector, bool removeButton) {
     selectors.insert(selector);
-    auto *deleteCard = new QPushButton(tr("Remove the card"));
-    selector->AddWidget(deleteCard);
-    QObject::connect(deleteCard, &QPushButton::clicked, [this, selector](){
-            if (selectors.size()==1)
-                return ;
-            selectors.erase(selector);
-            selector->disconnect();
-            selectorsLayout->removeWidget(selector);
-            selector->deleteLater();
-            });
-    selectorsLayout->insertWidget(selectorsLayout->count() - 1, selector);
+    if (removeButton) {
+        auto deleteCard = new QPushButton(tr("Remove the card"));
+        selector->AddWidget(deleteCard);
+        QObject::connect(deleteCard, &QPushButton::clicked, [this, selector](){
+                if (selectors.size()==1)
+                    return ;
+                selectors.erase(selector);
+                selector->disconnect();
+                selectorsLayout->removeWidget(selector);
+                selector->deleteLater();
+                });
+    }
+    selectorsLayout->addWidget(selector);
 }
 
 QSpinBox* GuiDeckSelector::CreateSpinBox(int min, int max) {
@@ -97,45 +105,62 @@ void GuiDeckSelector::SetSpinBoxes() {
 }
 
 void GuiDeckSelector::CreateLayout() {
-    auto mainLayout = new QVBoxLayout();
-    mainLayout->addWidget(enabled);
-    mainLayout->addWidget(selectorMode);
+    auto mainLayout = new QHBoxLayout();
+
+    configLayout = new QVBoxLayout();
+    configLayout->addWidget(enabled);
+    configLayout->addWidget(selectorMode);
     {
-        auto layout = new QHBoxLayout();
-        layout->addWidget(new QLabel(tr("Position from: ")));
-        layout->addWidget(positionStart);
-        layout->addWidget(new QLabel(tr(" to: ")));
-        layout->addWidget(positionEnd);
-        mainLayout->addLayout(layout);
+        auto layout = new QVBoxLayout();
+        {
+            auto subLayout = new QHBoxLayout();
+            subLayout->addWidget(new QLabel(tr("Position from")));
+            subLayout->addWidget(positionStart);
+            {
+                auto toLabel = new QLabel(tr("to"));
+                toLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+                subLayout->addWidget(toLabel);
+            }
+            subLayout->addWidget(positionEnd);
+            layout->addLayout(subLayout);
+        }
+        configLayout->addLayout(layout);
+
+        auto button = new QPushButton(tr("Add a card"));
+        configLayout->addWidget(button);
+        QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
     }
+    configLayout->setSizeConstraint(QLayout::SetFixedSize);
+    mainLayout->addLayout(configLayout);
+
     {
         selectorsLayout = new QHBoxLayout();
         {
-            auto button = new QPushButton(tr("Add a card"));
-            selectorsLayout->addWidget(button);
-            QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
         }
         selectorsLayout->setSizeConstraint(QLayout::SetFixedSize);
         mainLayout->addLayout(selectorsLayout);
     }
-
+    mainLayout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(mainLayout);
+    setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
 }
 
-void GuiDeckSelector::AddWidget(QWidget* widget) {
-    layout()->addWidget(widget);
+void GuiDeckSelector::AddButton(QPushButton* button) {
+    configLayout->addWidget(button);
 }
 
 std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
-    if (selectors.empty())
-        throw NoCards();
-
     std::unique_ptr<DeckAbstractSelector> selector;
     SelectorMode mode = static_cast<SelectorMode>(selectorMode->currentData().toUInt());
 
     std::vector<CardSelector> cardSelectors;
     for (auto &guiCardSelector: selectors) {
-        cardSelectors.push_back(std::move(guiCardSelector->GetSelector()));
+        bool ok;
+        auto cardSelector = guiCardSelector->GetSelector(ok);
+        if (ok)
+            cardSelectors.push_back(std::move(cardSelector));
+        else
+            return nullptr;
     }
     std::size_t from = static_cast<std::size_t>(positionStart->value());
     std::size_t to = static_cast<std::size_t>(positionEnd->value());

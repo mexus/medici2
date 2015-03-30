@@ -34,7 +34,7 @@ void CalculatorWindow::CreateObjects() {
             std::thread(&CalculatorWindow::RemoveThread, this).detach();
         });
 
-    updateProgressTimer = new QTimer();
+    updateProgressTimer = new QTimer(this);
     updateProgressTimer->setInterval(1000);
 
     progressBoxes = new QVBoxLayout();

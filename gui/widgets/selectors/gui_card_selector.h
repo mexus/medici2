@@ -1,7 +1,6 @@
 #ifndef GUI_SELECTORS_GUI_CARD_SELECTOR_H
 #define GUI_SELECTORS_GUI_CARD_SELECTOR_H
 
-#include <QWidget>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QPushButton>
@@ -9,20 +8,14 @@
 #include <QJsonObject>
 #include <QVBoxLayout>
 #include <cards/card-selector.h>
-#include <helpers/gui_exception.h>
 #include <helpers/cards_translations.h>
 
-class GuiCardSelector : public QWidget {
+class GuiCardSelector : public QFrame {
 Q_OBJECT
 public:
-    class NoSuitNoRank : public GuiException {
-    public:
-        NoSuitNoRank(GuiCardSelector*);
-    };
-
     GuiCardSelector(const CardsTranslations&, const QJsonObject&, bool multipleAllowed = true);
     GuiCardSelector(const CardsTranslations&, bool multipleAllowed = true);
-    CardSelector GetSelector();
+    CardSelector GetSelector(bool &ok);
 
     QJsonObject GetConfig() const;
     Card GetCard() const;
@@ -33,7 +26,6 @@ private:
     QVBoxLayout *innerLayout;
     QComboBox *suit, *rank;
     QCheckBox *inverse;
-    QFrame *frame;
     bool multipleAllowed;
 
     void CreateObjects();

@@ -10,12 +10,10 @@ add_executable(${EXE_NAME}
 
     windows/main_form.cpp
     windows/calculator_window.cpp
-
-    selectors/gui_card_selector.cpp
-    selectors/gui_deck_selector.cpp
-
     widgets/progress_widget.cpp
     widgets/deck_preference.cpp
+    widgets/selectors/gui_card_selector.cpp
+    widgets/selectors/gui_deck_selector.cpp
 
     helpers/cards_translations.cpp
 

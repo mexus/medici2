@@ -6,10 +6,10 @@
 #include <QSettings>
 #include <QJsonArray>
 #include <logxx/logxx.h>
-#include <selectors/gui_deck_selector.h>
-#include "calculator_window.h"
+#include <widgets/selectors/gui_deck_selector.h>
 #include <widgets/deck_preference.h>
 #include <helpers/cards_translations.h>
+#include "calculator_window.h"
 
 
 class MainForm : public QMainWindow {
@@ -31,15 +31,9 @@ protected:
     void CreateLayout();
 
     void AddSelectorTab(GuiDeckSelector*, const QString& label);
-    void AddSelectorTab();
-    void RenameSelector(int index);
         
     static logxx::Log cLog;
 
-    void LoadSelectorTabs(const QJsonArray&);
-    QJsonArray SaveSelectorTabs() const;
-
-    DeckSelectors GetSelectors();
     void ActivateCalculation();
 
 };
