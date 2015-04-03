@@ -1,5 +1,5 @@
-#ifndef GUI_WIDGETS_CLICKABLE_LABEL_H
-#define GUI_WIDGETS_CLICKABLE_LABEL_H
+#ifndef GUI_WIDGETS_CLICKABLE_GROUP_BOX_H
+#define GUI_WIDGETS_CLICKABLE_GROUP_BOX_H
 
 #include <QGroupBox>
 
@@ -13,4 +13,4 @@ signals:
     void doubleClicked();
 };
 
-#endif /* GUI_WIDGETS_CLICKABLE_LABEL_H */
+#endif /* GUI_WIDGETS_CLICKABLE_GROUP_BOX_H */
