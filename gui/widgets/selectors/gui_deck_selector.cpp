@@ -9,6 +9,7 @@
 GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, bool newCard) :
     ClicableGroupBox(), cardsTranslations(cardsTranslations)
 {
+    setTitle(tr("Double click to rename"));
     CreateObjects();
     SetSpinBoxes();
     SetupConnections();
