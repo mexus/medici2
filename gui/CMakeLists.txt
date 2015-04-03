@@ -12,6 +12,7 @@ add_executable(${EXE_NAME}
     windows/calculator_window.cpp
     widgets/progress_widget.cpp
     widgets/deck_preference.cpp
+    widgets/clickable_group_box.cpp
     widgets/selectors/gui_card_selector.cpp
     widgets/selectors/gui_deck_selector.cpp
 

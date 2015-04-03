@@ -4,35 +4,43 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QJsonArray>
+#include <QInputDialog>
 
 GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, bool newCard) :
-    QFrame(), cardsTranslations(cardsTranslations)
+    ClicableGroupBox(), cardsTranslations(cardsTranslations)
 {
     CreateObjects();
     SetSpinBoxes();
+    SetupConnections();
     CreateLayout();
     if (newCard)
         AddCardSelector();
 }
 
-GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, GuiCardSelector* cardSelector) : 
+GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, GuiCardSelector* cardSelector, const QString& label) :
     GuiDeckSelector(cardsTranslations, false)
 {
     AddCardSelector(cardSelector, false);
+    selectorMode->hide();
+    enabled->hide();
+    addCardButton->hide();
+    QObject::disconnect(renameConnection);
+    setTitle(label);
 }
 
 GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, const QJsonObject& config) :
     GuiDeckSelector(cardsTranslations, false)
 {
+    setTitle(config["label"].toString());
     auto index = selectorMode->findData(config["selector_mode"].toInt());
     if (index != -1)
         selectorMode->setCurrentIndex(index);
 
     auto positionConfig = config["position"].toObject();
-    positionStart->setValue(static_cast<int>(positionConfig["start"].toInt()));
-    positionEnd->setValue(static_cast<int>(positionConfig["end"].toInt()));
+    positionStart->setValue(static_cast<int>(positionConfig["start"].toInt(1)));
+    positionEnd->setValue(static_cast<int>(positionConfig["end"].toInt(1)));
 
-    enabled->setChecked(config["enabled"].toBool());
+    enabled->setChecked(config["enabled"].toBool(true));
 
     auto cards = config["cards"].toArray();
     for (int i = 0; i != cards.size(); ++i) {
@@ -51,6 +59,7 @@ QJsonObject GuiDeckSelector::GetConfig() const {
     position["start"] = positionStart->value();
     position["end"] = positionEnd->value();
 
+    config["label"] = title();
     config["cards"] = cards;
     config["selector_mode"] = selectorMode->currentData().toInt();
     config["position"] = position;
@@ -90,18 +99,33 @@ QSpinBox* GuiDeckSelector::CreateSpinBox(int min, int max) {
     return box;
 }
 
+void GuiDeckSelector::SetSpinBoxes() {
+    positionStart = CreateSpinBox(1, 36);
+    positionEnd = CreateSpinBox(1, 36);
+}
+
 void GuiDeckSelector::CreateObjects() {
     selectorMode = new QComboBox();
     selectorMode->addItem(tr("At least one of conditions must match"), SELECT_ONE);
     selectorMode->addItem(tr("All conditions must match"), SELECT_ALL);
     selectorMode->setCurrentIndex(0);
 
-    enabled = new QCheckBox(tr("Is enabled"));
+    enabled = new QCheckBox(tr("Enabled"));
+    addCardButton = new QPushButton(tr("Add a card"));
 }
 
-void GuiDeckSelector::SetSpinBoxes() {
-    positionStart = CreateSpinBox(1, 36);
-    positionEnd = CreateSpinBox(1, 36);
+template<typename... Args> struct Select {
+    template<typename C, typename R>
+    static constexpr auto Overload( R (C::*pmf)(Args...) ) -> decltype(pmf) {
+        return pmf;
+    }
+};
+
+void GuiDeckSelector::SetupConnections() {
+    QObject::connect(addCardButton, &QPushButton::clicked, [this](){AddCardSelector();});
+    QObject::connect(positionStart, Select<int>::Overload(&QSpinBox::valueChanged), this, &GuiDeckSelector::ValidatePositionStart);
+    QObject::connect(positionEnd, Select<int>::Overload(&QSpinBox::valueChanged), this, &GuiDeckSelector::ValidatePositionEnd);
+    renameConnection = QObject::connect(this, &ClicableGroupBox::doubleClicked, this, &GuiDeckSelector::RenameDeck);
 }
 
 void GuiDeckSelector::CreateLayout() {
@@ -126,9 +150,7 @@ void GuiDeckSelector::CreateLayout() {
         }
         configLayout->addLayout(layout);
 
-        auto button = new QPushButton(tr("Add a card"));
-        configLayout->addWidget(button);
-        QObject::connect(button, &QPushButton::clicked, [this](){AddCardSelector();});
+        configLayout->addWidget(addCardButton);
     }
     configLayout->setSizeConstraint(QLayout::SetFixedSize);
     mainLayout->addLayout(configLayout);
@@ -142,7 +164,7 @@ void GuiDeckSelector::CreateLayout() {
     }
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(mainLayout);
-    setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+    setFlat(false);
 }
 
 void GuiDeckSelector::AddButton(QPushButton* button) {
@@ -176,5 +198,23 @@ std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
             throw std::logic_error("Unknown mode");
     }
     return selector;
+}
+
+void GuiDeckSelector::ValidatePositionStart(int newValue) {
+    if (newValue > positionEnd->value())
+        positionEnd->setValue(newValue);
+}
+
+void GuiDeckSelector::ValidatePositionEnd(int newValue) {
+    int start = positionStart->value();
+    if (newValue < start)
+        positionEnd->setValue(start);
+}
+
+void GuiDeckSelector::RenameDeck() {
+    bool ok;
+    auto label = QInputDialog::getText(this, tr("Conditions set"), tr("Enter name for a conditions set"), QLineEdit::Normal, title(), &ok);
+    if (ok && !label.isEmpty())
+        setTitle(label);
 }
 

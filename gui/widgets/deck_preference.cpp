@@ -69,7 +69,7 @@ void DeckPreference::CreateLayout() {
     layout->addWidget(iChingCheck);
 
 
-    findMaximumConvolutions = new QCheckBox(tr("Find maximum convolutions"));
+    findMaximumConvolutions = new QCheckBox(tr("Find maximum convolutions on a target card"));
     layout->addWidget(findMaximumConvolutions);
 
     {
@@ -80,7 +80,7 @@ void DeckPreference::CreateLayout() {
     }
 
     decksLayout = new QVBoxLayout();
-    decksLayout->addWidget(new GuiDeckSelector(cardsTranslations, targetCard));
+    decksLayout->addWidget(new GuiDeckSelector(cardsTranslations, targetCard, tr("Target card")));
     layout->addLayout(decksLayout);
 
     layout->setSizeConstraint(QLayout::SetFixedSize);
