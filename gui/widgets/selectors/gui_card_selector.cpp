@@ -6,7 +6,8 @@
 #include <cards/standard-36-deck.h>
 
 template<class T>
-typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* comboBox, int data) {
+typename std::enable_if<std::is_same<T, QComboBox>::value>::type SelectData(T* comboBox, int data)
+{
     int index = comboBox->findData(data);
     if (index == -1)
         throw std::runtime_error("Unknown data");
@@ -40,7 +41,8 @@ QJsonObject GuiCardSelector::GetConfig() const {
     return config;
 }
 
-void GuiCardSelector::CreateObjects() {
+void GuiCardSelector::CreateObjects()
+{
     suit = new QComboBox();
     rank = new QComboBox();
     inverse = new QCheckBox(tr("Inverse"));
@@ -50,15 +52,19 @@ void GuiCardSelector::CreateObjects() {
 
 class Populater {
 public:
-    Populater(QComboBox* box) : box(box) {}
-    void Add(const QString& title, int value) {
+    Populater(QComboBox* box) : box(box)
+    {
+    }
+    void Add(const QString& title, int value)
+    {
         box->addItem(title, value);
     }
 private:
     QComboBox* box;
 };
 
-void GuiCardSelector::PopulateSuits() {
+void GuiCardSelector::PopulateSuits()
+{
     Populater p(suit);
     if (multipleAllowed)
         p.Add(tr("Any suit"), -1);
@@ -72,7 +78,8 @@ void GuiCardSelector::PopulateSuits() {
         p.Add(cardsTranslations.SuitLongName(suit), suit);
 }
 
-void GuiCardSelector::PopulateRanks() {
+void GuiCardSelector::PopulateRanks()
+{
     Populater p(rank);
     if (multipleAllowed)
         p.Add(tr("Any rank"), -1);
@@ -91,7 +98,8 @@ void GuiCardSelector::PopulateRanks() {
         p.Add(cardsTranslations.RankLongName(rank), rank);
 }
 
-void GuiCardSelector::CreateLayout() {
+void GuiCardSelector::CreateLayout()
+{
     innerLayout = new QVBoxLayout();
     innerLayout->addWidget(suit);
     innerLayout->addWidget(rank);
@@ -104,11 +112,13 @@ void GuiCardSelector::CreateLayout() {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
 }
 
-void GuiCardSelector::AddWidget(QWidget *widget) {
+void GuiCardSelector::AddWidget(QWidget *widget)
+{
     innerLayout->addWidget(widget);
 }
 
-CardSelector GuiCardSelector::GetSelector(bool &ok) {
+CardSelector GuiCardSelector::GetSelector(bool &ok)
+{
     int suitData = suit->currentData().toInt();
     int rankData = rank->currentData().toInt();
 
@@ -137,7 +147,8 @@ Card GuiCardSelector::GetCard() const {
     return {suitData, rankData};
 }
 
-void GuiCardSelector::Highlight() {
+void GuiCardSelector::Highlight()
+{
     static const int highlightedStyle = QFrame::Panel | QFrame::Sunken;
     int style = frameStyle();
     if (style != highlightedStyle) {
@@ -147,7 +158,7 @@ void GuiCardSelector::Highlight() {
     
         QTimer *timer = new QTimer(this);
         timer->setSingleShot(true);
-        QTimer::connect(timer, &QTimer::timeout, [=](){
+        QTimer::connect(timer, &QTimer::timeout, [=]() {
                 setFrameStyle(style);
                 setLineWidth(width);
                 timer->deleteLater();

@@ -1,12 +1,17 @@
 #include "medici.h"
+#include <operators.h>
+#include <comparisons.h>
 #include "operators.h"
 
 logxx::Log TestMedici::cLog("TestMedici");
 
-TestMedici::TestMedici() : TestFW("medici"){
+TestMedici::TestMedici() :
+    TestFW("medici")
+{
 }
 
-bool TestMedici::Tests(){
+bool TestMedici::Tests()
+{
     using namespace standard_36_deck;
     ArrayType convergingDeck1 { {{Jack, Spades}, {Nine, Diamonds}, {Ten, Spades}, {Queen, Diamonds}, {Seven, Hearts}, {Seven, Diamonds}, {Queen, Spades}, {Jack, Hearts}, {Ten, Diamonds}, {Jack, Clubs}, {Ten, Hearts}, {Seven, Spades}, {Nine, Spades}, {Eight, Spades}, {King, Diamonds}, {Nine, Hearts}, {Six, Hearts}, {Ace, Spades}, {Ace, Diamonds}, {Seven, Clubs}, {Jack, Diamonds}, {Ace, Clubs}, {Eight, Hearts}, {Ace, Hearts}, {Ten, Clubs}, {Six, Diamonds}, {Eight, Clubs}, {King, Spades}, {King, Hearts}, {Nine, Clubs}, {Queen, Hearts}, {Six, Spades}, {King, Clubs}, {Six, Clubs}, {Eight, Diamonds}, {Queen, Clubs}} };
     Patience::PatienceInfo deck1Info;
@@ -51,13 +56,14 @@ bool TestMedici::Tests(){
     return Test(convergingDeck1, true, deck1Info) && Test(notConvergingDeck2, false) && Test(convergingDeck3, true, deck3Info);
 }
 
-bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Patience::PatienceInfo& etalonInfo){
+bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Patience::PatienceInfo& etalonInfo)
+{
     S_LOG("Test");
     Patience::PatienceInfo resultInfo;
     bool resultConverges = Patience::Converge(deck, resultInfo);
 
     bool res;
-    if (resultConverges != etalonConverges){
+    if (resultConverges != etalonConverges) {
         auto &s = log(logxx::error) << "Deck should ";
         if (!etalonConverges)
             s << "not ";
@@ -70,18 +76,19 @@ bool TestMedici::Test(const ArrayType& deck, bool etalonConverges, const Patienc
         res = Compare(resultInfo, etalonInfo);
     else
         res = true;
-    if (!res){
+    if (!res) {
         log(logxx::error) << "Failed on {" << deck << "}" << logxx::endl;
     }
     return res;
 }
 
-bool TestMedici::Compare(const Patience::PatienceInfo& etalon, const Patience::PatienceInfo& result){
+bool TestMedici::Compare(const Patience::PatienceInfo& etalon, const Patience::PatienceInfo& result)
+{
     S_LOG("Compare");
-    if (!TestFW::Compare(etalon.convolutions, result.convolutions)){
+    if (!::Compare(etalon.convolutions, result.convolutions)) {
         log(logxx::error) << "Convolutions check failed" << logxx::endl;
         return false;
-    } else if (!TestFW::Compare(etalon.stationars, result.stationars)){
+    } else if (!::Compare(etalon.stationars, result.stationars)) {
         log(logxx::error) << "Stationars check failed" << logxx::endl;
         return false;
     } else

@@ -3,16 +3,16 @@
 
 #include "deck.h"
 
-namespace standard_36_deck{
+namespace standard_36_deck {
 
-    enum Suits{
+    enum Suits {
         Spades = 0,
         Hearts = 1,
         Diamonds = 2,
         Clubs = 3
     };  
     
-    enum Ranks{
+    enum Ranks {
         Six,
         Seven,
         Eight,

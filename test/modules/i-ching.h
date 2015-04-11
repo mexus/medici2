@@ -2,7 +2,7 @@
 #define TEST_I_CHING_H
 
 #include <i-ching/i-ching.h>
-#include "../test_fw.h"
+#include <test_fw.h>
 
 class TestIChing : public TestFW{
 public:

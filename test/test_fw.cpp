@@ -3,14 +3,18 @@
 #include <fstream>
 #include <cstring>
 
-TestFW::TestFW(const std::string& label, logxx::LogLevel l) : label(label), desiredLevel(l) {
+TestFW::TestFW(const std::string& label, logxx::LogLevel l) :
+    label(label), desiredLevel(l)
+{
 
 }
 
-TestFW::~TestFW() {
+TestFW::~TestFW()
+{
 }
 
-bool TestFW::RunTests(bool colouredOutput) {
+bool TestFW::RunTests(bool colouredOutput)
+{
     static const std::map<bool, std::string> colouredResult {
         {true, "\033[1;32mPASSED\033[0m"},
         {false, "\033[1;31mFAILED\033[0m"}
@@ -43,7 +47,8 @@ std::string TestFW::GetLabel() const {
         return label;
 }
 
-bool TestFW::CompareFiles(const std::string& testName, const std::string& etalonName) {
+bool TestFW::CompareFiles(const std::string& testName, const std::string& etalonName)
+{
     std::ifstream test(testName), etalon(etalonName);
     if (!test || !etalon)
         return false;

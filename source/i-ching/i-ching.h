@@ -30,7 +30,6 @@ namespace i_ching {
 
     SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info);
 
-
 }
 
 #endif /* I_CHING_I_CHING_H */

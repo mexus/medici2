@@ -68,20 +68,23 @@ QJsonObject GuiDeckSelector::GetConfig() const {
     return config;
 }
 
-void GuiDeckSelector::AddCardSelector() {
+void GuiDeckSelector::AddCardSelector()
+{
     AddCardSelector(new GuiCardSelector(cardsTranslations));
 }
 
-void GuiDeckSelector::AddCardSelector(const QJsonObject& config) {
+void GuiDeckSelector::AddCardSelector(const QJsonObject& config)
+{
     AddCardSelector(new GuiCardSelector(cardsTranslations, config));
 }
 
-void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector, bool removeButton) {
+void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector, bool removeButton)
+{
     selectors.insert(selector);
     if (removeButton) {
         auto deleteCard = new QPushButton(tr("Remove the card"));
         selector->AddWidget(deleteCard);
-        QObject::connect(deleteCard, &QPushButton::clicked, [this, selector](){
+        QObject::connect(deleteCard, &QPushButton::clicked, [this, selector]() {
                 if (selectors.size()==1)
                     return ;
                 selectors.erase(selector);
@@ -93,19 +96,22 @@ void GuiDeckSelector::AddCardSelector(GuiCardSelector* selector, bool removeButt
     selectorsLayout->addWidget(selector);
 }
 
-QSpinBox* GuiDeckSelector::CreateSpinBox(int min, int max) {
+QSpinBox* GuiDeckSelector::CreateSpinBox(int min, int max)
+{
     auto box = new QSpinBox();
     box->setRange(min, max);
     box->setSingleStep(1);
     return box;
 }
 
-void GuiDeckSelector::SetSpinBoxes() {
+void GuiDeckSelector::SetSpinBoxes()
+{
     positionStart = CreateSpinBox(1, 36);
     positionEnd = CreateSpinBox(1, 36);
 }
 
-void GuiDeckSelector::CreateObjects() {
+void GuiDeckSelector::CreateObjects()
+{
     selectorMode = new QComboBox();
     selectorMode->addItem(tr("At least one of conditions must match"), SELECT_ONE);
     selectorMode->addItem(tr("All conditions must match"), SELECT_ALL);
@@ -117,19 +123,22 @@ void GuiDeckSelector::CreateObjects() {
 
 template<typename... Args> struct Select {
     template<typename C, typename R>
-    static constexpr auto Overload( R (C::*pmf)(Args...) ) -> decltype(pmf) {
+    static constexpr auto Overload( R (C::*pmf)(Args...) ) -> decltype(pmf)
+    {
         return pmf;
     }
 };
 
-void GuiDeckSelector::SetupConnections() {
-    QObject::connect(addCardButton, &QPushButton::clicked, [this](){AddCardSelector();});
+void GuiDeckSelector::SetupConnections()
+{
+    QObject::connect(addCardButton, &QPushButton::clicked, [this]() {AddCardSelector();});
     QObject::connect(positionStart, Select<int>::Overload(&QSpinBox::valueChanged), this, &GuiDeckSelector::ValidatePositionStart);
     QObject::connect(positionEnd, Select<int>::Overload(&QSpinBox::valueChanged), this, &GuiDeckSelector::ValidatePositionEnd);
     renameConnection = QObject::connect(this, &ClicableGroupBox::doubleClicked, this, &GuiDeckSelector::RenameDeck);
 }
 
-void GuiDeckSelector::CreateLayout() {
+void GuiDeckSelector::CreateLayout()
+{
     auto mainLayout = new QHBoxLayout();
 
     configLayout = new QVBoxLayout();
@@ -168,7 +177,8 @@ void GuiDeckSelector::CreateLayout() {
     setFlat(false);
 }
 
-void GuiDeckSelector::AddButton(QPushButton* button) {
+void GuiDeckSelector::AddButton(QPushButton* button)
+{
     configLayout->addWidget(button);
 }
 
@@ -201,18 +211,21 @@ std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
     return selector;
 }
 
-void GuiDeckSelector::ValidatePositionStart(int newValue) {
+void GuiDeckSelector::ValidatePositionStart(int newValue)
+{
     if (newValue > positionEnd->value())
         positionEnd->setValue(newValue);
 }
 
-void GuiDeckSelector::ValidatePositionEnd(int newValue) {
+void GuiDeckSelector::ValidatePositionEnd(int newValue)
+{
     int start = positionStart->value();
     if (newValue < start)
         positionEnd->setValue(start);
 }
 
-void GuiDeckSelector::RenameDeck() {
+void GuiDeckSelector::RenameDeck()
+{
     bool ok;
     auto label = QInputDialog::getText(this, tr("Conditions set"), tr("Enter name for a conditions set"), QLineEdit::Normal, title(), &ok);
     if (ok && !label.isEmpty())

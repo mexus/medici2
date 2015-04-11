@@ -4,13 +4,17 @@
 #include <array>
 #include <cstdint>
 
-struct Card{
+struct Card {
     struct Suit;
     struct Rank;
 
-    struct Suit{
+    struct Suit {
         template<typename T>
-        Suit(typename std::enable_if<std::is_integral<T>::value, T>::type val) : Suit(static_cast<std::uint_fast8_t>(val)) {}
+        Suit(typename std::enable_if<std::is_integral<T>::value, T>::type val) :
+            Suit(static_cast<std::uint_fast8_t>(val))
+        {
+        }
+
         Suit(std::uint_fast8_t);
         Suit(const Rank&) = delete;
         Suit();
@@ -20,9 +24,13 @@ struct Card{
         bool operator<(const Suit&) const;
     };
 
-    struct Rank{
+    struct Rank {
         template<typename T>
-        Rank(typename std::enable_if<std::is_integral<T>::value, T>::type val) : Rank(static_cast<std::uint_fast8_t>(val)) {}
+        Rank(typename std::enable_if<std::is_integral<T>::value, T>::type val) :
+            Rank(static_cast<std::uint_fast8_t>(val))
+        {
+        }
+
         Rank(std::uint_fast8_t);
         Rank(const Suit&) = delete;
         Rank();
@@ -38,11 +46,14 @@ struct Card{
 };
 
 template<std::size_t n>
-struct Deck{
+struct Deck {
     typedef std::array<Card, n> ArrayType;
     static const ArrayType cards;
 
-    static constexpr std::size_t N() {return n;}
+    static constexpr std::size_t N()
+    {
+        return n;
+    }
 };
 
 #endif /* CARDS_DECK_H */

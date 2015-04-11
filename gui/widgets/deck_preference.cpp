@@ -25,12 +25,13 @@ DeckPreference::DeckPreference(const CardsTranslations& cardsTranslations, const
     }
 }
 
-void DeckPreference::AddDeckSelector(GuiDeckSelector* selector) {
+void DeckPreference::AddDeckSelector(GuiDeckSelector* selector)
+{
     deckSelectors.insert(selector);
     decksLayout->addWidget(selector);
 
     auto removeButton = new QPushButton(tr("Remove the conditions set"));
-    QObject::connect(removeButton, &QPushButton::clicked, [=](){
+    QObject::connect(removeButton, &QPushButton::clicked, [=]() {
             if (QMessageBox::question(this, tr("Deck conditions removal"),
                 tr("Do you really want to remove this set of conditions?")) == QMessageBox::Yes)
             {
@@ -40,11 +41,13 @@ void DeckPreference::AddDeckSelector(GuiDeckSelector* selector) {
     selector->AddButton(removeButton);
 }
 
-void DeckPreference::AddNewDeckSelector() {
+void DeckPreference::AddNewDeckSelector()
+{
     AddDeckSelector(new GuiDeckSelector(cardsTranslations));
 }
 
-void DeckPreference::RemoveDeckSelector(GuiDeckSelector* selector) {
+void DeckPreference::RemoveDeckSelector(GuiDeckSelector* selector)
+{
     deckSelectors.erase(selector);
     decksLayout->removeWidget(selector);
     delete selector;
@@ -62,7 +65,8 @@ QJsonObject DeckPreference::GetConfig() const {
     return config;
 }
 
-void DeckPreference::CreateLayout() {
+void DeckPreference::CreateLayout()
+{
     auto layout = new QVBoxLayout();
     
     iChingCheck = new QCheckBox(tr("Deck should be I-Ching balanced"));

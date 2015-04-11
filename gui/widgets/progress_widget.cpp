@@ -2,19 +2,22 @@
 
 #include <QGridLayout>
 
-ProgressWidget::ProgressWidget(std::uint8_t threadNumber, QWidget *parent) : QGroupBox(tr("Thread #") + QString::number(threadNumber), parent)
+ProgressWidget::ProgressWidget(std::uint8_t threadNumber, QWidget *parent) :
+    QGroupBox(tr("Thread #") + QString::number(threadNumber), parent)
 {
     CreateObjects();
     CreateLayout();
 }
 
-void ProgressWidget::CreateObjects() {
+void ProgressWidget::CreateObjects()
+{
     totalDecks = new QLabel("0");
     suitableDecks = new QLabel("0");
     runningTime = new QLabel("0");
 }
 
-void ProgressWidget::CreateLayout() {
+void ProgressWidget::CreateLayout()
+{
     auto layout = new QGridLayout();
     layout->addWidget(new QLabel(tr("Total decks:")),      0, 0);
     layout->addWidget(totalDecks,                          0, 1);
@@ -29,7 +32,8 @@ void ProgressWidget::CreateLayout() {
     setLayout(layout);
 }
 
-void ProgressWidget::Set(const calculator::Thread::RunParameters& params) {
+void ProgressWidget::Set(const calculator::Thread::RunParameters& params)
+{
     totalDecks->setText(QString::number(params.checkedDecks));
     suitableDecks->setText(QString::number(params.suitableDecks));
     auto seconds = std::chrono::duration_cast<std::chrono::duration<float>>(params.runningTime).count();;

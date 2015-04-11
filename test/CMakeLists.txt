@@ -4,6 +4,7 @@ configure_file (
     "${CMAKE_CURRENT_BINARY_DIR}/config.h"
 )
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(".")
 
 SET (TEST_EXE medici-test)
 add_executable(${TEST_EXE}

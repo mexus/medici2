@@ -1,17 +1,22 @@
 #include "deck-selector.h"
+#include <operators.h>
 #include "operators.h"
 
 using namespace standard_36_deck;
 logxx::Log TestDeckSelector::cLog("TestDeckSelector");
 
-TestDeckSelector::TestDeckSelector() : TestFW("deck-selector"){
+TestDeckSelector::TestDeckSelector() :
+    TestFW("deck-selector")
+{
 }
 
-bool TestDeckSelector::Tests(){
+bool TestDeckSelector::Tests()
+{
     return TestAllSelector() && TestOneSelector() && TestComplex();
 }
 
-bool TestDeckSelector::TestAllSelector(){
+bool TestDeckSelector::TestAllSelector()
+{
     auto deck1 = DeckType::cards;
     deck1[0] = {Diamonds, Nine};
     deck1[1] = {Hearts, Nine};
@@ -26,7 +31,8 @@ bool TestDeckSelector::TestAllSelector(){
     return TestSelector(deck1, deckSelector1, true) && TestSelector(deck1, deckSelector2, true) && TestSelector(deck1, deckSelector3, false);
 }
 
-bool TestDeckSelector::TestOneSelector(){
+bool TestDeckSelector::TestOneSelector()
+{
     auto deck1 = DeckType::cards;
     deck1[0] = {Spades, King};
     deck1[1] = {Hearts, Queen};
@@ -44,7 +50,8 @@ bool TestDeckSelector::TestOneSelector(){
         TestSelector(deck1, deckSelector4, false);
 }
 
-bool TestDeckSelector::TestComplex(){
+bool TestDeckSelector::TestComplex()
+{
     S_LOG("TestComplex");
     using namespace standard_36_deck;
     standard_36_deck::Deck::ArrayType deck1= {{
@@ -99,19 +106,21 @@ bool TestDeckSelector::TestComplex(){
     selectors.AddDeckSelector(secondCard);
     selectors.AddDeckSelector(thirdCard);
 
-    if (!selectors.Check(deck1)){
+    if (!selectors.Check(deck1)) {
         log(logxx::error) << "Failed" << logxx::endl;
         return false;
     } else
         return true;
 }
 
-void PrintDeckSelectorInfo(std::ostream& s, const DeckAbstractSelector& abstractSelector){
+void PrintDeckSelectorInfo(std::ostream& s, const DeckAbstractSelector& abstractSelector)
+{
     s << "range {" << abstractSelector.from << ", " << abstractSelector.to << "}, ";
     s << "card selectors: {" << abstractSelector.cardSelectors << "}";
 }
 
-std::ostream& operator <<(std::ostream& s, const DeckAbstractSelector& abstractSelector){
+std::ostream& operator <<(std::ostream& s, const DeckAbstractSelector& abstractSelector)
+{
     try {
         auto &selector = dynamic_cast<const DeckAllSelector&>(abstractSelector);
         s << "DeckAllSelector ";
@@ -130,12 +139,14 @@ std::ostream& operator <<(std::ostream& s, const DeckAbstractSelector& abstractS
     return s;
 }
 
-void PrintDeckPart(std::ostream& s, const TestDeckSelector::ArrayType& deck, std::size_t from, std::size_t to){
+void PrintDeckPart(std::ostream& s, const TestDeckSelector::ArrayType& deck, std::size_t from, std::size_t to)
+{
     std::vector<Card> cards(deck.begin() + from, deck.begin() + to + 1);
     s << cards;
 }
 
-bool TestDeckSelector::TestSelector(const ArrayType& deck, const DeckAbstractSelector& deckSelector, bool etalonResult){
+bool TestDeckSelector::TestSelector(const ArrayType& deck, const DeckAbstractSelector& deckSelector, bool etalonResult)
+{
     S_LOG("TestSelector");
     auto result = deckSelector.Check(deck);
     if (result == etalonResult)

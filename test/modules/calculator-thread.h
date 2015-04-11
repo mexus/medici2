@@ -1,7 +1,7 @@
 #ifndef TEST_CALCULATOR_THREAD_H
 #define TEST_CALCULATOR_THREAD_H
 
-#include "../test_fw.h"
+#include <test_fw.h>
 #include <medici/patience-selector.h>
 
 class TestCalculatorThread : public TestFW {

@@ -8,7 +8,11 @@
 class DeckAbstractSelector{
 public:
     template<std::size_t N>
-    bool Check(const std::array<Card, N>& deck) const;
+    bool Check(const std::array<Card, N>& deck) const
+    {
+        std::vector<Card> deckPart(deck.begin() + from, deck.begin() + to + 1);
+        return Check(deckPart);
+    }
 
 protected:
     const std::vector<CardSelector> cardSelectors;
@@ -24,15 +28,26 @@ class DeckSelectors{
 public:
     template<class T>
     typename std::enable_if<std::is_base_of<DeckAbstractSelector, T>::value, void>::type
-    AddDeckSelector(const T&);
+    AddDeckSelector(const T& s)
+    {
+        deckSelectors.emplace_back(new T(s));
+    }
 
     void AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&&);
 
     template<std::size_t N>
-    bool Check(const std::array<Card, N>& deck) const;
+    bool Check(const std::array<Card, N>& deck) const
+    {
+        for (auto &deckSelector : deckSelectors) {
+            if (!deckSelector->Check(deck))
+                return false;
+        }
+        return true;
+    }
 
     template<std::size_t N>
-    bool operator()(const std::array<Card, N>& deck) const {
+    bool operator()(const std::array<Card, N>& deck) const
+    {
         return Check(deck);
     }
 
@@ -61,7 +76,5 @@ public:
 protected:
     bool Check(const std::vector<Card>& deckPart) const;
 };
-
-#include "deck-selector.hpp"
 
 #endif /* CARDS_DECK_SELECTOR_H */

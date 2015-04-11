@@ -1,12 +1,19 @@
+#define private public
+#include <cards/deck.h>
+#include <cards/deck-selector.h>
+#undef private
+
 #include "operators.h"
 
 namespace std {
 
-    ostream& operator<<(ostream& s, const Card& card){
+    ostream& operator<<(ostream& s, const Card& card)
+    {
         return s << "suit #" << (int)card.suit.value << " rank #" << (int)card.rank.value;
     }
 
-    ostream& operator<<(ostream& s, const CardSelector& cardSelector){
+    ostream& operator<<(ostream& s, const CardSelector& cardSelector)
+    {
         s << "{";
         if (cardSelector.straight)
             s << "straight";
@@ -14,11 +21,11 @@ namespace std {
             s << "inverse";
         s << ", ";
         bool printSeparator = false;
-        if (cardSelector.suitSet){
+        if (cardSelector.suitSet) {
             s << "suit #" << static_cast<int>(cardSelector.suit.value);
             printSeparator = true;
         }
-        if (cardSelector.rankSet){
+        if (cardSelector.rankSet) {
             if (printSeparator)
                 s << ", ";
             s << "rank #" << static_cast<int>(cardSelector.rank.value);
@@ -27,9 +34,11 @@ namespace std {
         return s;
     }
 
-    ostream& operator<<(ostream& s, const calculator::Thread::RunParameters& params) {
+    ostream& operator<<(ostream& s, const calculator::Thread::RunParameters& params)
+    {
+        using namespace chrono;
         return s << "total " << params.checkedDecks << " decks, suitable " << params.suitableDecks << " decks, " <<
-            "running for " << std::chrono::duration_cast<std::chrono::duration<float>>(params.runningTime).count() << "s";
+            "running for " << duration_cast<duration<float>>(params.runningTime).count() << "s";
 
     }
 

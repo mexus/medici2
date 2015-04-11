@@ -1,28 +1,48 @@
 #include "deck.h"
 
 
-Card::Suit::Suit() : value(0) {}
-Card::Suit::Suit(std::uint_fast8_t v) : value(v) {}
-Card::Rank::Rank() : value(0) {}
-Card::Rank::Rank(std::uint_fast8_t v) : value(v) {}
+Card::Suit::Suit() :
+    value(0)
+{
+}
 
-bool Card::Suit::operator==(const Suit& other) const {
+Card::Suit::Suit(std::uint_fast8_t v) :
+    value(v)
+{
+}
+
+Card::Rank::Rank() :
+    value(0)
+{
+}
+
+Card::Rank::Rank(std::uint_fast8_t v) :
+    value(v)
+{
+}
+
+bool Card::Suit::operator==(const Suit& other) const
+{
     return value == other.value;
 }
 
-bool Card::Suit::operator<(const Suit& other) const {
+bool Card::Suit::operator<(const Suit& other) const
+{
     return value < other.value;
 }
 
-bool Card::Rank::operator==(const Rank& other) const {
+bool Card::Rank::operator==(const Rank& other) const
+{
     return value == other.value;
 }
 
-bool Card::Rank::operator<(const Rank& other) const {
+bool Card::Rank::operator<(const Rank& other) const
+{
     return value < other.value;
 }
 
-bool Card::operator<(const Card& other) const{
+bool Card::operator<(const Card& other) const
+{
     if (suit == other.suit)
         return rank < other.rank;
     else

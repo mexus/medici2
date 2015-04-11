@@ -1,7 +1,7 @@
 #ifndef TEST_CALCULATOR_MANAGER_H
 #define TEST_CALCULATOR_MANAGER_H
 
-#include "../test_fw.h"
+#include <test_fw.h>
 
 class TestCalculatorManager : public TestFW {
 public:

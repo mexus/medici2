@@ -6,7 +6,8 @@ CardsTranslations::CardsTranslations() : QObject(nullptr)
     PopulateTranslations();
 }
 
-void CardsTranslations::PopulateRanks() {
+void CardsTranslations::PopulateRanks()
+{
     ranksTranslationsLong[standard_36_deck::Six]   = tr("Six");
     ranksTranslationsLong[standard_36_deck::Seven] = tr("Seven");
     ranksTranslationsLong[standard_36_deck::Eight] = tr("Eight");
@@ -28,7 +29,8 @@ void CardsTranslations::PopulateRanks() {
     ranksTranslationsShort[standard_36_deck::Ace]   = tr("A");
 }
 
-void CardsTranslations::PopulateSuits() {
+void CardsTranslations::PopulateSuits()
+{
     suitsTranslationsLong[standard_36_deck::Diamonds] = tr("Diamonds");
     suitsTranslationsLong[standard_36_deck::Spades]   = tr("Spades");
     suitsTranslationsLong[standard_36_deck::Hearts]   = tr("Hearts");
@@ -40,7 +42,8 @@ void CardsTranslations::PopulateSuits() {
     suitsTranslationsShort[standard_36_deck::Clubs]    = tr("c");
 }
 
-void CardsTranslations::AddCard(const Card& card) {
+void CardsTranslations::AddCard(const Card& card)
+{
     auto &suit = card.suit;
     auto &rank = card.rank;
     QString rankLong, rankShort, suitLong, suitShort;
@@ -73,7 +76,8 @@ void CardsTranslations::AddCard(const Card& card) {
     cardsTranslationsShort[{suit, rank}] = rankShort      + suitShort;
 }
 
-void CardsTranslations::PopulateTranslations() {
+void CardsTranslations::PopulateTranslations()
+{
     PopulateRanks();
     PopulateSuits();
     for (auto &card : standard_36_deck::Deck::cards)
@@ -81,7 +85,8 @@ void CardsTranslations::PopulateTranslations() {
 }
 
 template<class T>
-const QString& CardsTranslations::Name(const std::map<T, QString>& translations, const T& card) {
+const QString& CardsTranslations::Name(const std::map<T, QString>& translations, const T& card)
+{
     auto it = translations.find(card);
     if (it == translations.end())
         throw std::logic_error("Unknown card");

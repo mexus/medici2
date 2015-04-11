@@ -2,6 +2,7 @@
 #include <map>
 
 #include "test_fw.h"
+#include "operators.h"
 #include <logxx/logxx.h>
 #include <stdbool.h>
 
@@ -17,32 +18,35 @@ logxx::Log cLog("testing");
 std::map<std::shared_ptr<TestFW>, bool> tests;
 
 template<class T, class ...Args>
-void AddTest(bool defaultVal, Args&& ...args){
+void AddTest(bool defaultVal, Args&& ...args)
+{
         static_assert(std::is_base_of<TestFW, T>::value, "T should be derived from TestFW");
         tests[std::make_shared<T>(args...)] = defaultVal;
 }
 
-void SetAll(bool val){
-        for (auto &pair : tests){
+void SetAll(bool val)
+{
+        for (auto &pair : tests) {
                 pair.second = val;
         }
 }
 
-void Set(const std::string& arg){
+void Set(const std::string& arg)
+{
         S_LOG("Set");
-        if (!arg.empty()){
+        if (!arg.empty()) {
                 bool val;
                 std::string label;
-                if (arg[0] == '-'){
+                if (arg[0] == '-') {
                         label = arg.substr(1);
                         val = false;
                 } else{
                         label = arg;
                         val = true;
                 }
-                if (!label.empty()){
-                        for (auto &pair : tests){
-                                if (pair.first->GetLabel() == label){
+                if (!label.empty()) {
+                        for (auto &pair : tests) {
+                                if (pair.first->GetLabel() == label) {
                                         pair.second = val;
                                         return ;
                                 }
@@ -52,7 +56,8 @@ void Set(const std::string& arg){
         }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
         S_LOG("main");
         logxx::GlobalLogLevel(logxx::warning);
         bool res(true);
@@ -65,7 +70,7 @@ int main(int argc, char **argv) {
     AddTest<TestCalculatorThread>(false);
     AddTest<TestCalculatorManager>(true);
         
-        for (int i = 1; i < argc; ++i){
+        for (int i = 1; i < argc; ++i) {
                 std::string arg(argv[i]);
                 if (arg == "all")
                         SetAll(true);
@@ -79,8 +84,8 @@ int main(int argc, char **argv) {
         
         std::vector<std::string> passed, failed;
         
-        for (auto &pair : tests){
-                if (pair.second){
+        for (auto &pair : tests) {
+                if (pair.second) {
                         std::string label = pair.first->GetLabel();
                         bool testRes = pair.first->RunTests(colouredOutput);
                         if (testRes)
@@ -91,7 +96,7 @@ int main(int argc, char **argv) {
                 }
         }
         
-    if (colouredOutput){
+    if (colouredOutput) {
         if (!passed.empty())
             log(logxx::info) << "\033[1;32mPASSED\033[0m tests: " << passed << logxx::endl;
         else

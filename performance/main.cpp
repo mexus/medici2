@@ -1,6 +1,7 @@
 #include "performance.h"
 
-int main(){
+int main()
+{
     Performance perf;
     perf.Run();
 }

@@ -7,14 +7,17 @@ logxx::Log TestCalculatorManager::cLog("TestCalculatorManager");
 
 using namespace calculator;
 
-TestCalculatorManager::TestCalculatorManager() : TestFW("calculator-manager") {
+TestCalculatorManager::TestCalculatorManager() : TestFW("calculator-manager")
+{
 }
 
-bool TestCalculatorManager::Tests() {
+bool TestCalculatorManager::Tests()
+{
     return TestLaunch() && TestIncrease() && TestDecrease() && TestInterrupt();
 }
 
-bool TestCalculatorManager::TestLaunch() {
+bool TestCalculatorManager::TestLaunch()
+{
     S_LOG("TestLaunch");
     DeckSelectors deckSelector;
 
@@ -39,7 +42,8 @@ bool TestCalculatorManager::TestLaunch() {
     return true;
 }
 
-bool TestCalculatorManager::TestIncrease() {
+bool TestCalculatorManager::TestIncrease()
+{
     S_LOG("TestIncrease");
     DeckSelectors deckSelector;
 
@@ -68,7 +72,8 @@ bool TestCalculatorManager::TestIncrease() {
     return true;
 }
 
-bool TestCalculatorManager::TestDecrease() {
+bool TestCalculatorManager::TestDecrease()
+{
     S_LOG("TestDecrease");
     DeckSelectors deckSelector;
 
@@ -97,7 +102,8 @@ bool TestCalculatorManager::TestDecrease() {
     return true;
 }
 
-bool TestCalculatorManager::TestInterrupt() {
+bool TestCalculatorManager::TestInterrupt()
+{
     S_LOG("TestInterrupt");
     DeckSelectors deckSelector;
 

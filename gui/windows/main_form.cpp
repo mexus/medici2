@@ -10,7 +10,9 @@
 
 logxx::Log MainForm::cLog("MainForm");
 
-MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
+MainForm::MainForm(QWidget* parent) :
+    QMainWindow(parent)
+{
     QSettings settings;
     restoreGeometry(settings.value("main-window:geometry").toByteArray());
     restoreState(settings.value("main-window:state").toByteArray());
@@ -21,7 +23,8 @@ MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
     tabs->setCurrentIndex(settings.value("main-window:last-selected-tab").toInt());
 }
 
-void MainForm::CreateObjects(const QJsonObject& config) {
+void MainForm::CreateObjects(const QJsonObject& config)
+{
     setCentralWidget(new QWidget());
 
     deckPreferenceTab = new DeckPreference(cardsTranslations, config["preference-tab"].toObject());
@@ -35,7 +38,8 @@ void MainForm::CreateObjects(const QJsonObject& config) {
     calculator = new CalculatorWindow(cardsTranslations, this);
 }
 
-void MainForm::CreateLayout() {
+void MainForm::CreateLayout()
+{
     auto layout = new QVBoxLayout();
 
     layout->addWidget(tabs);
@@ -44,10 +48,12 @@ void MainForm::CreateLayout() {
     centralWidget()->setLayout(layout);
 }
 
-MainForm::~MainForm() {
+MainForm::~MainForm()
+{
 }
 
-void MainForm::closeEvent(QCloseEvent*) {
+void MainForm::closeEvent(QCloseEvent*)
+{
     QSettings settings;
     settings.setValue("main-window:geometry", saveGeometry());
     settings.setValue("main-window:state", saveState());
@@ -58,7 +64,8 @@ void MainForm::closeEvent(QCloseEvent*) {
     settings.setValue("selector-tabs", QJsonDocument(config).toBinaryData());
 }
 
-void MainForm::ActivateCalculation() {
+void MainForm::ActivateCalculation()
+{
     try {
         auto selectors = deckPreferenceTab->GetDeckSelectors();
         if (!selectors.IsEmpty())

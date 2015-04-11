@@ -1,13 +1,19 @@
 #include "patience-selector.h"
 
 typedef std::lock_guard<std::mutex> Guard;
+using namespace i_ching;
 
 namespace medici {
 
-    PatienceTargetSelector::PatienceTargetSelector(const Card& target) : target(target) {
+    typedef Patience::PatienceInfo PatienceInfo;
+
+    PatienceTargetSelector::PatienceTargetSelector(const Card& target) :
+        target(target)
+    {
     }
 
-    bool PatienceTargetSelector::Check(const Patience::PatienceInfo& info) {
+    bool PatienceTargetSelector::Check(const PatienceInfo& info)
+    {
         auto it = info.convolutions.find(target);
         return it != info.convolutions.end() && it->second != 0;
     }
@@ -17,7 +23,8 @@ namespace medici {
     {
     }
 
-    bool PatienceMaxSelector::Check(const Patience::PatienceInfo& info) {
+    bool PatienceMaxSelector::Check(const PatienceInfo& info)
+    {
         auto it = info.convolutions.find(target);
         if (it != info.convolutions.end() && it->second != 0) {
             std::size_t targetConvolutions = it->second;
@@ -35,16 +42,17 @@ namespace medici {
     }
 
     PatienceIChingSelector::PatienceIChingSelector(PPatienceSelector&& parent) :
-        parent(std::move(parent)), checker(new i_ching::BalanceChecker())
+        parent(std::move(parent)), checker(new BalanceChecker())
     {
     }
 
-    PatienceIChingSelector::PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent) : 
-        parent(std::move(parent)), checker(new i_ching::BalanceAndSuitChecker(suit, targetHex))
+    PatienceIChingSelector::PatienceIChingSelector(const Card::Suit& suit, const Hexagram& targetHex, PPatienceSelector&& parent) : 
+        parent(std::move(parent)), checker(new BalanceAndSuitChecker(suit, targetHex))
     {
     }
 
-    bool PatienceIChingSelector::Check(const Patience::PatienceInfo& info) {
+    bool PatienceIChingSelector::Check(const PatienceInfo& info)
+    {
             return parent->Check(info) && checker->Check(info);
     }
 

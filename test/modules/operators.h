@@ -1,11 +1,9 @@
-#ifndef TEST_OPERATORS_H
-#define TEST_OPERATORS_H
+#ifndef TEST_MODULES_OPERATORS_H
+#define TEST_MODULES_OPERATORS_H
 #include <ostream>
 
-#define private public
-#include <cards/deck.h>
-#include <cards/deck-selector.h>
-#undef private
+struct Card;
+class CardSelector;
 #include <calculator/thread.h>
 
 namespace std {
@@ -14,5 +12,5 @@ namespace std {
     ostream& operator<<(ostream& s, const calculator::Thread::RunParameters&);
 }
 
-#endif /* TEST_OPERATORS_H */
+#endif /* TEST_MODULES_OPERATORS_H */
 

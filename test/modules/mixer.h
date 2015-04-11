@@ -1,7 +1,7 @@
 #ifndef TEST_MIXER_H
 #define TEST_MIXER_H
 
-#include "../test_fw.h"
+#include <test_fw.h>
 #include <mixer/mixer.h>
 #include <functional>
 
@@ -20,12 +20,12 @@ protected:
     bool TestStatistics();
 
     std::size_t CalculateLoops(Mixer&);
-    float CalculateAverageLoops(Mixer&);
-
     std::size_t CalculateDuplicates(Mixer&);
+    float CalculateAverageLoops(Mixer&);
     float CalculateAverageDuplicates(Mixer&);
 
     static Deck SimpleDeck();
+    static float CalculateAverage(std::size_t tests, const std::function<std::size_t()>& f);
 };
 
 #endif /* TEST_MIXER_H */

@@ -6,10 +6,12 @@ logxx::Log TestCalculatorThread::cLog("TestCalculatorThread");
 
 using namespace calculator;
 
-TestCalculatorThread::TestCalculatorThread() : TestFW("calculator-thread") {
+TestCalculatorThread::TestCalculatorThread() : TestFW("calculator-thread")
+{
 }
 
-bool TestCalculatorThread::Tests() {
+bool TestCalculatorThread::Tests()
+{
     S_LOG("Tests");
     try {
         return TestRunning() && TestRunningMultithreaded();
@@ -19,7 +21,8 @@ bool TestCalculatorThread::Tests() {
     }
 }
 
-bool TestCalculatorThread::TestRunning() {
+bool TestCalculatorThread::TestRunning()
+{
     S_LOG("TestRunning");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
@@ -35,14 +38,15 @@ bool TestCalculatorThread::TestRunning() {
     return params.checkedDecks != 0 && params.suitableDecks != 0;
 }
 
-bool TestCalculatorThread::TestRunningMultithreaded() {
+bool TestCalculatorThread::TestRunningMultithreaded()
+{
     S_LOG("TestRunningMultithreaded");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
 
     static const std::size_t testThreadsCount = 4;
     std::vector<std::unique_ptr<Thread>> threads;
-    for (std::size_t i = 0; i != testThreadsCount; ++i){
+    for (std::size_t i = 0; i != testThreadsCount; ++i) {
         threads.emplace_back(new Thread(deckSelector, patienceSelector, 0));
         threads.back()->Launch();
     }
@@ -59,7 +63,8 @@ bool TestCalculatorThread::TestRunningMultithreaded() {
 }
 
 
-medici::PPatienceSelector TestCalculatorThread::DefaultPatienceSelector() {
+medici::PPatienceSelector TestCalculatorThread::DefaultPatienceSelector()
+{
     return medici::PPatienceSelector(new medici::PatienceSelector());
 }
 

@@ -4,7 +4,7 @@
 #define protected public
 #include <cards/deck-selector.h>
 #undef protected
-#include "../test_fw.h"
+#include <test_fw.h>
 #include <cards/standard-36-deck.h>
 
 class TestDeckSelector : public TestFW{

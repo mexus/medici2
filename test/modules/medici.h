@@ -3,7 +3,7 @@
 
 #include <medici/patience.h>
 #include <cards/standard-36-deck.h>
-#include "../test_fw.h"
+#include <test_fw.h>
 
 using namespace medici;
 
