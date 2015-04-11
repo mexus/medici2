@@ -5,7 +5,7 @@
 #include <array>
 #include <algorithm>
 
-template<class T, std::size_t N, class RandomEnging = std::ranlux24_base>
+template<class T, std::size_t N, class RandomEngine = std::ranlux24_base>
 class Mixer {
 public:
     Mixer(uint_fast32_t seed = 0) :
@@ -26,7 +26,7 @@ public:
         }
     }
 private:
-    RandomEnging randomEngine;
+    RandomEngine randomEngine;
 };
 
 #endif /* MIXER_H */
