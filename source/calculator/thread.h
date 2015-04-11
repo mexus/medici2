@@ -27,7 +27,7 @@ namespace calculator {
             std::chrono::steady_clock::duration runningTime;
         };
 
-        Thread(const DeckSelectors&, const medici::PPatienceSelector&, const StandardMixer& mixer);
+        Thread(const DeckSelectors&, const medici::PPatienceSelector&, std::uint_fast32_t mixerSeed);
         ~Thread();
 
         void Launch();

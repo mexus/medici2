@@ -108,9 +108,8 @@ void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienc
         }
         if (launch){
             std::thread([this](DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector){
-                    calculator::Manager::StandardMixer mixer;
                     calculatorManager.Interrupt();
-                    calculatorManager.Launch(threadsCount, std::move(deckSelectors), std::move(patienceSelector), mixer);
+                    calculatorManager.Launch(threadsCount, std::move(deckSelectors), std::move(patienceSelector));
                     operationInProgress.store(false);
                 }, std::move(deckSelectors), std::move(patienceSelector)).detach();
                 QObject::connect(updateProgressTimer, &QTimer::timeout, this, &CalculatorWindow::ShowProgress);

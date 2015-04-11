@@ -7,12 +7,12 @@ namespace calculator {
     }
 
     void Manager::CreateThread(std::size_t number) {
-        auto thread = new Thread(deckSelector, patienceSelector, StandardMixer(mixer, GetSeed(number)));
+        auto thread = new Thread(deckSelector, patienceSelector, GetSeed(number));
         threads.emplace_back(thread);
         thread->Launch();
     }
 
-    void Manager::Launch(std::size_t threadsCount, DeckSelectors&& deckSelector, medici::PPatienceSelector&& patienceSelector, const StandardMixer& mixer) {
+    void Manager::Launch(std::size_t threadsCount, DeckSelectors&& deckSelector, medici::PPatienceSelector&& patienceSelector) {
         if (threads.empty()){
             this->deckSelector = std::move(deckSelector);
             if (!patienceSelector)

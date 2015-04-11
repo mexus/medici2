@@ -3,20 +3,24 @@
 
 #include <random>
 #include <array>
+#include <algorithm>
 
-template<class T, std::size_t N>
+template<class T, std::size_t N, class RandomEnging = std::minstd_rand>
 class Mixer {
 public:
-    Mixer(uint_fast32_t seed = 0);
-    Mixer(const Mixer&) = default;
-    Mixer(const Mixer&, uint_fast32_t seed);
-    void Mix(std::array<T, N>&);
-    void Shuffle(std::array<T, N>&);
+    Mixer(uint_fast32_t seed = 0) : randomEngine(seed), uniformDistribution(1, N - 1) {}
+    Mixer(const Mixer&) = delete;
+
+    void Mix(std::array<T, N>& array) {
+        std::size_t i = uniformDistribution(randomEngine);
+        std::swap(array[0], array[i]);
+    }
+    void Shuffle(std::array<T, N>& array) {
+        std::shuffle(array.begin(), array.end(), randomEngine);
+    }
 private:
-    std::minstd_rand randomEngine;
+    RandomEnging randomEngine;
     std::uniform_int_distribution<std::size_t> uniformDistribution;
 };
-
-#include "mixer.hpp" 
 
 #endif /* MIXER_H */

@@ -4,8 +4,8 @@ typedef std::lock_guard<std::mutex> Guard;
 
 namespace calculator {
 
-    Thread::Thread(const DeckSelectors& deckSelector, const medici::PPatienceSelector& patienceSelector, const StandardMixer& mixer) :
-        deckSelector(deckSelector), patienceSelector(patienceSelector), mixer(mixer), localInterrupt(false),
+    Thread::Thread(const DeckSelectors& deckSelector, const medici::PPatienceSelector& patienceSelector, std::uint_fast32_t mixerSeed) :
+        deckSelector(deckSelector), patienceSelector(patienceSelector), mixer(mixerSeed), localInterrupt(false),
         inSchedule(false), checkedDecks(0), suitableDecks(0), thread(nullptr)
     {
     }

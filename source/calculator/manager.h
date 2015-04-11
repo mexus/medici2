@@ -17,7 +17,7 @@ namespace calculator {
         Manager() = default;
         Manager(const Manager&) = delete;
 
-        void Launch(std::size_t threads, DeckSelectors&&, medici::PPatienceSelector&&, const StandardMixer& mixer);
+        void Launch(std::size_t threads, DeckSelectors&&, medici::PPatienceSelector&&);
         void SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds);
 
         bool Running() const;

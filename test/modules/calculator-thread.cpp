@@ -23,9 +23,8 @@ bool TestCalculatorThread::TestRunning() {
     S_LOG("TestRunning");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
-    Thread::StandardMixer mixer;
 
-    Thread thread(deckSelector, patienceSelector, mixer);
+    Thread thread(deckSelector, patienceSelector, 0);
     thread.Launch();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -40,12 +39,11 @@ bool TestCalculatorThread::TestRunningMultithreaded() {
     S_LOG("TestRunningMultithreaded");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
-    Thread::StandardMixer mixer;
 
     static const std::size_t testThreadsCount = 4;
     std::vector<std::unique_ptr<Thread>> threads;
     for (std::size_t i = 0; i != testThreadsCount; ++i){
-        threads.emplace_back(new Thread(deckSelector, patienceSelector, mixer));
+        threads.emplace_back(new Thread(deckSelector, patienceSelector, 0));
         threads.back()->Launch();
     }
 
