@@ -39,7 +39,6 @@ namespace calculator {
         inSchedule = false;
         threadStarted.notify_one();
         auto deck = standard_36_deck::Deck::cards;
-        mixer.Shuffle(deck);
         Patience::PatienceInfo patienceInfo;
         while (!localInterrupt) {
             mixer.Mix(deck);
