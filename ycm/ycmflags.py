@@ -4,7 +4,7 @@ from clang_helpers import PrepareClangFlags
 
 
 class YcmFlags:
-    def __init__(self, additional_includes=[], enable_qt=True):
+    def __init__(self, additional_includes=[], enable_qt=False):
         self.flags = [
             '-std=c++11',
             '-x', 'c++',
