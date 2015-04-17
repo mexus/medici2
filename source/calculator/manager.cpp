@@ -9,7 +9,8 @@ namespace calculator {
 
     void Manager::CreateThread(std::size_t number)
     {
-        auto thread = new Thread(deckSelector, patienceSelector, GetSeed(number));
+        auto mixer = mixersFactory.CreateMixer<Card, StandardDeck::N()>(GetSeed(number));
+        auto thread = new Thread(deckSelector, patienceSelector, std::move(mixer));
         threads.emplace_back(thread);
         thread->Launch();
     }
@@ -21,7 +22,6 @@ namespace calculator {
             if (!patienceSelector)
                 throw std::logic_error("null patienceSelector supplied");
             this->patienceSelector = std::move(patienceSelector);
-            this->mixer = mixer;
             for (std::size_t i = 0; i!= threadsCount; ++i)
                 CreateThread(i);
         }

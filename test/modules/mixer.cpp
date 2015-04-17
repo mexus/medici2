@@ -53,14 +53,17 @@ TestMixer::TestMixer() :
 
 bool TestMixer::Tests()
 {
-    return TestStatistics();
+    return
+        TestStatistics<FullCapacityMixer<int, testSize>>("FullCapacityMixer") &&
+        TestStatistics<OneSwapMixer<int, testSize>>("OneSwapMixer");
 }
 
-bool TestMixer::TestStatistics()
+template<class Mixer>
+bool TestMixer::TestStatistics(const std::string& mixerName)
 {
-    S_LOG("TestStatistics");
-    Mixer mixer;
-    float relativeEps = 0.01;
+    D_LOG("TestStatistics::" + mixerName);
+    Mixer mixer(0);
+    float relativeEps = 0.03;
     float loopsResult = CalculateAverageLoops(mixer);
     float loopsEtalon = factorial(testSize);
     if (std::fabs(loopsResult - loopsEtalon) / loopsEtalon > relativeEps) {
@@ -80,6 +83,7 @@ bool TestMixer::TestStatistics()
     return true;
 }
 
+template<class Mixer>
 std::size_t TestMixer::CalculateLoops(Mixer& mixer)
 {
     Deck array(SimpleDeck());
@@ -92,6 +96,7 @@ std::size_t TestMixer::CalculateLoops(Mixer& mixer)
     return loops;
 }
 
+template<class Mixer>
 float TestMixer::CalculateAverageLoops(Mixer& mixer)
 {
     static const std::size_t tests = 1E4;
@@ -100,6 +105,7 @@ float TestMixer::CalculateAverageLoops(Mixer& mixer)
             });
 }
 
+template<class Mixer>
 std::size_t TestMixer::CalculateDuplicates(Mixer& mixer)
 {
     Deck array(SimpleDeck());
@@ -128,6 +134,7 @@ std::size_t TestMixer::CalculateDuplicates(Mixer& mixer)
     return duplicates;
 }
 
+template<class Mixer>
 float TestMixer::CalculateAverageDuplicates(Mixer& mixer)
 {
     static const std::size_t tests = 1E3;

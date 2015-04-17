@@ -213,7 +213,7 @@ void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newD
 
 }
 
-void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeck& deck, const medici::Patience::PatienceInfo&)
+void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeckArray& deck, const medici::Patience::PatienceInfo&)
 {
     QString line;
     for (auto &card : deck) {

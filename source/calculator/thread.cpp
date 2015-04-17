@@ -6,8 +6,8 @@ namespace calculator {
     using medici::PPatienceSelector;
     using medici::Patience;
 
-    Thread::Thread(const DeckSelectors& deckSelector, const PPatienceSelector& patienceSelector, std::uint_fast32_t mixerSeed) :
-        deckSelector(deckSelector), patienceSelector(patienceSelector), mixer(mixerSeed), localInterrupt(false),
+    Thread::Thread(const DeckSelectors& deckSelector, const PPatienceSelector& patienceSelector, StandardMixer&& mixer) :
+        deckSelector(deckSelector), patienceSelector(patienceSelector), mixer(std::move(mixer)), localInterrupt(false),
         inSchedule(false), checkedDecks(0), suitableDecks(0), thread(nullptr)
     {
     }
@@ -41,7 +41,7 @@ namespace calculator {
         auto deck = standard_36_deck::Deck::cards;
         Patience::PatienceInfo patienceInfo;
         while (!localInterrupt) {
-            mixer.Mix(deck);
+            mixer->Mix(deck);
             ++checkedDecks;
             if (deckSelector.Check(deck) && Patience::Converge(deck, patienceInfo) && patienceSelector->Check(patienceInfo)) {
                 ++suitableDecks;

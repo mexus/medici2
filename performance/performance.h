@@ -1,17 +1,18 @@
 #ifndef PERFORMANCE_H
 #define PERFORMANCE_H
 
-#include <medici/generator.h>
+#include <atomic>
 #include <logxx/logxx.h>
 #include <cards/standard-36-deck.h>
 #include <cards/deck-selector.h>
+#include <mixer/mixer.h>
 
 class Performance {
 public:
     void Run();
 private:
     typedef standard_36_deck::Deck::ArrayType StandardDeck;
-    typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
+    typedef FullCapacityMixer<Card, standard_36_deck::Deck::N()> StandardMixer;
 
     class CheckOperand {
     public:
@@ -22,8 +23,6 @@ private:
     };
 
     static logxx::Log cLog;
-
-    static std::atomic_bool interrupt;
 
     static void Mixing();
     static std::vector<StandardDeck> PregenerateConvergableDecks();

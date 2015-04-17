@@ -51,7 +51,7 @@ private:
     void ShowProgress();
     void PopulateParameters(const std::vector<calculator::Thread::RunParameters>&);
     void PopulateDecks(const calculator::Thread::FoundVector&);
-    void AddDeck(const calculator::Thread::StandardDeck&, const medici::Patience::PatienceInfo&);
+    void AddDeck(const calculator::Thread::StandardDeckArray&, const medici::Patience::PatienceInfo&);
 
 };
 

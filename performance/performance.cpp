@@ -4,7 +4,6 @@
 #include <i-ching/i-ching.h>
 
 logxx::Log Performance::cLog("Performance");
-std::atomic_bool Performance::interrupt(false);
 using namespace medici;
 
 void Performance::Run()
@@ -29,7 +28,7 @@ bool Performance::CheckOperand::operator()(const StandardDeck& deck) const
 void Performance::Mixing()
 {
     S_LOG("Mixing");
-    StandardMixer mixer;
+    StandardMixer mixer(0);
     auto deck = standard_36_deck::Deck::cards;
     {
         static const std::size_t decksCount = 1E6;
@@ -45,7 +44,7 @@ void Performance::Mixing()
 std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks()
 {
     S_LOG("PregenerateConvergableDecks");
-    StandardMixer mixer;
+    StandardMixer mixer(0);
     Patience::PatienceInfo info;
     std::vector<StandardDeck> pregeneratedDecks;
     static const std::size_t decksCount = 1E3;
@@ -54,7 +53,9 @@ std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(
     {
         TimeMeasure timer;
         for (std::size_t i = 0; i != decksCount; ++i) {
-            generator::Generate(deck, info, mixer, interrupt);
+            do {
+                mixer.Mix(deck);
+            } while (!Patience::Converge(deck, info));
             pregeneratedDecks.push_back(deck);
         }
         double elapsed = timer.Elapsed();
@@ -66,7 +67,7 @@ std::vector<Performance::StandardDeck> Performance::PregenerateConvergableDecks(
 void Performance::MediciGenerator()
 {
     S_LOG("MediciGenerator");
-    StandardMixer mixer;
+    StandardMixer mixer(0);
     Patience::PatienceInfo info;
 
     auto pregeneratedDecks = PregenerateConvergableDecks();
@@ -114,14 +115,16 @@ void Performance::MediciWithConditions()
 {
     S_LOG("MediciWithConditions");
 
-    StandardMixer mixer;
+    StandardMixer mixer(0);
     auto deck = standard_36_deck::Deck::cards;
     Patience::PatienceInfo info;
     auto checker = DefaultCheckOperand();
     const std::size_t totalDecks = 100;
     TimeMeasure timer;
     for (std::size_t i = 0; i != totalDecks; ++i) {
-        generator::Generate(deck, info, mixer, interrupt, checker);
+        do {
+            mixer.Mix(deck);
+        } while (!(checker(deck) && Patience::Converge(deck, info)));
     }
     double elapsed = timer.Elapsed();
     log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
@@ -135,13 +138,15 @@ void Performance::MediciWithConditionsAndIChing()
     Patience::PatienceInfo info;
     i_ching::BalanceChecker iChingChecker;
     auto checker = DefaultCheckOperand();
-    StandardMixer mixer;
+    StandardMixer mixer(0);
     
     std::size_t totalDecks = 100;
     std::size_t balanced = 0;
     TimeMeasure timer;
     for (std::size_t i = 0; i != totalDecks; ++i) {
-        generator::Generate(deck, info, mixer, interrupt, checker);
+        do {
+            mixer.Mix(deck);
+        } while (!(checker(deck) && Patience::Converge(deck, info)));
         if (iChingChecker.Check(info))
             ++balanced;
     }
@@ -158,12 +163,14 @@ void Performance::IChingBalancedPercent()
     auto deck = standard_36_deck::Deck::cards;
     Patience::PatienceInfo info;
     i_ching::BalanceChecker iChingChecker;
-    StandardMixer mixer;
+    StandardMixer mixer(0);
 
     std::size_t totalDecks = 1E5;
     std::size_t balanced = 0;
     for (std::size_t i = 0; i != totalDecks; ++i) {
-        generator::Generate(deck, info, mixer, interrupt);
+        do {
+            mixer.Mix(deck);
+        } while (!Patience::Converge(deck, info));
         if (iChingChecker.Check(info))
             ++balanced;
     }

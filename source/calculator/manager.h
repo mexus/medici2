@@ -12,6 +12,7 @@ namespace calculator {
     class Manager {
     public:
         typedef Thread::StandardDeck StandardDeck;
+        typedef Thread::StandardDeckArray StandardDeckArray;
         typedef Thread::StandardMixer StandardMixer;
 
         Manager() = default;
@@ -31,7 +32,7 @@ namespace calculator {
         std::vector<std::uint_fast32_t> seeds;
         DeckSelectors deckSelector;
         medici::PPatienceSelector patienceSelector;
-        StandardMixer mixer;
+        MixersFactory mixersFactory;
 
         std::vector<std::unique_ptr<Thread>> threads;
 

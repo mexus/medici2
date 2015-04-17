@@ -10,16 +10,17 @@
 #include <cards/standard-36-deck.h>
 #include <cards/deck-selector.h>
 #include <medici/patience-selector.h>
-#include <medici/generator.h>
+#include <mixer/factory.h>
 
 namespace calculator {
 
     class Thread {
     public:
-        typedef standard_36_deck::Deck::ArrayType StandardDeck;
-        typedef Mixer<Card, standard_36_deck::Deck::N()> StandardMixer;
+        typedef standard_36_deck::Deck StandardDeck;
+        typedef StandardDeck::ArrayType StandardDeckArray;
+        typedef std::unique_ptr<MixerInterface<Card, StandardDeck::N()>> StandardMixer;
 
-        typedef std::pair<StandardDeck, medici::Patience::PatienceInfo> FoundType;
+        typedef std::pair<StandardDeckArray, medici::Patience::PatienceInfo> FoundType;
         typedef std::vector<FoundType> FoundVector;
 
         struct RunParameters {
@@ -27,7 +28,7 @@ namespace calculator {
             std::chrono::steady_clock::duration runningTime;
         };
 
-        Thread(const DeckSelectors&, const medici::PPatienceSelector&, std::uint_fast32_t mixerSeed);
+        Thread(const DeckSelectors&, const medici::PPatienceSelector&, StandardMixer&& mixer);
         ~Thread();
 
         void Launch();
