@@ -7,8 +7,9 @@
 logxx::Log Performance::cLog("Performance");
 using namespace medici;
 
-void Performance::Run()
+void Performance::Run(MixersFactory::MixerType mixerType)
 {
+    mixersFactory.SetMixer(mixerType);
     Mixing();
     MediciGenerator();
     MediciWithConditions();

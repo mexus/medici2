@@ -9,7 +9,7 @@
 
 class Performance {
 public:
-    void Run();
+    void Run(MixersFactory::MixerType);
 private:
     MixersFactory mixersFactory;
 
