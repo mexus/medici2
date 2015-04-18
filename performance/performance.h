@@ -5,12 +5,14 @@
 #include <logxx/logxx.h>
 #include <cards/standard-36-deck.h>
 #include <cards/deck-selector.h>
-#include <mixer/mixer.h>
+#include <mixer/factory.h>
 
 class Performance {
 public:
     void Run();
 private:
+    MixersFactory mixersFactory;
+
     typedef standard_36_deck::Deck StandardDeck;
     typedef StandardDeck::ArrayType StandardDeckArray;
 
@@ -24,18 +26,18 @@ private:
 
     static logxx::Log cLog;
 
-    static void Mixing();
-    static std::vector<StandardDeckArray> PregenerateConvergableDecks();
-    static void MediciGenerator();
-    static void MediciWithConditions();
-    static void MediciWithConditionsAndIChing();
-    static void IChingBalancedPercent();
+    void Mixing() const;
+    std::vector<StandardDeckArray> PregenerateConvergableDecks() const;
+    void MediciGenerator() const;
+    void MediciWithConditions() const;
+    void MediciWithConditionsAndIChing() const;
+    void IChingBalancedPercent() const;
 
     static DeckSelectors DefaultSelectors();
     static CheckOperand DefaultCheckOperand();
     
     typedef std::unique_ptr<MixerInterface<Card, StandardDeck::N()>> StandardGenerator;
-    static StandardGenerator GetMixer(std::uint_fast32_t seed = 0);
+    StandardGenerator GetMixer(std::uint_fast32_t seed = 0) const;
 };
 
 #endif /* PERFORMANCE_H */

@@ -26,7 +26,7 @@ bool Performance::CheckOperand::operator()(const StandardDeckArray& deck) const
     return deckSelectors.Check(deck);
 }
 
-void Performance::Mixing()
+void Performance::Mixing() const
 {
     S_LOG("Mixing");
     auto mixer = GetMixer();
@@ -42,7 +42,7 @@ void Performance::Mixing()
     }
 }
 
-std::vector<Performance::StandardDeckArray> Performance::PregenerateConvergableDecks()
+std::vector<Performance::StandardDeckArray> Performance::PregenerateConvergableDecks() const
 {
     S_LOG("PregenerateConvergableDecks");
     auto mixer = GetMixer();
@@ -65,7 +65,7 @@ std::vector<Performance::StandardDeckArray> Performance::PregenerateConvergableD
     return pregeneratedDecks;
 }
 
-void Performance::MediciGenerator()
+void Performance::MediciGenerator() const
 {
     S_LOG("MediciGenerator");
     Patience::PatienceInfo info;
@@ -111,7 +111,7 @@ Performance::CheckOperand Performance::DefaultCheckOperand()
     return operand;
 }
 
-void Performance::MediciWithConditions()
+void Performance::MediciWithConditions() const
 {
     S_LOG("MediciWithConditions");
 
@@ -130,7 +130,7 @@ void Performance::MediciWithConditions()
     log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
 }
 
-void Performance::MediciWithConditionsAndIChing()
+void Performance::MediciWithConditionsAndIChing() const
 {
     S_LOG("MediciWithConditionsAndIChing");
 
@@ -157,7 +157,7 @@ void Performance::MediciWithConditionsAndIChing()
         totalDecks / elapsed << " decks per second" << logxx::endl;
 }
 
-void Performance::IChingBalancedPercent()
+void Performance::IChingBalancedPercent() const
 {
     S_LOG("IChingBalancedPercent");
     auto deck = standard_36_deck::Deck::cards;
@@ -177,9 +177,8 @@ void Performance::IChingBalancedPercent()
     log(logxx::info) << static_cast<double>(balanced) / totalDecks * 100.0 << "% balanced decks" << logxx::endl;
 }
 
-Performance::StandardGenerator Performance::GetMixer(std::uint_fast32_t seed)
+Performance::StandardGenerator Performance::GetMixer(std::uint_fast32_t seed) const
 {
-    static MixersFactory mixersFactory;
     return mixersFactory.CreateMixer<Card, StandardDeck::N()>(seed);
 }
 
