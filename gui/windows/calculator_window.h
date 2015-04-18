@@ -23,12 +23,14 @@ protected:
     virtual void closeEvent(QCloseEvent*) override;
 
 private:
+    static constexpr std::size_t N = 36;
     void GenerateSeeds();
     void CreateObjects();
     void CreateLayout();
 
+    MixersFactory mixersFactory;
     std::atomic_bool operationInProgress;
-    calculator::Manager calculatorManager;
+    calculator::Manager<N> calculatorManager;
     const CardsTranslations& cardsTranslations;
 
     std::uint8_t threadsCount;
@@ -49,9 +51,9 @@ private:
 
     QTimer *updateProgressTimer;
     void ShowProgress();
-    void PopulateParameters(const std::vector<calculator::Thread::RunParameters>&);
-    void PopulateDecks(const calculator::Thread::FoundVector&);
-    void AddDeck(const calculator::Thread::StandardDeckArray&, const medici::Patience::PatienceInfo&);
+    void PopulateParameters(const std::vector<calculator::ExecutionParameters>&);
+    void PopulateDecks(const calculator::Manager<N>::FoundVector&);
+    void AddDeck(const std::array<Card, N>&, const medici::Patience::PatienceInfo&);
 
 };
 

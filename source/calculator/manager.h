@@ -9,35 +9,65 @@
 
 namespace calculator {
 
-    class Manager {
+    class BaseManager {
     public:
-        typedef Thread::StandardDeck StandardDeck;
-        typedef Thread::StandardDeckArray StandardDeckArray;
-        typedef Thread::StandardMixer StandardMixer;
+        BaseManager(MixersFactory&);
+        virtual ~BaseManager();
+        BaseManager(const BaseManager&) = delete;
 
-        Manager() = default;
-        Manager(const Manager&) = delete;
+        void SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds);
+        std::vector<ExecutionParameters> GetExecutionParameters() const;
 
         void Launch(std::size_t threads, DeckSelectors&&, medici::PPatienceSelector&&);
-        void SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds);
 
-        bool Running() const;
+        bool IsRunning() const;
         void Interrupt();
         void IncreaseThreads();
         void DecreaseThreads();
 
-        Thread::FoundVector GetNewDecks();
-        std::vector<Thread::RunParameters> GetRunParameters() const;
-    private:
+    protected:
+        std::vector<std::unique_ptr<BaseThread>> threads;
+        MixersFactory& mixersFactory;
         std::vector<std::uint_fast32_t> seeds;
         DeckSelectors deckSelector;
         medici::PPatienceSelector patienceSelector;
-        MixersFactory mixersFactory;
 
-        std::vector<std::unique_ptr<Thread>> threads;
-
-        void CreateThread(std::size_t number);
+        virtual void CreateThread(std::size_t number) = 0;
         std::uint_fast32_t GetSeed(std::size_t number) const;
+    };
+
+    template<std::size_t N>
+    class Manager : public BaseManager {
+    public:
+        typedef typename Thread<N>::FoundVector FoundVector;
+        Manager(MixersFactory& mixersFactory) : 
+            BaseManager(mixersFactory)
+        {
+        }
+
+        FoundVector GetNewDecks()
+        {
+            FoundVector result;
+            for (auto& thread : threads) {
+                auto tmp = static_cast<Thread<N>*>(thread.get())->GetNewDecks();
+                result.insert(result.end(),
+                        std::make_move_iterator(tmp.begin()),
+                        std::make_move_iterator(tmp.end()));
+            }
+            return result;
+        }
+
+    private:
+
+        void CreateThread(std::size_t number) override
+        {
+            auto mixer = mixersFactory.CreateMixer<Card, N>(GetSeed(number));
+            if (!patienceSelector)
+                throw std::logic_error("Passed a nullptr patienceSelector!");
+            auto thread = new Thread<N>(deckSelector, patienceSelector, std::move(mixer));
+            threads.emplace_back(thread);
+            thread->Launch();
+        }
     };
 
 };

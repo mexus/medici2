@@ -14,48 +14,86 @@
 
 namespace calculator {
 
-    class Thread {
+    struct ExecutionParameters {
+        std::uintmax_t checkedDecks, suitableDecks;
+        std::chrono::steady_clock::duration runningTime;
+    };
+
+    class BaseThread {
     public:
-        typedef standard_36_deck::Deck StandardDeck;
-        typedef StandardDeck::ArrayType StandardDeckArray;
-        typedef std::unique_ptr<MixerInterface<Card, StandardDeck::N()>> StandardMixer;
-
-        typedef std::pair<StandardDeckArray, medici::Patience::PatienceInfo> FoundType;
-        typedef std::vector<FoundType> FoundVector;
-
-        struct RunParameters {
-            std::uintmax_t checkedDecks, suitableDecks;
-            std::chrono::steady_clock::duration runningTime;
-        };
-
-        Thread(const DeckSelectors&, const medici::PPatienceSelector&, StandardMixer&& mixer);
-        ~Thread();
+        BaseThread(const DeckSelectors&, const medici::PPatienceSelector&);
+        virtual ~BaseThread() = default; //In a child's class destructor one should call JoinThread();
 
         void Launch();
-        RunParameters GetRunParameters() const;
-        FoundVector GetNewDecks();
+        ExecutionParameters GetExecutionParameters() const;
+    protected:
+        virtual void Run() = 0;
+        void JoinThread();
 
-    private:
         const DeckSelectors& deckSelector;
         const medici::PPatienceSelector& patienceSelector;
-        StandardMixer mixer;
+
+        std::unique_ptr<std::thread> thread;
 
         std::atomic_bool localInterrupt;
         std::atomic_bool inSchedule;
-
         std::mutex threadStartedMutex;
         std::condition_variable threadStarted;
 
         std::atomic_uintmax_t checkedDecks, suitableDecks;
-        std::thread* thread;
-
         std::chrono::steady_clock::time_point launchedAt;
 
-        FoundVector foundDecks;
         std::mutex accessDecks;
-        std::size_t givenAwayDecks = 0;
+    };
 
-        void Run();
+    template<std::size_t N>
+    class Thread : public BaseThread {
+    public:
+        typedef std::array<Card, N> DeckArray;
+        typedef std::unique_ptr<MixerInterface<Card, N>> MixerInterface;
+
+        typedef std::pair<DeckArray, medici::Patience::PatienceInfo> FoundType;
+        typedef std::vector<FoundType> FoundVector;
+
+        Thread(const DeckSelectors& deckSelector, const medici::PPatienceSelector& patienceSelector, MixerInterface&& mixer) :
+            BaseThread(deckSelector, patienceSelector), mixer(std::move(mixer))
+        {
+        }
+
+        ~Thread()
+        {
+            JoinThread();
+        }
+
+        FoundVector GetNewDecks()
+        {
+            std::lock_guard<std::mutex> guard(accessDecks);
+            return std::move(foundDecks);
+        }
+
+    private:
+        MixerInterface mixer;
+        FoundVector foundDecks;
+
+        void Run() override
+        {
+            launchedAt = std::chrono::steady_clock::now();
+            inSchedule = false;
+            threadStarted.notify_one();
+
+            auto deck = Deck<N>::cards;
+            medici::Patience::PatienceInfo patienceInfo;
+            while (!localInterrupt) {
+                mixer->Mix(deck);
+                ++checkedDecks;
+
+                if (deckSelector.Check(deck) && medici::Patience::Converge(deck, patienceInfo) && patienceSelector->Check(patienceInfo)) {
+                    ++suitableDecks;
+                    std::lock_guard<std::mutex> guard(accessDecks);
+                    foundDecks.push_back({deck, patienceInfo});
+                }
+            }
+        }
     };
 
 }

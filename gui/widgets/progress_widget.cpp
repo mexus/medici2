@@ -32,11 +32,12 @@ void ProgressWidget::CreateLayout()
     setLayout(layout);
 }
 
-void ProgressWidget::Set(const calculator::Thread::RunParameters& params)
+void ProgressWidget::Set(const calculator::ExecutionParameters& params)
 {
+    using namespace std::chrono;
     totalDecks->setText(QString::number(params.checkedDecks));
     suitableDecks->setText(QString::number(params.suitableDecks));
-    auto seconds = std::chrono::duration_cast<std::chrono::duration<float>>(params.runningTime).count();;
+    auto seconds = duration_cast<duration<float>>(params.runningTime).count();;
     runningTime->setText(QString::number(seconds) + tr("s.", "seconds abbrevation"));
 }
 

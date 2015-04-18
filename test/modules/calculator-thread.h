@@ -2,7 +2,7 @@
 #define TEST_CALCULATOR_THREAD_H
 
 #include <test_fw.h>
-#include <medici/patience-selector.h>
+#include <calculator/thread.h>
 
 class TestCalculatorThread : public TestFW {
 public:
@@ -10,7 +10,10 @@ public:
 
     static medici::PPatienceSelector DefaultPatienceSelector();
 protected:
+    static constexpr std::size_t N = 36;
     static logxx::Log cLog;
+    typedef calculator::Thread<N> Thread;
+    static MixersFactory mixersFactory;
 
     bool Tests() override;
 

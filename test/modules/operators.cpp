@@ -34,7 +34,7 @@ namespace std {
         return s;
     }
 
-    ostream& operator<<(ostream& s, const calculator::Thread::RunParameters& params)
+    ostream& operator<<(ostream& s, const calculator::ExecutionParameters& params)
     {
         using namespace chrono;
         return s << "total " << params.checkedDecks << " decks, suitable " << params.suitableDecks << " decks, " <<

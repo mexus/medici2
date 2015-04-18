@@ -7,9 +7,10 @@ class CardSelector;
 #include <calculator/thread.h>
 
 namespace std {
-    ostream& operator<<(ostream& s, const Card& );
-    ostream& operator<<(ostream& s, const CardSelector& cardSelector);
-    ostream& operator<<(ostream& s, const calculator::Thread::RunParameters&);
+    ostream& operator<<(ostream&, const Card& );
+    ostream& operator<<(ostream&, const CardSelector&);
+
+    ostream& operator<<(ostream&, const typename calculator::ExecutionParameters&);
 }
 
 #endif /* TEST_MODULES_OPERATORS_H */

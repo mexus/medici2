@@ -7,7 +7,8 @@
 #include <random>
 
 CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations, QWidget* parent) :
-    QDialog(parent), operationInProgress(false), cardsTranslations(cardsTranslations), threadsCount(4)
+    QDialog(parent), operationInProgress(false), calculatorManager(mixersFactory),
+    cardsTranslations(cardsTranslations), threadsCount(4)
 {
     QSettings settings;
     restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
@@ -89,7 +90,7 @@ CalculatorWindow::~CalculatorWindow()
 
 void CalculatorWindow::closeEvent(QCloseEvent* e)
 {
-    if (calculatorManager.Running()) {
+    if (calculatorManager.IsRunning()) {
         if (QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?")) == QMessageBox::No) {
             e->ignore();
             return ;
@@ -108,7 +109,7 @@ void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienc
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         bool launch = true;
-        if (calculatorManager.Running()) {
+        if (calculatorManager.IsRunning()) {
             auto reply = QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?"));
             launch = reply == QMessageBox::Yes;
         }
@@ -168,8 +169,8 @@ void CalculatorWindow::ShowProgress()
 {
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
-        if (calculatorManager.Running()) {
-            auto allParameters = calculatorManager.GetRunParameters();
+        if (calculatorManager.IsRunning()) {
+            auto allParameters = calculatorManager.GetExecutionParameters();
             PopulateParameters(allParameters);
             auto decks = calculatorManager.GetNewDecks();
             PopulateDecks(decks);
@@ -179,7 +180,7 @@ void CalculatorWindow::ShowProgress()
     }
 }
 
-void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::RunParameters>& allParameters)
+void CalculatorWindow::PopulateParameters(const std::vector<calculator::ExecutionParameters>& allParameters)
 {
     if (allParameters.size() > progressVector.size()) {
         for (std::size_t i = progressVector.size(); i != allParameters.size(); ++i) {
@@ -203,7 +204,7 @@ void CalculatorWindow::PopulateParameters(const std::vector<calculator::Thread::
         progressVector[i]->Set(allParameters[i]);
 }
 
-void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newDecks)
+void CalculatorWindow::PopulateDecks(const calculator::Manager<N>::FoundVector& newDecks)
 {
     static const std::size_t maxDecksAtOnce = 10;
     for (std::size_t i = 0, l = std::min(maxDecksAtOnce, newDecks.size()); i != l; ++i) {
@@ -213,7 +214,7 @@ void CalculatorWindow::PopulateDecks(const calculator::Thread::FoundVector& newD
 
 }
 
-void CalculatorWindow::AddDeck(const calculator::Thread::StandardDeckArray& deck, const medici::Patience::PatienceInfo&)
+void CalculatorWindow::AddDeck(const std::array<Card, N>& deck, const medici::Patience::PatienceInfo&)
 {
     QString line;
     for (auto &card : deck) {

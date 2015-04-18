@@ -2,81 +2,68 @@
 
 namespace calculator {
 
-    void Manager::SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds)
+    BaseManager::BaseManager(MixersFactory& mixersFactory) :
+        mixersFactory(mixersFactory)
     {
-        this->seeds = seeds;
     }
 
-    void Manager::CreateThread(std::size_t number)
+    BaseManager::~BaseManager()
     {
-        auto mixer = mixersFactory.CreateMixer<Card, StandardDeck::N()>(GetSeed(number));
-        auto thread = new Thread(deckSelector, patienceSelector, std::move(mixer));
-        threads.emplace_back(thread);
-        thread->Launch();
+        threads.clear();
     }
 
-    void Manager::Launch(std::size_t threadsCount, DeckSelectors&& deckSelector, medici::PPatienceSelector&& patienceSelector)
+    void BaseManager::Launch(std::size_t threadsCount, DeckSelectors&& deckSelector, medici::PPatienceSelector&& patienceSelector)
     {
         if (threads.empty()) {
             this->deckSelector = std::move(deckSelector);
-            if (!patienceSelector)
-                throw std::logic_error("null patienceSelector supplied");
             this->patienceSelector = std::move(patienceSelector);
             for (std::size_t i = 0; i!= threadsCount; ++i)
                 CreateThread(i);
         }
     }
 
-    bool Manager::Running() const
+    void BaseManager::SetRandomSeeds(const std::vector<std::uint_fast32_t>& seeds)
     {
-        return !threads.empty();
+        this->seeds = seeds;
     }
 
-    void Manager::Interrupt()
-    {
-        if (!threads.empty())
-            threads.clear();
-    }
-
-    void Manager::IncreaseThreads()
-    {
-        if (!threads.empty())
-            CreateThread(threads.size());
-    }
-
-    void Manager::DecreaseThreads()
-    {
-        if (threads.size() > 1)
-            threads.pop_back();
-    }
-
-    Thread::FoundVector Manager::GetNewDecks()
-    {
-        Thread::FoundVector result;
-        for (auto& thread : threads) {
-            auto tmp = thread->GetNewDecks();
-            result.insert(result.end(),
-                    std::make_move_iterator(tmp.begin()),
-                    std::make_move_iterator(tmp.end()));
-        }
-        return result;
-    }
-
-    std::vector<Thread::RunParameters> Manager::GetRunParameters() const
-    {
-        std::vector<Thread::RunParameters> result;
-        for (auto& thread : threads) 
-            result.push_back(thread->GetRunParameters());
-        return result;
-    }
-
-    std::uint_fast32_t Manager::GetSeed(std::size_t number) const
+    std::uint_fast32_t BaseManager::GetSeed(std::size_t number) const
     {
         std::size_t count = seeds.size();
         if (count == 0)
             return number;
         else
             return seeds[number % count];
+    }
+
+    bool BaseManager::IsRunning() const
+    {
+        return !threads.empty();
+    }
+
+    void BaseManager::Interrupt()
+    {
+        threads.clear();
+    }
+
+    void BaseManager::IncreaseThreads()
+    {
+        if (!threads.empty())
+            CreateThread(threads.size());
+    }
+
+    void BaseManager::DecreaseThreads()
+    {
+        if (threads.size() > 1)
+            threads.pop_back();
+    }
+
+    std::vector<ExecutionParameters> BaseManager::GetExecutionParameters() const
+    {
+        std::vector<ExecutionParameters> result;
+        for (auto& thread : threads) 
+            result.push_back(thread->GetExecutionParameters());
+        return result;
     }
 
 }
