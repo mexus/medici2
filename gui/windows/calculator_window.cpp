@@ -214,7 +214,7 @@ void CalculatorWindow::PopulateDecks(const calculator::Manager<N>::FoundVector& 
 
 }
 
-void CalculatorWindow::AddDeck(const std::array<Card, N>& deck, const medici::Patience::PatienceInfo&)
+void CalculatorWindow::AddDeck(const std::array<Card, N>& deck, const medici::PatienceInfo&)
 {
     QString line;
     for (auto &card : deck) {

@@ -14,7 +14,7 @@ namespace medici {
     class PatienceSelector {
     public:
         virtual ~PatienceSelector() = default;
-        virtual bool Check(const Patience::PatienceInfo&)
+        virtual bool Check(const PatienceInfo&)
         {
             return true;
         }
@@ -25,7 +25,7 @@ namespace medici {
     public:
         PatienceTargetSelector(const Card& target);
         virtual ~PatienceTargetSelector() = default;
-        virtual bool Check(const Patience::PatienceInfo&);
+        virtual bool Check(const PatienceInfo&);
     protected:
         const Card target;
     };
@@ -33,7 +33,7 @@ namespace medici {
     class PatienceMaxSelector : public PatienceTargetSelector {
     public:
         PatienceMaxSelector(const Card& target, bool strictComparison);
-        virtual bool Check(const Patience::PatienceInfo& info) override;
+        virtual bool Check(const PatienceInfo& info) override;
     private:
         const bool strictComparison;
         std::mutex accessConvolutions;
@@ -44,7 +44,7 @@ namespace medici {
     public:
         PatienceIChingSelector(PPatienceSelector&& parent);
         PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent);
-        virtual bool Check(const Patience::PatienceInfo&) override;
+        virtual bool Check(const PatienceInfo&) override;
     private:
         const PPatienceSelector parent;
         const std::unique_ptr<const i_ching::BalanceChecker> checker;

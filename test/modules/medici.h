@@ -16,9 +16,9 @@ public:
 protected:
     static logxx::Log cLog;
     bool Tests() ;
-    bool Test(const ArrayType& deck, bool converges, const Patience::PatienceInfo& etalonInfo = Patience::PatienceInfo());
+    bool Test(const ArrayType& deck, bool converges, const PatienceInfo& etalonInfo = PatienceInfo());
 
-    bool Compare(const Patience::PatienceInfo& result, const Patience::PatienceInfo& etalon);
+    bool Compare(const PatienceInfo& result, const PatienceInfo& etalon);
 };
 
 #endif /* TEST_MEDICI */

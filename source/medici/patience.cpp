@@ -2,26 +2,26 @@
 
 namespace medici {
 
-    void Patience::PatienceInfo::Clear()
+    void PatienceInfo::Clear()
     {
         convolutions.clear();
         stationars.clear();
         mobiles.clear();
     }
 
-    bool Patience::Converges(const Card& left, const Card& right)
+    bool CheckConvergence(const Card& left, const Card& right)
     {
         return left.suit == right.suit || left.rank == right.rank;
     }
 
-    void Patience::Mobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info)
+    void PopulateMobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info)
     {
         info.mobiles.insert(middleCard);
         if (info.mobiles.find(leftCard) == info.mobiles.end())
             info.stationars.insert(leftCard);
     }
 
-    std::size_t Patience::Converge(std::vector<Card>& deck, PatienceInfo& info)
+    std::size_t ConvergeDeck(std::vector<Card>& deck, PatienceInfo& info)
     {
         if (deck.size() <= 2)
             return 0;
@@ -33,8 +33,8 @@ namespace medici {
             else {
                 auto middleCardIt = rightCardIt - 1;
                 auto leftCardIt  = middleCardIt - 1;
-                if (Converges(*leftCardIt, *rightCardIt)) {
-                    Mobiles(*leftCardIt, *middleCardIt, info);
+                if (CheckConvergence(*leftCardIt, *rightCardIt)) {
+                    PopulateMobiles(*leftCardIt, *middleCardIt, info);
                     rightCardIt = deck.erase(leftCardIt);
                     ++convolutions;
                 } else

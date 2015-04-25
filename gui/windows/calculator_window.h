@@ -53,7 +53,7 @@ private:
     void ShowProgress();
     void PopulateParameters(const std::vector<calculator::ExecutionParameters>&);
     void PopulateDecks(const calculator::Manager<N>::FoundVector&);
-    void AddDeck(const std::array<Card, N>&, const medici::Patience::PatienceInfo&);
+    void AddDeck(const std::array<Card, N>&, const medici::PatienceInfo&);
 
 };
 

@@ -3,7 +3,7 @@
 
 namespace i_ching {
 
-    SuitsHexagrams CalculateHexagrams(const medici::Patience::PatienceInfo& info)
+    SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info)
     {
         using namespace standard_36_deck;
         static const Hexagram defaultHexagram{{Yang, Yang, Yang, Yang, Yang, Yang}};
@@ -52,7 +52,7 @@ namespace i_ching {
         return true;
     }
 
-    bool BalanceChecker::Check(const medici::Patience::PatienceInfo& info) const
+    bool BalanceChecker::Check(const medici::PatienceInfo& info) const
     {
         auto hexagrams = CalculateHexagrams(info);
         return CheckBalance(hexagrams);
@@ -63,7 +63,7 @@ namespace i_ching {
     {
     }
 
-    bool BalanceAndSuitChecker::Check(const medici::Patience::PatienceInfo& info) const
+    bool BalanceAndSuitChecker::Check(const medici::PatienceInfo& info) const
     {
         auto hexagrams = CalculateHexagrams(info);
         return hexagrams[suit] == hexagram && CheckBalance(hexagrams);

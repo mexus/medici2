@@ -19,8 +19,8 @@ bool TestIChing::Tests()
 
 SuitsHexagrams TestIChing::CalculateHexagrams(const ArrayType& deck)
 {
-    Patience::PatienceInfo info;
-    if (Patience::Converge(deck, info)) {
+    PatienceInfo info;
+    if (ConvergeDeck(deck, info)) {
         return i_ching::CalculateHexagrams(info);
     } else
         throw std::logic_error("Supplied not convergable deck");
@@ -29,7 +29,7 @@ SuitsHexagrams TestIChing::CalculateHexagrams(const ArrayType& deck)
 bool TestIChing::TestCalculation()
 {
     S_LOG("TestCalculation");
-    Patience::PatienceInfo info1, info2;
+    PatienceInfo info1, info2;
     info1.stationars = {{Spades, Jack}, {Spades, Eight}, {Hearts, Six}, {Hearts, Nine}, {Hearts, Ten}, {Hearts, Jack}, {Hearts, Queen}, {Hearts, King}, {Diamonds, Six}, {Diamonds, Seven}, {Diamonds, Eight}, {Diamonds, Nine}, {Diamonds, Jack}, {Diamonds, Ace}, {Clubs, Seven}, {Clubs, Jack}};
     info2.stationars = {{Spades, Ten}, {Spades, Jack}, {Spades, Queen}, {Spades, King}, {Hearts, Jack}, {Hearts, Queen}, {Diamonds, Jack}, {Diamonds, Queen}, {Diamonds, Ace}, {Clubs, Nine}, {Clubs, Jack}, {Clubs, King}};
     SuitsHexagrams etalonHexagrams1 {{
@@ -74,8 +74,8 @@ bool TestIChing::TestBalance()
 bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon)
 {
     S_LOG("TestBalance");
-    Patience::PatienceInfo info;
-    if (!Patience::Converge(deck, info)) {
+    PatienceInfo info;
+    if (!ConvergeDeck(deck, info)) {
         log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
         return false;
     } else {
@@ -108,8 +108,8 @@ bool TestIChing::TestBalanceAndSuit()
 bool TestIChing::TestBalanceAndSuit(const ArrayType& deck, const Card::Suit& suit, const i_ching::Hexagram& etalonHexagram)
 {
     S_LOG("TestBalanceAndSuit");
-    Patience::PatienceInfo info;
-    if (!Patience::Converge(deck, info)) {
+    PatienceInfo info;
+    if (!ConvergeDeck(deck, info)) {
         log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
         return false;
     } else {

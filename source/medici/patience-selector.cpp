@@ -5,8 +5,6 @@ using namespace i_ching;
 
 namespace medici {
 
-    typedef Patience::PatienceInfo PatienceInfo;
-
     PatienceTargetSelector::PatienceTargetSelector(const Card& target) :
         target(target)
     {
