@@ -1,5 +1,4 @@
-#include "deck.h"
-
+#include "card.h"
 
 Card::Suit::Suit() :
     value(0)

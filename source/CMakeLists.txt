@@ -3,8 +3,8 @@ add_library (source-library
 
     helpers/time_measure.cpp
 
+    cards/card.cpp
     cards/card-selector.cpp
-    cards/deck.cpp
     cards/deck-selector.cpp
     cards/standard-36-deck.cpp
 
