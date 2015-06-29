@@ -36,10 +36,9 @@ namespace calculator {
         std::uint_fast32_t GetSeed(std::size_t number) const;
     };
 
-    template<std::size_t N>
     class Manager : public BaseManager {
     public:
-        typedef typename Thread<N>::FoundVector FoundVector;
+        typedef typename Thread::FoundVector FoundVector;
         Manager(MixersFactory& mixersFactory) : 
             BaseManager(mixersFactory)
         {
@@ -49,7 +48,7 @@ namespace calculator {
         {
             FoundVector result;
             for (auto& thread : threads) {
-                auto tmp = static_cast<Thread<N>*>(thread.get())->GetNewDecks();
+                auto tmp = static_cast<Thread*>(thread.get())->GetNewDecks();
                 result.insert(result.end(),
                         std::make_move_iterator(tmp.begin()),
                         std::make_move_iterator(tmp.end()));
@@ -61,10 +60,10 @@ namespace calculator {
 
         void CreateThread(std::size_t number) override
         {
-            auto mixer = mixersFactory.CreateMixer<Card, N>(GetSeed(number));
+            auto mixer = mixersFactory.CreateMixer<Card>(GetSeed(number));
             if (!patienceSelector)
                 throw std::logic_error("Passed a nullptr patienceSelector!");
-            auto thread = new Thread<N>(deckSelector, patienceSelector, std::move(mixer));
+            auto thread = new Thread(deckSelector, patienceSelector, std::move(mixer));
             threads.emplace_back(thread);
             thread->Launch();
         }

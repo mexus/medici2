@@ -4,7 +4,7 @@
 #include "operators.h"
 
 logxx::Log TestCalculatorManager::cLog("TestCalculatorManager");
-MixersFactory TestCalculatorManager::mixersFactory;
+MixersFactory TestCalculatorManager::mixersFactory(TestCalculatorManager::N);
 
 using namespace calculator;
 
@@ -22,7 +22,7 @@ bool TestCalculatorManager::TestLaunch()
     S_LOG("TestLaunch");
     DeckSelectors deckSelector;
 
-    Manager<N> manager(mixersFactory);
+    Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
     manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
 
@@ -50,7 +50,7 @@ bool TestCalculatorManager::TestIncrease()
     S_LOG("TestIncrease");
     DeckSelectors deckSelector;
 
-    Manager<N> manager(mixersFactory);
+    Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
     manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
 
@@ -80,7 +80,7 @@ bool TestCalculatorManager::TestDecrease()
     S_LOG("TestDecrease");
     DeckSelectors deckSelector;
 
-    Manager<N> manager(mixersFactory);
+    Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
     manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
 
@@ -110,7 +110,7 @@ bool TestCalculatorManager::TestInterrupt()
     S_LOG("TestInterrupt");
     DeckSelectors deckSelector;
 
-    Manager<N> manager(mixersFactory);
+    Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
     manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
 

@@ -1,5 +1,4 @@
 #define private public
-#include <cards/deck.h>
 #include <cards/deck-selector.h>
 #undef private
 
@@ -9,26 +8,26 @@ namespace std {
 
     ostream& operator<<(ostream& s, const Card& card)
     {
-        return s << "suit #" << (int)card.suit.value << " rank #" << (int)card.rank.value;
+        return s << "suit #" << (int)card.suit << " rank #" << (int)card.rank;
     }
 
     ostream& operator<<(ostream& s, const CardSelector& cardSelector)
     {
         s << "{";
-        if (cardSelector.straight)
+        if (cardSelector.config.straight)
             s << "straight";
         else
             s << "inverse";
         s << ", ";
         bool printSeparator = false;
-        if (cardSelector.suitSet) {
-            s << "suit #" << static_cast<int>(cardSelector.suit.value);
+        if (cardSelector.config.suitSet) {
+            s << "suit #" << static_cast<int>(cardSelector.config.suit);
             printSeparator = true;
         }
-        if (cardSelector.rankSet) {
+        if (cardSelector.config.rankSet) {
             if (printSeparator)
                 s << ", ";
-            s << "rank #" << static_cast<int>(cardSelector.rank.value);
+            s << "rank #" << static_cast<int>(cardSelector.config.rank);
         }
         s << "}";
         return s;

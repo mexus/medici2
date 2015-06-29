@@ -5,7 +5,11 @@
 
 class MixersFactory {
 public:
-    MixersFactory() = default;
+    MixersFactory(std::size_t deck_size) :
+        deck_size(deck_size)
+    {
+    }
+
     MixersFactory(const MixersFactory&) = delete;
 
     enum MixerType {
@@ -18,14 +22,16 @@ public:
         MINSTD_RAND
     };
 
-    template<class T, std::size_t N>
-    std::unique_ptr<MixerInterface<T, N>> CreateMixer(std::uint_fast32_t seed) const
+    template<class T>
+    std::unique_ptr<MixerInterface<T>> CreateMixer(std::uint_fast32_t seed) const
     {
         switch (engine) {
             case RANLUX24_BASE:
-                return CreateMixer<T, N, std::ranlux24_base>(seed);
+                return CreateMixer<T, std::ranlux24_base>(seed);
             case MINSTD_RAND:
-                return CreateMixer<T, N, std::minstd_rand>(seed);
+                return CreateMixer<T, std::minstd_rand>(seed);
+            default:
+                throw std::logic_error("Unimplemented engine " + std::to_string(engine));
         }
     }
 
@@ -36,21 +42,24 @@ public:
 
     void SetMixer(MixerType type)
     {
-        mixerType = type;
+        mixer_type = type;
     }
 
 private:
+    const std::size_t deck_size;
     EngineName engine = RANLUX24_BASE;
-    MixerType mixerType = FULL_CAPACITY;
+    MixerType mixer_type = FULL_CAPACITY;
 
-    template<class T, std::size_t N, class RandomEngine>
-    std::unique_ptr<MixerInterface<T, N>> CreateMixer(std::uint_fast32_t seed) const
+    template<class T, class RandomEngine>
+    std::unique_ptr<MixerInterface<T>> CreateMixer(std::uint_fast32_t seed) const
     {
-        switch (mixerType) {
+        switch (mixer_type) {
             case ONE_SWAP:
-                return std::unique_ptr<MixerInterface<T, N>>(new OneSwapMixer<T, N, RandomEngine>(seed));
+                return std::unique_ptr<MixerInterface<T>>(new OneSwapMixer<T, RandomEngine>(deck_size, seed));
             case FULL_CAPACITY:
-                return std::unique_ptr<MixerInterface<T, N>>(new FullCapacityMixer<T, N, RandomEngine>(seed));
+                return std::unique_ptr<MixerInterface<T>>(new FullCapacityMixer<T, RandomEngine>(deck_size, seed));
+            default:
+                throw std::logic_error("Unimplemented mixer type " + std::to_string(mixer_type));
         }
     }
 };

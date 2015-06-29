@@ -80,7 +80,7 @@ void CardsTranslations::PopulateTranslations()
 {
     PopulateRanks();
     PopulateSuits();
-    for (auto &card : standard_36_deck::Deck::cards)
+    for (auto &card : standard_36_deck::kDeck)
         AddCard(card);
 }
 
@@ -102,11 +102,11 @@ const QString& CardsTranslations::CardLongName(const Card& card) const {
     return Name(cardsTranslationsLong, card);
 }
 
-const QString& CardsTranslations::SuitLongName(const Card::Suit& suit) const {
+const QString& CardsTranslations::SuitLongName(std::uint_fast8_t suit) const {
     return Name(suitsTranslationsLong, suit);
 }
 
-const QString& CardsTranslations::RankLongName(const Card::Rank& rank) const {
+const QString& CardsTranslations::RankLongName(std::uint_fast8_t rank) const {
     return Name(ranksTranslationsLong, rank);
 }
 

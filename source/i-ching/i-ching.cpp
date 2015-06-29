@@ -22,8 +22,8 @@ namespace i_ching {
             {Nine,  1 - 1},// {Seven, 1 - 1}
         };
         for (auto &card : info.stationars) {
-            auto &suitHexagram = hexagrams[card.suit.value];
-            auto it = converter.find(card.rank.value);
+            auto &suitHexagram = hexagrams[card.suit];
+            auto it = converter.find(card.rank);
             if (it != converter.end()) {
                 auto lineNumber = it->second;
                 suitHexagram[lineNumber] = Yin;
@@ -58,8 +58,8 @@ namespace i_ching {
         return CheckBalance(hexagrams);
     }
 
-    BalanceAndSuitChecker::BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram& hexagram) :
-        suit(suit.value), hexagram(hexagram)
+    BalanceAndSuitChecker::BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram& hexagram) :
+        suit(suit), hexagram(hexagram)
     {
     }
 

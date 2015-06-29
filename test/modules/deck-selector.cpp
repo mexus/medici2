@@ -4,6 +4,7 @@
 
 using namespace standard_36_deck;
 logxx::Log TestDeckSelector::cLog("TestDeckSelector");
+CardSelectorConfigurator TestDeckSelector::configurator;
 
 TestDeckSelector::TestDeckSelector() :
     TestFW("deck-selector")
@@ -15,36 +16,63 @@ bool TestDeckSelector::Tests()
     return TestAllSelector() && TestOneSelector() && TestComplex();
 }
 
+CardSelector TestDeckSelector::SelectorAnyRank(std::uint_fast8_t suit, bool straight)
+{
+    configurator.Reset();
+    configurator.SetSuit(suit);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
+}
+
+CardSelector TestDeckSelector::SelectorAnySuit(std::uint_fast8_t rank, bool straight)
+{
+    configurator.Reset();
+    configurator.SetRank(rank);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
+}
+
+CardSelector TestDeckSelector::Selector(std::uint_fast8_t suit, std::uint_fast8_t rank, bool straight)
+{
+    configurator.Reset();
+    configurator.SetSuit(suit);
+    configurator.SetRank(rank);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
+}
+
 bool TestDeckSelector::TestAllSelector()
 {
-    auto deck1 = DeckType::cards;
-    deck1[0] = {Diamonds, Nine};
-    deck1[1] = {Hearts, Nine};
-    deck1[2] = {Clubs, Jack};
+    std::vector<Card> deck1 {
+        {Diamonds, Nine},
+        {Hearts, Nine},
+        {Clubs, Jack}
+    };
     //All should be "Nine"s and "Non-Spades"s in a range {0, 1}:
-    DeckAllSelector deckSelector1({CardSelector(Card::Rank(Nine), true), CardSelector(Card::Suit(Spades), false)}, 0, 1);
+    DeckAllSelector deckSelector1({SelectorAnySuit(Nine), SelectorAnyRank(Spades, false)}, 0, 1);
     //All should be "Not-Eight"s in a range {0, 1}:
-    DeckAllSelector deckSelector2({CardSelector(Card::Rank(Eight), false)}, 0, 1);
+    DeckAllSelector deckSelector2({SelectorAnySuit(Eight, false)}, 0, 1);
     //All should be "Nine"s in a range {0, 2}:
-    DeckAllSelector deckSelector3({CardSelector(Card::Rank(Nine), true)}, 0, 2);
+    DeckAllSelector deckSelector3({SelectorAnySuit(Nine)}, 0, 2);
 
     return TestSelector(deck1, deckSelector1, true) && TestSelector(deck1, deckSelector2, true) && TestSelector(deck1, deckSelector3, false);
 }
 
 bool TestDeckSelector::TestOneSelector()
 {
-    auto deck1 = DeckType::cards;
-    deck1[0] = {Spades, King};
-    deck1[1] = {Hearts, Queen};
-    deck1[2] = {Clubs, Jack};
+    std::vector<Card> deck1 {
+        {Spades, King},
+        {Hearts, Queen},
+        {Clubs, Jack},
+    };
     //Should be at least one "King-of-Spades" in a range {0, 1}
-    DeckOneSelector deckSelector1({CardSelector(Card::Suit(Spades), Card::Rank(King), true)}, 0, 1);
+    DeckOneSelector deckSelector1({Selector(Spades, King)}, 0, 1);
     //Should be at least one "King-of-Spades" or "Queen-of-Hearts" in a range {1, 2}
-    DeckOneSelector deckSelector2({CardSelector(Card::Suit(Spades), Card::Rank(King), true), CardSelector(Card::Suit(Hearts), Card::Rank(Queen), true)}, 0, 1);
+    DeckOneSelector deckSelector2({Selector(Spades, King), Selector(Hearts, Queen)}, 0, 1);
     //Should not be at least one "King-of-Spades" or "Not-Ace" in a range {2, 2}
-    DeckOneSelector deckSelector3({CardSelector(Card::Suit(Spades), Card::Rank(King), true), CardSelector(Card::Rank(Ace), false)}, 2, 2);
+    DeckOneSelector deckSelector3({Selector(Spades, King), SelectorAnySuit(Ace, false)}, 2, 2);
     //Should not be at least one "King-of-Spades" or "Not-Jack" in a range {2, 2}
-    DeckOneSelector deckSelector4({CardSelector(Card::Suit(Spades), Card::Rank(King), true), CardSelector(Card::Rank(Jack), false)}, 2, 2);
+    DeckOneSelector deckSelector4({Selector(Spades, King), SelectorAnySuit(Jack, false)}, 2, 2);
 
     return TestSelector(deck1, deckSelector1, true) && TestSelector(deck1, deckSelector2, true) && TestSelector(deck1, deckSelector3, true) && 
         TestSelector(deck1, deckSelector4, false);
@@ -54,7 +82,7 @@ bool TestDeckSelector::TestComplex()
 {
     S_LOG("TestComplex");
     using namespace standard_36_deck;
-    standard_36_deck::Deck::ArrayType deck1= {{
+    std::vector<Card> deck1 {
         {Hearts, Jack},     // 0
         {Clubs, Nine},      // 1
         {Hearts, Ace},      // 2
@@ -91,13 +119,13 @@ bool TestDeckSelector::TestComplex()
         {Clubs, Ace},       // 33
         {Diamonds, Six},    // 34
         {Clubs, King}       // 35
-    }};
+    };
 
-    DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
-    DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
-    DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
-    DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
-    DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
+    DeckOneSelector targetCard({Selector(Hearts, Ten)}, 19, 24);
+    DeckAllSelector ownActions({SelectorAnySuit(Ace, false)}, 3, 7);
+    DeckOneSelector firstCard({SelectorAnySuit(Jack)}, 0, 0);
+    DeckOneSelector secondCard({SelectorAnySuit(Nine)}, 1, 1);
+    DeckOneSelector thirdCard({SelectorAnySuit(Ace), SelectorAnySuit(Ten)}, 2, 2);
 
     DeckSelectors selectors;
     selectors.AddDeckSelector(targetCard);
@@ -139,13 +167,13 @@ std::ostream& operator <<(std::ostream& s, const DeckAbstractSelector& abstractS
     return s;
 }
 
-void PrintDeckPart(std::ostream& s, const TestDeckSelector::ArrayType& deck, std::size_t from, std::size_t to)
+void PrintDeckPart(std::ostream& s, const std::vector<Card>& deck, std::size_t from, std::size_t to)
 {
     std::vector<Card> cards(deck.begin() + from, deck.begin() + to + 1);
     s << cards;
 }
 
-bool TestDeckSelector::TestSelector(const ArrayType& deck, const DeckAbstractSelector& deckSelector, bool etalonResult)
+bool TestDeckSelector::TestSelector(const std::vector<Card>& deck, const DeckAbstractSelector& deckSelector, bool etalonResult)
 {
     S_LOG("TestSelector");
     auto result = deckSelector.Check(deck);

@@ -122,19 +122,22 @@ CardSelector GuiCardSelector::GetSelector(bool &ok)
     int suitData = suit->currentData().toInt();
     int rankData = rank->currentData().toInt();
 
+    CardSelectorConfigurator configurator;
+    configurator.SetStraight(!inverse->isChecked());
+
     ok = true;
-    bool isStraight = !inverse->isChecked();
-    if (suitData != -1 && rankData != -1) {
-        return CardSelector(suitData, rankData, isStraight);
-    } else if (suitData != -1) {
-        return CardSelector(Card::Suit(suitData), isStraight);
-    } else if (rankData != -1) {
-        return CardSelector(Card::Rank(rankData), isStraight);
-    } else {
+    if (suitData == -1 && rankData == -1) {
         Highlight();
         ok = false;
-        return CardSelector(0, 0, true);
+        configurator.SetRank(0);
+        configurator.SetSuit(0);
+    } else {
+        if (suitData != -1)
+            configurator.SetSuit(suitData);
+        if (rankData != -1)
+            configurator.SetRank(rankData);
     }
+    return configurator.GetSelector();
 }
 
 Card GuiCardSelector::GetCard() const {
@@ -144,7 +147,7 @@ Card GuiCardSelector::GetCard() const {
     int rankData = rank->currentData().toInt();
     if (rankData == -1)
         throw std::logic_error("Can't detect a rank");
-    return {suitData, rankData};
+    return {std::uint_fast8_t(suitData), std::uint_fast8_t(rankData)};
 }
 
 void GuiCardSelector::Highlight()

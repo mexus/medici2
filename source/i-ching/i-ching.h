@@ -21,7 +21,7 @@ namespace i_ching {
 
     class BalanceAndSuitChecker : public BalanceChecker{
     public:
-        BalanceAndSuitChecker(const Card::Suit& suit, const Hexagram&);
+        BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram&);
         bool Check(const medici::PatienceInfo&) const override;
     private:
         std::uint_fast8_t suit;

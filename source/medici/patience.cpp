@@ -21,7 +21,21 @@ namespace medici {
             info.stationars.insert(leftCard);
     }
 
-    std::size_t ConvergeDeck(std::vector<Card>& deck, PatienceInfo& info)
+    bool TryToConverge(const std::vector<Card>& cards, PatienceInfo& info)
+    {
+        std::vector<Card> deck;
+        info.Clear();
+        for (std::size_t i = 0; i != cards.size(); ++i) {
+            const Card& current = cards[i];
+            deck.push_back(current);
+            std::size_t convolutions = ConvergeDeckPart(deck, info);
+            if (convolutions != 0)
+                info.convolutions[current] = convolutions;
+        }
+        return deck.size() == 2;
+    }
+
+    std::size_t ConvergeDeckPart(std::vector<Card>& deck, PatienceInfo& info)
     {
         if (deck.size() <= 2)
             return 0;

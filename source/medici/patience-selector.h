@@ -5,7 +5,7 @@
 #include <memory>
 #include <atomic>
 #include <mutex>
-#include <cards/deck.h>
+#include <cards/card.h>
 #include <i-ching/i-ching.h>
 #include "patience.h"
 
@@ -43,7 +43,7 @@ namespace medici {
     class PatienceIChingSelector : public PatienceSelector {
     public:
         PatienceIChingSelector(PPatienceSelector&& parent);
-        PatienceIChingSelector(const Card::Suit& suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent);
+        PatienceIChingSelector(std::uint_fast8_t suit, const i_ching::Hexagram& targetHex, PPatienceSelector&& parent);
         virtual bool Check(const PatienceInfo&) override;
     private:
         const PPatienceSelector parent;

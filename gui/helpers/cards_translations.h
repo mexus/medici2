@@ -11,16 +11,16 @@ class CardsTranslations : QObject {
 public:
     CardsTranslations();
 
-    const QString& SuitLongName(const Card::Suit&) const;
-    const QString& RankLongName(const Card::Rank&) const;
+    const QString& SuitLongName(std::uint_fast8_t) const;
+    const QString& RankLongName(std::uint_fast8_t) const;
 
     const QString& CardShortName(const Card&) const;
     const QString& CardLongName(const Card&) const;
     void PopulateTranslations();
 
 private:
-    std::map<Card::Suit, QString> suitsTranslationsShort, suitsTranslationsLong;
-    std::map<Card::Rank, QString> ranksTranslationsShort, ranksTranslationsLong;
+    std::map<std::uint_fast8_t, QString> suitsTranslationsShort, suitsTranslationsLong;
+    std::map<std::uint_fast8_t, QString> ranksTranslationsShort, ranksTranslationsLong;
     std::map<Card, QString> cardsTranslationsShort, cardsTranslationsLong;
 
     void PopulateRanks();

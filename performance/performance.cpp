@@ -5,7 +5,13 @@
 #include <mixer/factory.h>
 
 logxx::Log Performance::cLog("Performance");
+CardSelectorConfigurator Performance::configurator;
 using namespace medici;
+
+Performance::Performance() : 
+    mixersFactory(N)
+{
+}
 
 void Performance::Run(MixersFactory::MixerType mixerType)
 {
@@ -22,7 +28,7 @@ Performance::CheckOperand::CheckOperand(DeckSelectors&& selectors) :
 {
 }
 
-bool Performance::CheckOperand::operator()(const StandardDeckArray& deck) const
+bool Performance::CheckOperand::operator()(const std::vector<Card>& deck) const
 {
     return deckSelectors.Check(deck);
 }
@@ -31,7 +37,7 @@ void Performance::Mixing() const
 {
     S_LOG("Mixing");
     auto mixer = GetMixer();
-    auto deck = standard_36_deck::Deck::cards;
+    auto deck = standard_36_deck::kDeck;
     {
         static const std::size_t decksCount = 1E6;
         TimeMeasure timer;
@@ -43,21 +49,21 @@ void Performance::Mixing() const
     }
 }
 
-std::vector<Performance::StandardDeckArray> Performance::PregenerateConvergableDecks() const
+std::vector<std::vector<Card>> Performance::PregenerateConvergableDecks() const
 {
     S_LOG("PregenerateConvergableDecks");
     auto mixer = GetMixer();
     PatienceInfo info;
-    std::vector<StandardDeckArray> pregeneratedDecks;
+    std::vector<std::vector<Card>> pregeneratedDecks;
     static const std::size_t decksCount = 1E3;
     pregeneratedDecks.reserve(decksCount);
-    auto deck = standard_36_deck::Deck::cards;
+    auto deck = standard_36_deck::kDeck;
     {
         TimeMeasure timer;
         for (std::size_t i = 0; i != decksCount; ++i) {
             do {
                 mixer->Mix(deck);
-            } while (!ConvergeDeck(deck, info));
+            } while (!TryToConverge(deck, info));
             pregeneratedDecks.push_back(deck);
         }
         double elapsed = timer.Elapsed();
@@ -78,7 +84,7 @@ void Performance::MediciGenerator() const
         TimeMeasure timer;
         for (; it != end; ++it) {
             auto &deck = *it;
-            if (!ConvergeDeck(deck, info))
+            if (!TryToConverge(deck, info))
                 throw std::logic_error("Convergable deck doesn't converges!");
         }
         double elapsed = timer.Elapsed();
@@ -91,11 +97,11 @@ void Performance::MediciGenerator() const
 DeckSelectors Performance::DefaultSelectors()
 {
     using namespace standard_36_deck;
-    DeckOneSelector targetCard({CardSelector(Card::Suit(Hearts), Card::Rank(Ten), true)}, 19, 24);
-    DeckAllSelector ownActions({CardSelector(Card::Rank(Ace), false)}, 3, 7);
-    DeckOneSelector firstCard({CardSelector(Card::Rank(Jack), true)}, 0, 0);
-    DeckOneSelector secondCard({CardSelector(Card::Rank(Nine), true)}, 1, 1);
-    DeckOneSelector thirdCard({CardSelector(Card::Rank(Ace), true), CardSelector(Card::Rank(Ten), true)}, 2, 2);
+    DeckOneSelector targetCard({Selector(Hearts, Ten)}, 19, 24);
+    DeckAllSelector ownActions({SelectorAnySuit(Ace, false)}, 3, 7);
+    DeckOneSelector firstCard({SelectorAnySuit(Jack)}, 0, 0);
+    DeckOneSelector secondCard({SelectorAnySuit(Nine)}, 1, 1);
+    DeckOneSelector thirdCard({SelectorAnySuit(Ace), SelectorAnySuit(Ten)}, 2, 2);
 
     DeckSelectors selectors;
     selectors.AddDeckSelector(targetCard);
@@ -117,7 +123,7 @@ void Performance::MediciWithConditions() const
     S_LOG("MediciWithConditions");
 
     auto mixer = GetMixer();
-    auto deck = standard_36_deck::Deck::cards;
+    auto deck = standard_36_deck::kDeck;
     PatienceInfo info;
     auto checker = DefaultCheckOperand();
     const std::size_t totalDecks = 100;
@@ -125,7 +131,7 @@ void Performance::MediciWithConditions() const
     for (std::size_t i = 0; i != totalDecks; ++i) {
         do {
             mixer->Mix(deck);
-        } while (!(checker(deck) && ConvergeDeck(deck, info)));
+        } while (!(checker(deck) && TryToConverge(deck, info)));
     }
     double elapsed = timer.Elapsed();
     log(logxx::info) << totalDecks << " appropriate decks generated in " << elapsed << "s: " << totalDecks / elapsed << " decks per second" << logxx::endl;
@@ -135,7 +141,7 @@ void Performance::MediciWithConditionsAndIChing() const
 {
     S_LOG("MediciWithConditionsAndIChing");
 
-    auto deck = standard_36_deck::Deck::cards;
+    auto deck = standard_36_deck::kDeck;
     PatienceInfo info;
     i_ching::BalanceChecker iChingChecker;
     auto checker = DefaultCheckOperand();
@@ -147,7 +153,7 @@ void Performance::MediciWithConditionsAndIChing() const
     for (std::size_t i = 0; i != totalDecks; ++i) {
         do {
             mixer->Mix(deck);
-        } while (!(checker(deck) && ConvergeDeck(deck, info)));
+        } while (!(checker(deck) && TryToConverge(deck, info)));
         if (iChingChecker.Check(info))
             ++balanced;
     }
@@ -161,7 +167,7 @@ void Performance::MediciWithConditionsAndIChing() const
 void Performance::IChingBalancedPercent() const
 {
     S_LOG("IChingBalancedPercent");
-    auto deck = standard_36_deck::Deck::cards;
+    auto deck = standard_36_deck::kDeck;
     PatienceInfo info;
     i_ching::BalanceChecker iChingChecker;
     auto mixer = GetMixer();
@@ -171,7 +177,7 @@ void Performance::IChingBalancedPercent() const
     for (std::size_t i = 0; i != totalDecks; ++i) {
         do {
             mixer->Mix(deck);
-        } while (!ConvergeDeck(deck, info));
+        } while (!TryToConverge(deck, info));
         if (iChingChecker.Check(info))
             ++balanced;
     }
@@ -180,6 +186,31 @@ void Performance::IChingBalancedPercent() const
 
 Performance::StandardGenerator Performance::GetMixer(std::uint_fast32_t seed) const
 {
-    return mixersFactory.CreateMixer<Card, StandardDeck::N()>(seed);
+    return mixersFactory.CreateMixer<Card>(seed);
+}
+
+CardSelector Performance::SelectorAnyRank(std::uint_fast8_t suit, bool straight)
+{
+    configurator.Reset();
+    configurator.SetSuit(suit);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
+}
+
+CardSelector Performance::SelectorAnySuit(std::uint_fast8_t rank, bool straight)
+{
+    configurator.Reset();
+    configurator.SetRank(rank);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
+}
+
+CardSelector Performance::Selector(std::uint_fast8_t suit, std::uint_fast8_t rank, bool straight)
+{
+    configurator.Reset();
+    configurator.SetSuit(suit);
+    configurator.SetRank(rank);
+    configurator.SetStraight(straight);
+    return configurator.GetSelector();
 }
 

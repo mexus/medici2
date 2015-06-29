@@ -3,7 +3,7 @@
 #include "operators.h"
 
 logxx::Log TestCalculatorThread::cLog("TestCalculatorThread");
-MixersFactory TestCalculatorThread::mixersFactory;
+MixersFactory TestCalculatorThread::mixersFactory(TestCalculatorThread::N);
 
 using namespace calculator;
 
@@ -28,7 +28,7 @@ bool TestCalculatorThread::TestRunning()
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
 
-    Thread thread(deckSelector, patienceSelector, mixersFactory.CreateMixer<Card, N>(0));
+    Thread thread(deckSelector, patienceSelector, mixersFactory.CreateMixer<Card>(0));
     thread.Launch();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -48,7 +48,7 @@ bool TestCalculatorThread::TestRunningMultithreaded()
     static const std::size_t testThreadsCount = 4;
     std::vector<std::unique_ptr<Thread>> threads;
     for (std::size_t i = 0; i != testThreadsCount; ++i) {
-        threads.emplace_back(new Thread(deckSelector, patienceSelector, mixersFactory.CreateMixer<Card, N>(0)));
+        threads.emplace_back(new Thread(deckSelector, patienceSelector, mixersFactory.CreateMixer<Card>(0)));
         threads.back()->Launch();
     }
 

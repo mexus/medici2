@@ -7,9 +7,9 @@ constexpr unsigned long int factorial(unsigned int n)
     return n <= 1 ? 1 : (n * factorial(n-1));
 }
 
-bool operator<(const TestMixer::Deck& lhs, const TestMixer::Deck& rhs)
+bool operator<(const std::vector<int>& lhs, const std::vector<int>& rhs)
 {
-    for (std::size_t i = 0; i != TestMixer::testSize; ++i) {
+    for (std::size_t i = 0; i != TestMixer::test_size; ++i) {
         if (lhs[i] < rhs[i])
             return true;
         else if (lhs[i] > rhs[i])
@@ -18,27 +18,27 @@ bool operator<(const TestMixer::Deck& lhs, const TestMixer::Deck& rhs)
     return false;
 }
 
-bool operator==(const TestMixer::Deck& lhs, const TestMixer::Deck& rhs)
+bool operator==(const std::vector<int>& lhs, const std::vector<int>& rhs)
 {
-    for (std::size_t i = 0; i != TestMixer::testSize; ++i) {
+    for (std::size_t i = 0; i != TestMixer::test_size; ++i) {
         if (lhs[i] != rhs[i])
             return false;
     }
     return true;
 }
 
-std::ostream& operator<<(std::ostream& s, const TestMixer::Deck& deck)
+std::ostream& operator<<(std::ostream& s, const std::vector<int>& deck)
 {
-    for (std::size_t i = 0; i != TestMixer::testSize; ++i) {
+    for (std::size_t i = 0; i != TestMixer::test_size; ++i) {
         s << deck[i] << " ";
     }
     return s;
 }
 
-TestMixer::Deck TestMixer::SimpleDeck()
+std::vector<int> TestMixer::SimpleDeck()
 {
-    TestMixer::Deck deck;
-    for (std::size_t i = 0; i != testSize; ++i) {
+    std::vector<int> deck(test_size);
+    for (std::size_t i = 0; i != test_size; ++i) {
         deck[i] = i+1;
     }
     return deck;
@@ -54,25 +54,26 @@ TestMixer::TestMixer() :
 bool TestMixer::Tests()
 {
     return
-        TestStatistics<FullCapacityMixer<int, testSize>>("FullCapacityMixer") &&
-        TestStatistics<OneSwapMixer<int, testSize>>("OneSwapMixer");
+        TestStatistics("FullCapacityMixer", MixersFactory::FULL_CAPACITY) &&
+        TestStatistics("OneSwapMixer", MixersFactory::ONE_SWAP);
 }
 
-template<class Mixer>
-bool TestMixer::TestStatistics(const std::string& mixerName)
+bool TestMixer::TestStatistics(const std::string& mixer_name, MixersFactory::MixerType mixer_type)
 {
-    D_LOG("TestStatistics::" + mixerName);
-    Mixer mixer(0);
+    D_LOG("TestStatistics::" + mixer_name);
+    MixersFactory mixers_factory(test_size);
+    mixers_factory.SetMixer(mixer_type);
+    auto mixer = mixers_factory.CreateMixer<int>(0);
     float relativeEps = 0.03;
     float loopsResult = CalculateAverageLoops(mixer);
-    float loopsEtalon = factorial(testSize);
+    float loopsEtalon = factorial(test_size);
     if (std::fabs(loopsResult - loopsEtalon) / loopsEtalon > relativeEps) {
         log(logxx::error) << "Got " << loopsResult << " loops, but should be " << loopsEtalon << logxx::endl;
         return false;
     } else
         log(logxx::debug) << "Got " << loopsResult << " loops, should be " << loopsEtalon << logxx::endl;
 
-    float duplicatesResult = CalculateAverageDuplicates(mixer) / factorial(testSize);
+    float duplicatesResult = CalculateAverageDuplicates(mixer) / factorial(test_size);
     float duplicatesEtalon = 0.5;
     if ((duplicatesResult - duplicatesEtalon) / duplicatesEtalon > relativeEps) {
         log(logxx::error) << "Got " << duplicatesResult << " duplicates (relative), but should be " << duplicatesEtalon << logxx::endl;
@@ -83,20 +84,18 @@ bool TestMixer::TestStatistics(const std::string& mixerName)
     return true;
 }
 
-template<class Mixer>
 std::size_t TestMixer::CalculateLoops(Mixer& mixer)
 {
-    Deck array(SimpleDeck());
+    auto array = SimpleDeck();
     std::size_t loops = 0;
     auto original = array;
     do {
-        mixer.Mix(array);
+        mixer->Mix(array);
         ++loops;
     } while (original != array);
     return loops;
 }
 
-template<class Mixer>
 float TestMixer::CalculateAverageLoops(Mixer& mixer)
 {
     static const std::size_t tests = 1E4;
@@ -105,17 +104,15 @@ float TestMixer::CalculateAverageLoops(Mixer& mixer)
             });
 }
 
-template<class Mixer>
 std::size_t TestMixer::CalculateDuplicates(Mixer& mixer)
 {
-    Deck array(SimpleDeck());
-    constexpr std::size_t tests = factorial(testSize);
-    std::array<Deck, tests> results;
+    constexpr std::size_t tests = factorial(test_size);
+    std::array<std::vector<int>, tests> results;
 
-    results[0] = array;
+    results[0] = SimpleDeck();
     for (std::size_t i = 1; i != tests; ++i) {
         results[i] = results[i-1];
-        mixer.Mix(results[i]);
+        mixer->Mix(results[i]);
     }
 
     std::sort(results.begin(), results.end());
@@ -134,7 +131,6 @@ std::size_t TestMixer::CalculateDuplicates(Mixer& mixer)
     return duplicates;
 }
 
-template<class Mixer>
 float TestMixer::CalculateAverageDuplicates(Mixer& mixer)
 {
     static const std::size_t tests = 1E3;

@@ -46,13 +46,11 @@ namespace calculator {
         std::mutex accessDecks;
     };
 
-    template<std::size_t N>
     class Thread : public BaseThread {
     public:
-        typedef std::array<Card, N> DeckArray;
-        typedef std::unique_ptr<MixerInterface<Card, N>> MixerInterface;
+        typedef std::unique_ptr<::MixerInterface<Card>> MixerInterface;
 
-        typedef std::pair<DeckArray, medici::PatienceInfo> FoundType;
+        typedef std::pair<std::vector<Card>, medici::PatienceInfo> FoundType;
         typedef std::vector<FoundType> FoundVector;
 
         Thread(const DeckSelectors& deckSelector, const medici::PPatienceSelector& patienceSelector, MixerInterface&& mixer) :
@@ -81,13 +79,13 @@ namespace calculator {
             inSchedule = false;
             threadStarted.notify_one();
 
-            auto deck = Deck<N>::cards;
+            auto deck = standard_36_deck::kDeck;
             medici::PatienceInfo patienceInfo;
             while (!localInterrupt) {
                 mixer->Mix(deck);
                 ++checkedDecks;
 
-                if (deckSelector.Check(deck) && medici::ConvergeDeck(deck, patienceInfo) && patienceSelector->Check(patienceInfo)) {
+                if (deckSelector.Check(deck) && medici::TryToConverge(deck, patienceInfo) && patienceSelector->Check(patienceInfo)) {
                     ++suitableDecks;
                     std::lock_guard<std::mutex> guard(accessDecks);
                     foundDecks.push_back({deck, patienceInfo});

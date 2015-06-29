@@ -2,37 +2,27 @@
 #define TEST_MIXER_H
 
 #include <test_fw.h>
-#include <mixer/mixer.h>
+#include <mixer/factory.h>
 #include <functional>
 
 class TestMixer : public TestFW {
 public:
-    static constexpr std::size_t testSize = 6;
-
-    //typedef ::FullCapacityMixer<int, testSize> Mixer;
-    typedef std::array<int, testSize> Deck;
+    static constexpr std::size_t test_size = 6;
+    typedef std::unique_ptr<MixerInterface<int>> Mixer;
 
     TestMixer();
 protected:
     static logxx::Log cLog;
     bool Tests();
 
-    template<class Mixer>
-    bool TestStatistics(const std::string& mixerName);
+    bool TestStatistics(const std::string& mixer_name, MixersFactory::MixerType mixer_type);
 
-    template<class Mixer>
     std::size_t CalculateLoops(Mixer&);
-
-    template<class Mixer>
     std::size_t CalculateDuplicates(Mixer&);
-
-    template<class Mixer>
     float CalculateAverageLoops(Mixer&);
-
-    template<class Mixer>
     float CalculateAverageDuplicates(Mixer&);
 
-    static Deck SimpleDeck();
+    static std::vector<int> SimpleDeck();
     static float CalculateAverage(std::size_t tests, const std::function<std::size_t()>& f);
 };
 

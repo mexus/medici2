@@ -30,7 +30,7 @@ private:
 
     MixersFactory mixersFactory;
     std::atomic_bool operationInProgress;
-    calculator::Manager<N> calculatorManager;
+    calculator::Manager calculatorManager;
     const CardsTranslations& cardsTranslations;
 
     std::uint8_t threadsCount;
@@ -52,8 +52,8 @@ private:
     QTimer *updateProgressTimer;
     void ShowProgress();
     void PopulateParameters(const std::vector<calculator::ExecutionParameters>&);
-    void PopulateDecks(const calculator::Manager<N>::FoundVector&);
-    void AddDeck(const std::array<Card, N>&, const medici::PatienceInfo&);
+    void PopulateDecks(const calculator::Manager::FoundVector&);
+    void AddDeck(const std::vector<Card>&, const medici::PatienceInfo&);
 
 };
 

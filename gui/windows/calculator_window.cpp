@@ -7,7 +7,7 @@
 #include <random>
 
 CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations, QWidget* parent) :
-    QDialog(parent), operationInProgress(false), calculatorManager(mixersFactory),
+    QDialog(parent), mixersFactory(N), operationInProgress(false), calculatorManager(mixersFactory),
     cardsTranslations(cardsTranslations), threadsCount(4)
 {
     QSettings settings;
@@ -204,7 +204,7 @@ void CalculatorWindow::PopulateParameters(const std::vector<calculator::Executio
         progressVector[i]->Set(allParameters[i]);
 }
 
-void CalculatorWindow::PopulateDecks(const calculator::Manager<N>::FoundVector& newDecks)
+void CalculatorWindow::PopulateDecks(const calculator::Manager::FoundVector& newDecks)
 {
     static const std::size_t maxDecksAtOnce = 10;
     for (std::size_t i = 0, l = std::min(maxDecksAtOnce, newDecks.size()); i != l; ++i) {
@@ -214,7 +214,7 @@ void CalculatorWindow::PopulateDecks(const calculator::Manager<N>::FoundVector& 
 
 }
 
-void CalculatorWindow::AddDeck(const std::array<Card, N>& deck, const medici::PatienceInfo&)
+void CalculatorWindow::AddDeck(const std::vector<Card>& deck, const medici::PatienceInfo&)
 {
     QString line;
     for (auto &card : deck) {

@@ -1,22 +1,37 @@
 #ifndef CARDS_CARD_SELECTOR_H
 #define CARDS_CARD_SELECTOR_H
 
-#include "deck.h"
+#include "card.h"
 
 class CardSelector {
 public:
-    CardSelector(const Card::Suit& suit, const Card::Rank& rank, bool straight);
-    CardSelector(const Card::Suit& suit, bool straight);
-    CardSelector(const Card::Rank& rank, bool straight);
-
     bool Check(const Card&) const;
 
 private:
-    const Card::Suit suit;
-    const Card::Rank rank;
-    const bool suitSet;
-    const bool rankSet;
-    const bool straight;
+    struct Config {
+        std::uint_fast8_t suit;
+        std::uint_fast8_t rank;
+        bool suitSet;
+        bool rankSet;
+        bool straight;
+    };
+    const Config config;
+    CardSelector(Config&&);
+
+    friend class CardSelectorConfigurator;
+};
+
+class CardSelectorConfigurator {
+public:
+    void SetSuit(std::uint_fast8_t);
+    void SetRank(std::uint_fast8_t);
+    void SetStraight(bool);
+    void Reset();
+
+    CardSelector GetSelector();
+
+private:
+    CardSelector::Config config;
 };
 
 #endif /* CARDS_CARD_SELECTOR_H */

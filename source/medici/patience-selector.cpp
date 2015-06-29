@@ -44,7 +44,7 @@ namespace medici {
     {
     }
 
-    PatienceIChingSelector::PatienceIChingSelector(const Card::Suit& suit, const Hexagram& targetHex, PPatienceSelector&& parent) : 
+    PatienceIChingSelector::PatienceIChingSelector(std::uint_fast8_t suit, const Hexagram& targetHex, PPatienceSelector&& parent) : 
         parent(std::move(parent)), checker(new BalanceAndSuitChecker(suit, targetHex))
     {
     }

@@ -9,19 +9,20 @@
 
 class TestDeckSelector : public TestFW{
 public:
-    typedef standard_36_deck::Deck DeckType;
-    typedef standard_36_deck::Deck::ArrayType ArrayType;
-
     TestDeckSelector();
 protected:
     static logxx::Log cLog;
+    static CardSelectorConfigurator configurator;
     bool Tests();
 
     bool TestAllSelector();
     bool TestOneSelector();
     bool TestComplex();
 
-    static bool TestSelector(const ArrayType& deck, const DeckAbstractSelector&, bool etalonResult);
+    static bool TestSelector(const std::vector<Card>& deck, const DeckAbstractSelector&, bool etalonResult);
+    static CardSelector SelectorAnyRank(std::uint_fast8_t suit, bool straight = true);
+    static CardSelector SelectorAnySuit(std::uint_fast8_t rank, bool straight = true);
+    static CardSelector Selector(std::uint_fast8_t suit, std::uint_fast8_t rank, bool straight = true);
 };
 
 #endif /* TEST_DECK_SELECTOR */

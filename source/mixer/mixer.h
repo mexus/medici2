@@ -5,61 +5,71 @@
 #include <array>
 #include <algorithm>
 
-template<class T, std::size_t N>
+template<class T>
 class MixerInterface {
 public:
-    MixerInterface() = default;
+    virtual void Mix(std::vector<T>& deck) = 0;
     virtual ~MixerInterface() = default;
-    MixerInterface(const MixerInterface&) = delete;
-    virtual void Mix(std::array<T, N>& array) = 0;
-};
-
-template<class T, std::size_t N, class RandomEngine>
-class RandomMixer : public MixerInterface<T, N> {
-public:
-    RandomMixer(uint_fast32_t seed) :
-        randomEngine(seed)
+protected:
+    MixerInterface(std::size_t array_size):
+        array_size(array_size)
     {
     }
+
+    MixerInterface(const MixerInterface&) = delete;
+
+    const std::size_t array_size;
+};
+
+template<class T, class RandomEngine>
+class RandomMixer : public MixerInterface<T> {
 protected:
+    RandomMixer(std::size_t array_size, uint_fast32_t seed) :
+        MixerInterface<T>(array_size), randomEngine(seed)
+    {
+    }
+
     RandomEngine randomEngine;
 };
 
-template<class T, std::size_t N, class RandomEngine = std::ranlux24_base>
-class OneSwapMixer : public RandomMixer<T, N, RandomEngine> {
-public:
-    OneSwapMixer(uint_fast32_t seed) :
-        RandomMixer<T, N, RandomEngine>(seed),
-        uniformDistribution(1, N - 1)
+template<class T, class RandomEngine = std::ranlux24_base>
+class OneSwapMixer : public RandomMixer<T, RandomEngine> {
+protected:
+    OneSwapMixer(std::size_t array_size, uint_fast32_t seed) :
+        RandomMixer<T, RandomEngine>(array_size, seed), distribution(1, array_size - 1)
     {
     }
 
-    void Mix(std::array<T, N>& array) override
+    std::uniform_int_distribution<std::size_t> distribution;
+    friend class MixersFactory;
+public:
+    void Mix(std::vector<T>& array) override
     {
-        std::size_t i = uniformDistribution(this->randomEngine);
+        std::size_t i = distribution(this->randomEngine);
         std::swap(array[0], array[i]);
     }
-private:
-    std::uniform_int_distribution<std::size_t> uniformDistribution;
 };
 
-template<class T, std::size_t N, class RandomEngine = std::ranlux24_base>
-class FullCapacityMixer : public RandomMixer<T, N, RandomEngine> {
-public:
-    FullCapacityMixer(uint_fast32_t seed) :
-        RandomMixer<T, N, RandomEngine>(seed)
+template<class T, class RandomEngine = std::ranlux24_base>
+class FullCapacityMixer : public RandomMixer<T, RandomEngine> {
+protected:
+    FullCapacityMixer(std::size_t array_size, uint_fast32_t seed) :
+        RandomMixer<T, RandomEngine>(array_size, seed)
     {
     }
 
-    void Mix(std::array<T, N>& array) override
+    friend class MixersFactory;
+public:
+    void Mix(std::vector<T>& array) override
     {
-        auto rand = this->randomEngine();
-        for (std::size_t i = 0; i + 1 != N && rand != 0; ++i) {
+        std::size_t N = MixerInterface<T>::array_size;
+        auto random_value = this->randomEngine();
+        for (std::size_t i = 0; i + 1 != N && random_value != 0; ++i) {
             std::size_t rank = N - i;
-            std::size_t swapWithShift = rand % rank;
+            std::size_t swapWithShift = random_value % rank;
             if (swapWithShift != 0)
                 std::swap(array[i], array[i + swapWithShift]);
-            rand /= rank;
+            random_value /= rank;
         }
     }
 };

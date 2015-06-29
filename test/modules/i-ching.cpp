@@ -17,10 +17,10 @@ bool TestIChing::Tests()
     return TestCalculation() && TestBalance() && TestBalanceAndSuit();
 }
 
-SuitsHexagrams TestIChing::CalculateHexagrams(const ArrayType& deck)
+SuitsHexagrams TestIChing::CalculateHexagrams(const std::vector<Card>& deck)
 {
     PatienceInfo info;
-    if (ConvergeDeck(deck, info)) {
+    if (TryToConverge(deck, info)) {
         return i_ching::CalculateHexagrams(info);
     } else
         throw std::logic_error("Supplied not convergable deck");
@@ -44,7 +44,7 @@ bool TestIChing::TestCalculation()
         {{Yang, Yang, Yang, Yin , Yang, Yin }}, // Diamonds
         {{Yin , Yang, Yang, Yang, Yin , Yang}}, // Clubs
     }};
-    ArrayType deck3 {{{Spades, Seven}, {Clubs, Eight}, {Clubs, Ace}, {Hearts, Six}, {Hearts, King}, {Diamonds, Nine}, {Clubs, Ten}, {Spades, Nine}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Queen}, {Diamonds, Ten}, {Clubs, Nine}, {Spades, Queen}, {Spades, Ten}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Six}, {Clubs, Jack}, {Hearts, Ten}, {Diamonds, Eight}, {Hearts, Eight}, {Spades, Jack}, {Diamonds, Queen}, {Spades, Eight}, {Diamonds, Six}, {Clubs, Six}, {Diamonds, Jack}, {Hearts, Jack}, {Diamonds, Ace}, {Hearts, Queen}, {Spades, King}, {Hearts, Ace}, {Clubs, King}, {Hearts, Nine}, {Clubs, Seven}}};
+    std::vector<Card> deck3 {{{Spades, Seven}, {Clubs, Eight}, {Clubs, Ace}, {Hearts, Six}, {Hearts, King}, {Diamonds, Nine}, {Clubs, Ten}, {Spades, Nine}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Queen}, {Diamonds, Ten}, {Clubs, Nine}, {Spades, Queen}, {Spades, Ten}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Six}, {Clubs, Jack}, {Hearts, Ten}, {Diamonds, Eight}, {Hearts, Eight}, {Spades, Jack}, {Diamonds, Queen}, {Spades, Eight}, {Diamonds, Six}, {Clubs, Six}, {Diamonds, Jack}, {Hearts, Jack}, {Diamonds, Ace}, {Hearts, Queen}, {Spades, King}, {Hearts, Ace}, {Clubs, King}, {Hearts, Nine}, {Clubs, Seven}}};
     SuitsHexagrams etalonHexagrams3 {{
         {{Yin , Yin , Yin , Yin , Yang, Yin }}, // Spades
         {{Yang, Yang, Yin , Yin , Yin , Yang}}, // Hearts
@@ -64,18 +64,18 @@ bool TestIChing::TestCalculation()
 
 bool TestIChing::TestBalance()
 {
-    ArrayType balancedDeck {{{Hearts, Jack}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Queen}, {Clubs, Seven}, {Hearts, Seven}, {Diamonds, Jack}, {Spades, Jack}, {Hearts, Six}, {Hearts, Queen}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Queen}, {Spades, Ten}, {Clubs, Jack}, {Clubs, Nine}, {Diamonds, Nine}, {Diamonds, Ten}, {Diamonds, Six}, {Clubs, Queen}, {Diamonds, Ace}, {Clubs, Ten}, {Clubs, Six}, {Diamonds, King}, {Hearts, Ace}, {Clubs, Eight}, {Hearts, Eight}, {Spades, Six}, {Hearts, King}, {Clubs, King}, {Spades, Nine}, {Spades, King}, {Diamonds, Eight}, {Spades, Seven}, {Clubs, Ace}, {Spades, Eight}}} ;
-    ArrayType unbalancedDeck {{{Spades, Jack}, {Hearts, Nine}, {Diamonds, Ace}, {Clubs, Six}, {Clubs, Queen}, {Spades, Queen}, {Spades, Seven}, {Clubs, Jack}, {Diamonds, Queen}, {Spades, Six}, {Diamonds, King}, {Spades, Ten}, {Diamonds, Ten}, {Hearts, King}, {Clubs, King}, {Hearts, Ten}, {Spades, Nine}, {Diamonds, Eight}, {Clubs, Ten}, {Clubs, Ace}, {Hearts, Six}, {Hearts, Queen}, {Clubs, Eight}, {Hearts, Ace}, {Diamonds, Six}, {Diamonds, Seven}, {Clubs, Nine}, {Hearts, Eight}, {Clubs, Seven}, {Diamonds, Nine}, {Spades, Ace}, {Diamonds, Jack}, {Spades, Eight}, {Hearts, Seven}, {Spades, King}, {Hearts, Jack}}};
-    ArrayType balanced2 = {{{Hearts, Jack}, {Clubs, Nine}, {Spades, Ten}, {Hearts, Six}, {Diamonds, Six}, {Spades, Nine}, {Spades, Queen}, {Spades, Six}, {Hearts, Eight}, {Clubs, King}, {Spades, King}, {Clubs, Queen}, {Spades, Eight}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Seven}, {Hearts, Queen}, {Clubs, Eight}, {Diamonds, Nine}, {Spades, Seven}, {Hearts, Ace}, {Spades, Jack}, {Diamonds, Ten}, {Diamonds, King}, {Hearts, Seven}, {Clubs, Ace}, {Spades, Ace}, {Hearts, King}, {Diamonds, Ace}, {Diamonds, Queen}, {Clubs, Ten}, {Diamonds, Jack}, {Clubs, Six}, {Clubs, Jack}, {Hearts, Nine}, {Clubs, Seven}}};
-    ArrayType balanced3 = {{{Clubs, Nine}, {Diamonds, Eight}, {Hearts, Ten}, {Spades, Queen}, {Hearts, King}, {Clubs, Eight}, {Spades, Ten}, {Clubs, Ten}, {Clubs, King}, {Diamonds, Nine}, {Diamonds, King}, {Hearts, Seven}, {Hearts, Eight}, {Diamonds, Ten}, {Diamonds, Ace}, {Hearts, Jack}, {Hearts, Ace}, {Spades, King}, {Diamonds, Six}, {Clubs, Ace}, {Diamonds, Queen}, {Spades, Nine}, {Clubs, Queen}, {Diamonds, Jack}, {Hearts, Nine}, {Clubs, Seven}, {Hearts, Queen}, {Diamonds, Seven}, {Clubs, Six}, {Spades, Ace}, {Clubs, Jack}, {Hearts, Six}, {Spades, Eight}, {Spades, Jack}, {Spades, Seven}, {Spades, Six}}};
+    std::vector<Card> balancedDeck {{{Hearts, Jack}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Queen}, {Clubs, Seven}, {Hearts, Seven}, {Diamonds, Jack}, {Spades, Jack}, {Hearts, Six}, {Hearts, Queen}, {Diamonds, Seven}, {Spades, Ace}, {Spades, Queen}, {Spades, Ten}, {Clubs, Jack}, {Clubs, Nine}, {Diamonds, Nine}, {Diamonds, Ten}, {Diamonds, Six}, {Clubs, Queen}, {Diamonds, Ace}, {Clubs, Ten}, {Clubs, Six}, {Diamonds, King}, {Hearts, Ace}, {Clubs, Eight}, {Hearts, Eight}, {Spades, Six}, {Hearts, King}, {Clubs, King}, {Spades, Nine}, {Spades, King}, {Diamonds, Eight}, {Spades, Seven}, {Clubs, Ace}, {Spades, Eight}}} ;
+    std::vector<Card> unbalancedDeck {{{Spades, Jack}, {Hearts, Nine}, {Diamonds, Ace}, {Clubs, Six}, {Clubs, Queen}, {Spades, Queen}, {Spades, Seven}, {Clubs, Jack}, {Diamonds, Queen}, {Spades, Six}, {Diamonds, King}, {Spades, Ten}, {Diamonds, Ten}, {Hearts, King}, {Clubs, King}, {Hearts, Ten}, {Spades, Nine}, {Diamonds, Eight}, {Clubs, Ten}, {Clubs, Ace}, {Hearts, Six}, {Hearts, Queen}, {Clubs, Eight}, {Hearts, Ace}, {Diamonds, Six}, {Diamonds, Seven}, {Clubs, Nine}, {Hearts, Eight}, {Clubs, Seven}, {Diamonds, Nine}, {Spades, Ace}, {Diamonds, Jack}, {Spades, Eight}, {Hearts, Seven}, {Spades, King}, {Hearts, Jack}}};
+    std::vector<Card> balanced2 = {{{Hearts, Jack}, {Clubs, Nine}, {Spades, Ten}, {Hearts, Six}, {Diamonds, Six}, {Spades, Nine}, {Spades, Queen}, {Spades, Six}, {Hearts, Eight}, {Clubs, King}, {Spades, King}, {Clubs, Queen}, {Spades, Eight}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Seven}, {Hearts, Queen}, {Clubs, Eight}, {Diamonds, Nine}, {Spades, Seven}, {Hearts, Ace}, {Spades, Jack}, {Diamonds, Ten}, {Diamonds, King}, {Hearts, Seven}, {Clubs, Ace}, {Spades, Ace}, {Hearts, King}, {Diamonds, Ace}, {Diamonds, Queen}, {Clubs, Ten}, {Diamonds, Jack}, {Clubs, Six}, {Clubs, Jack}, {Hearts, Nine}, {Clubs, Seven}}};
+    std::vector<Card> balanced3 = {{{Clubs, Nine}, {Diamonds, Eight}, {Hearts, Ten}, {Spades, Queen}, {Hearts, King}, {Clubs, Eight}, {Spades, Ten}, {Clubs, Ten}, {Clubs, King}, {Diamonds, Nine}, {Diamonds, King}, {Hearts, Seven}, {Hearts, Eight}, {Diamonds, Ten}, {Diamonds, Ace}, {Hearts, Jack}, {Hearts, Ace}, {Spades, King}, {Diamonds, Six}, {Clubs, Ace}, {Diamonds, Queen}, {Spades, Nine}, {Clubs, Queen}, {Diamonds, Jack}, {Hearts, Nine}, {Clubs, Seven}, {Hearts, Queen}, {Diamonds, Seven}, {Clubs, Six}, {Spades, Ace}, {Clubs, Jack}, {Hearts, Six}, {Spades, Eight}, {Spades, Jack}, {Spades, Seven}, {Spades, Six}}};
     return TestBalance(balancedDeck, true) && TestBalance(unbalancedDeck, false) && TestBalance(balanced2, true) && TestBalance(balanced3, true);
 }
 
-bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon)
+bool TestIChing::TestBalance(const std::vector<Card>& deck, bool balancedEtalon)
 {
     S_LOG("TestBalance");
     PatienceInfo info;
-    if (!ConvergeDeck(deck, info)) {
+    if (!TryToConverge(deck, info)) {
         log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
         return false;
     } else {
@@ -98,18 +98,18 @@ bool TestIChing::TestBalance(const ArrayType& deck, bool balancedEtalon)
 
 bool TestIChing::TestBalanceAndSuit()
 {
-    ArrayType balancedDeck {{{Spades, Jack}, {Spades, Nine}, {Clubs, Ten}, {Hearts, Queen}, {Diamonds, Six}, {Clubs, Nine}, {Clubs, Six}, {Hearts, Jack}, {Spades, Six}, {Spades, Queen}, {Diamonds, Jack}, {Clubs, Queen}, {Clubs, Ace}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Jack}, {Diamonds, Queen}, {Clubs, Eight}, {Spades, Seven}, {Spades, Eight}, {Hearts, Ace}, {Spades, Ace}, {Hearts, Six}, {Spades, Ten}, {Spades, King}, {Clubs, Seven}, {Diamonds, Seven}, {Clubs, King}, {Diamonds, Ace}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Nine}, {Hearts, Eight}, {Diamonds, Ten}, {Hearts, King}
+    std::vector<Card> balancedDeck {{{Spades, Jack}, {Spades, Nine}, {Clubs, Ten}, {Hearts, Queen}, {Diamonds, Six}, {Clubs, Nine}, {Clubs, Six}, {Hearts, Jack}, {Spades, Six}, {Spades, Queen}, {Diamonds, Jack}, {Clubs, Queen}, {Clubs, Ace}, {Hearts, Seven}, {Diamonds, King}, {Clubs, Jack}, {Diamonds, Queen}, {Clubs, Eight}, {Spades, Seven}, {Spades, Eight}, {Hearts, Ace}, {Spades, Ace}, {Hearts, Six}, {Spades, Ten}, {Spades, King}, {Clubs, Seven}, {Diamonds, Seven}, {Clubs, King}, {Diamonds, Ace}, {Hearts, Nine}, {Hearts, Ten}, {Diamonds, Eight}, {Diamonds, Nine}, {Hearts, Eight}, {Diamonds, Ten}, {Hearts, King}
     }};
     Hexagram etalonHexagram {{Yin, Yang, Yang, Yang, Yang, Yang}};
 
-    return TestBalanceAndSuit(balancedDeck, Card::Suit(Hearts), etalonHexagram);
+    return TestBalanceAndSuit(balancedDeck, Hearts, etalonHexagram);
 }
 
-bool TestIChing::TestBalanceAndSuit(const ArrayType& deck, const Card::Suit& suit, const i_ching::Hexagram& etalonHexagram)
+bool TestIChing::TestBalanceAndSuit(const std::vector<Card>& deck, std::uint_fast8_t suit, const i_ching::Hexagram& etalonHexagram)
 {
     S_LOG("TestBalanceAndSuit");
     PatienceInfo info;
-    if (!ConvergeDeck(deck, info)) {
+    if (!TryToConverge(deck, info)) {
         log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
         return false;
     } else {

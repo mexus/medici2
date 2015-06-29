@@ -31,7 +31,7 @@ DeckAllSelector::DeckAllSelector(CardSelectors&& selectors, std::size_t from, st
 {
 }
 
-bool DeckAllSelector::Check(const std::vector<Card>& deckPart) const
+bool DeckAllSelector::CheckPart(const std::vector<Card>& deckPart) const
 {
     for (auto &selector : cardSelectors) {
         for (auto &card : deckPart) {
@@ -53,7 +53,7 @@ DeckOneSelector::DeckOneSelector(CardSelectors&& selectors, std::size_t from, st
 {
 }
 
-bool DeckOneSelector::Check(const std::vector<Card>& deckPart) const
+bool DeckOneSelector::CheckPart(const std::vector<Card>& deckPart) const
 {
     for (auto &selector : cardSelectors) {
         for (auto &card : deckPart) {

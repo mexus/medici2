@@ -20,4 +20,4 @@ add_executable(${EXE_NAME}
 
 )
 
-target_link_libraries(${EXE_NAME} Qt5::Widgets source-library )
+target_link_libraries(${EXE_NAME} Qt5::Widgets source-library pthread )

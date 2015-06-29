@@ -9,14 +9,11 @@ using namespace medici;
 
 class TestMedici : public TestFW{
 public:
-    typedef standard_36_deck::Deck DeckType;
-    typedef standard_36_deck::Deck::ArrayType ArrayType;
-
     TestMedici();
 protected:
     static logxx::Log cLog;
     bool Tests() ;
-    bool Test(const ArrayType& deck, bool converges, const PatienceInfo& etalonInfo = PatienceInfo());
+    bool Test(const std::vector<Card>& deck, bool converges, const PatienceInfo& etalonInfo = PatienceInfo());
 
     bool Compare(const PatienceInfo& result, const PatienceInfo& etalon);
 };

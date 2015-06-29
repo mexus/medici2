@@ -9,17 +9,17 @@
 
 class Performance {
 public:
+    Performance();
     void Run(MixersFactory::MixerType);
 private:
+    static constexpr std::size_t N = 36;
+    static CardSelectorConfigurator configurator;
     MixersFactory mixersFactory;
-
-    typedef standard_36_deck::Deck StandardDeck;
-    typedef StandardDeck::ArrayType StandardDeckArray;
 
     class CheckOperand {
     public:
         CheckOperand(DeckSelectors&&);
-        bool operator()(const StandardDeckArray&) const;
+        bool operator()(const std::vector<Card>&) const;
     private:
         DeckSelectors deckSelectors;
     };
@@ -27,7 +27,7 @@ private:
     static logxx::Log cLog;
 
     void Mixing() const;
-    std::vector<StandardDeckArray> PregenerateConvergableDecks() const;
+    std::vector<std::vector<Card>> PregenerateConvergableDecks() const;
     void MediciGenerator() const;
     void MediciWithConditions() const;
     void MediciWithConditionsAndIChing() const;
@@ -35,8 +35,11 @@ private:
 
     static DeckSelectors DefaultSelectors();
     static CheckOperand DefaultCheckOperand();
+    static CardSelector SelectorAnyRank(std::uint_fast8_t suit, bool straight = true);
+    static CardSelector SelectorAnySuit(std::uint_fast8_t rank, bool straight = true);
+    static CardSelector Selector(std::uint_fast8_t suit, std::uint_fast8_t rank, bool straight = true);
     
-    typedef std::unique_ptr<MixerInterface<Card, StandardDeck::N()>> StandardGenerator;
+    typedef std::unique_ptr<MixerInterface<Card>> StandardGenerator;
     StandardGenerator GetMixer(std::uint_fast32_t seed = 0) const;
 };
 
