@@ -38,8 +38,10 @@ GuiDeckSelector::GuiDeckSelector(const CardsTranslations& cardsTranslations, con
         selectorMode->setCurrentIndex(index);
 
     auto positionConfig = config["position"].toObject();
-    positionStart->setValue(static_cast<int>(positionConfig["start"].toInt(1)));
-    positionEnd->setValue(static_cast<int>(positionConfig["end"].toInt(1)));
+    QJsonValue value_start = positionConfig["start"];
+    QJsonValue value_end = positionConfig["end"];
+    positionStart->setValue(static_cast<int>(value_start.toInt(1)));
+    positionEnd->setValue(static_cast<int>(value_end.toInt(1)));
 
     enabled->setChecked(config["enabled"].toBool(true));
 

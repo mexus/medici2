@@ -21,7 +21,7 @@ DeckPreference::DeckPreference(const CardsTranslations& cardsTranslations, const
     findMaximumConvolutions->setChecked(config["find-maximum"].toBool());
     auto selectors = config["deck-selectors"].toArray();
     for (auto it = selectors.begin(); it != selectors.end(); ++it) {
-        AddDeckSelector(new GuiDeckSelector(cardsTranslations, it->toObject()));
+        AddDeckSelector(new GuiDeckSelector(cardsTranslations, (*it).toObject()));
     }
 }
 
