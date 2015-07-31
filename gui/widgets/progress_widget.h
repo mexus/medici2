@@ -10,7 +10,8 @@ class ProgressWidget : public QGroupBox {
     Q_OBJECT
 public:
     ProgressWidget(std::uint8_t threadNumber, QWidget *parent = 0);
-    void Set(const calculator::ExecutionParameters&);
+    void Set(const calculator::ExecutionParameters &);
+
 private:
     QLabel *totalDecks, *suitableDecks, *runningTime;
 

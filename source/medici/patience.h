@@ -8,18 +8,16 @@
 
 namespace medici {
 
-    struct PatienceInfo {
-        std::map<Card, std::size_t> convolutions;
-        std::set<Card> mobiles, stationars;
-        void Clear();
-    };
+struct PatienceInfo {
+    std::map<Card, std::size_t> convolutions;
+    std::set<Card> mobiles, stationars;
+    void Clear();
+};
 
-    bool TryToConverge(const std::vector<Card>& deck, PatienceInfo&);
-    std::size_t ConvergeDeckPart(std::vector<Card>& deck, PatienceInfo&);
-    void PopulateMobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info);
-    bool CheckConvergence(const Card& left, const Card& right);
-
-
+bool TryToConverge(const std::vector<Card>& deck, PatienceInfo&);
+std::size_t ConvergeDeckPart(std::vector<Card>& deck, PatienceInfo&);
+void PopulateMobiles(const Card& leftCard, const Card& middleCard, PatienceInfo& info);
+bool CheckConvergence(const Card& left, const Card& right);
 }
 
 #endif /* MEDICI_PATIENCE_H */

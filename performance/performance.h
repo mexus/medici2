@@ -7,22 +7,24 @@
 #include <cards/deck-selector.h>
 #include <mixer/factory.h>
 
+class CheckOperand {
+public:
+    CheckOperand(DeckSelectors&&);
+    bool operator()(const std::vector<Card>&) const;
+
+private:
+    DeckSelectors deckSelectors;
+};
+
 class Performance {
 public:
     Performance();
     void Run(MixersFactory::MixerType);
+
 private:
     static constexpr std::size_t N = 36;
     static CardSelectorConfigurator configurator;
     MixersFactory mixersFactory;
-
-    class CheckOperand {
-    public:
-        CheckOperand(DeckSelectors&&);
-        bool operator()(const std::vector<Card>&) const;
-    private:
-        DeckSelectors deckSelectors;
-    };
 
     static logxx::Log cLog;
 
@@ -37,11 +39,11 @@ private:
     static CheckOperand DefaultCheckOperand();
     static CardSelector SelectorAnyRank(std::uint_fast8_t suit, bool straight = true);
     static CardSelector SelectorAnySuit(std::uint_fast8_t rank, bool straight = true);
-    static CardSelector Selector(std::uint_fast8_t suit, std::uint_fast8_t rank, bool straight = true);
-    
+    static CardSelector Selector(std::uint_fast8_t suit, std::uint_fast8_t rank,
+                                 bool straight = true);
+
     typedef std::unique_ptr<MixerInterface<Card>> StandardGenerator;
     StandardGenerator GetMixer(std::uint_fast32_t seed = 0) const;
 };
 
 #endif /* PERFORMANCE_H */
-

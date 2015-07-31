@@ -7,13 +7,15 @@
 
 using namespace medici;
 
-class TestMedici : public TestFW{
+class TestMedici : public TestFW {
 public:
     TestMedici();
+
 protected:
     static logxx::Log cLog;
-    bool Tests() ;
-    bool Test(const std::vector<Card>& deck, bool converges, const PatienceInfo& etalonInfo = PatienceInfo());
+    bool Tests();
+    bool Test(const std::vector<Card>& deck, bool converges,
+              const PatienceInfo& etalonInfo = PatienceInfo());
 
     bool Compare(const PatienceInfo& result, const PatienceInfo& etalon);
 };

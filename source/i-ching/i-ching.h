@@ -7,29 +7,26 @@
 
 namespace i_ching {
 
-    enum Line {
-        Yang,
-        Yin
-    };
-    typedef std::array<Line, 6> Hexagram;
-    typedef std::array<Hexagram, 4> SuitsHexagrams;
+enum Line { Yang, Yin };
+typedef std::array<Line, 6> Hexagram;
+typedef std::array<Hexagram, 4> SuitsHexagrams;
 
-    struct BalanceChecker{
-        virtual bool Check(const medici::PatienceInfo&) const;
-        virtual ~BalanceChecker() = default;
-    };
+struct BalanceChecker {
+    virtual bool Check(const medici::PatienceInfo&) const;
+    virtual ~BalanceChecker() = default;
+};
 
-    class BalanceAndSuitChecker : public BalanceChecker{
-    public:
-        BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram&);
-        bool Check(const medici::PatienceInfo&) const override;
-    private:
-        std::uint_fast8_t suit;
-        Hexagram hexagram;
-    };
+class BalanceAndSuitChecker : public BalanceChecker {
+public:
+    BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram&);
+    bool Check(const medici::PatienceInfo&) const override;
 
-    SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info);
+private:
+    std::uint_fast8_t suit;
+    Hexagram hexagram;
+};
 
+SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info);
 }
 
 #endif /* I_CHING_I_CHING_H */

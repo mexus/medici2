@@ -8,6 +8,7 @@
 class TestCalculatorManager : public TestFW {
 public:
     TestCalculatorManager();
+
 protected:
     static constexpr std::size_t N = 36;
 

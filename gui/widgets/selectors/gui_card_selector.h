@@ -11,18 +11,20 @@
 #include <helpers/cards_translations.h>
 
 class GuiCardSelector : public QFrame {
-Q_OBJECT
+    Q_OBJECT
 public:
-    GuiCardSelector(const CardsTranslations&, const QJsonObject&, bool multipleAllowed = true);
-    GuiCardSelector(const CardsTranslations&, bool multipleAllowed = true);
+    GuiCardSelector(const CardsTranslations &, const QJsonObject &,
+                    bool multipleAllowed = true);
+    GuiCardSelector(const CardsTranslations &, bool multipleAllowed = true);
     CardSelector GetSelector(bool &ok);
 
     QJsonObject GetConfig() const;
     Card GetCard() const;
     void Highlight();
-    void AddWidget(QWidget*);
+    void AddWidget(QWidget *);
+
 private:
-    const CardsTranslations& cardsTranslations;
+    const CardsTranslations &cardsTranslations;
     QVBoxLayout *innerLayout;
     QComboBox *suit, *rank;
     QCheckBox *inverse;

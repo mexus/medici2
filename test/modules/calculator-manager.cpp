@@ -8,29 +8,29 @@ MixersFactory TestCalculatorManager::mixersFactory(TestCalculatorManager::N);
 
 using namespace calculator;
 
-TestCalculatorManager::TestCalculatorManager() : TestFW("calculator-manager")
-{
+TestCalculatorManager::TestCalculatorManager() : TestFW("calculator-manager") {
 }
 
-bool TestCalculatorManager::Tests()
-{
+bool TestCalculatorManager::Tests() {
     return TestLaunch() && TestIncrease() && TestDecrease() && TestInterrupt();
 }
 
-bool TestCalculatorManager::TestLaunch()
-{
+bool TestCalculatorManager::TestLaunch() {
     S_LOG("TestLaunch");
     DeckSelectors deckSelector;
 
     Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
+    manager.Launch(testThreadsCount, std::move(deckSelector),
+                   TestCalculatorThread::DefaultPatienceSelector());
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto allParams = manager.GetExecutionParameters();
     if (allParams.size() != testThreadsCount) {
-        log(logxx::error) << "There should be " << testThreadsCount << " threads, but only " << allParams.size() << " detected" << logxx::endl;
+        log(logxx::error) << "There should be " << testThreadsCount
+                          << " threads, but only " << allParams.size() << " detected"
+                          << logxx::endl;
         return false;
     }
 
@@ -45,14 +45,14 @@ bool TestCalculatorManager::TestLaunch()
     return true;
 }
 
-bool TestCalculatorManager::TestIncrease()
-{
+bool TestCalculatorManager::TestIncrease() {
     S_LOG("TestIncrease");
     DeckSelectors deckSelector;
 
     Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
+    manager.Launch(testThreadsCount, std::move(deckSelector),
+                   TestCalculatorThread::DefaultPatienceSelector());
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -62,7 +62,9 @@ bool TestCalculatorManager::TestIncrease()
 
     auto allParams = manager.GetExecutionParameters();
     if (allParams.size() != testThreadsCount + 1) {
-        log(logxx::error) << "There should be " << testThreadsCount + 1 << " threads, but only " << allParams.size() << " detected" << logxx::endl;
+        log(logxx::error) << "There should be " << testThreadsCount + 1
+                          << " threads, but only " << allParams.size() << " detected"
+                          << logxx::endl;
         return false;
     }
 
@@ -75,14 +77,14 @@ bool TestCalculatorManager::TestIncrease()
     return true;
 }
 
-bool TestCalculatorManager::TestDecrease()
-{
+bool TestCalculatorManager::TestDecrease() {
     S_LOG("TestDecrease");
     DeckSelectors deckSelector;
 
     Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
+    manager.Launch(testThreadsCount, std::move(deckSelector),
+                   TestCalculatorThread::DefaultPatienceSelector());
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -92,7 +94,9 @@ bool TestCalculatorManager::TestDecrease()
 
     auto allParams = manager.GetExecutionParameters();
     if (allParams.size() != testThreadsCount - 1) {
-        log(logxx::error) << "There should be " << testThreadsCount - 1 << " threads, but only " << allParams.size() << " detected" << logxx::endl;
+        log(logxx::error) << "There should be " << testThreadsCount - 1
+                          << " threads, but only " << allParams.size() << " detected"
+                          << logxx::endl;
         return false;
     }
 
@@ -105,14 +109,14 @@ bool TestCalculatorManager::TestDecrease()
     return true;
 }
 
-bool TestCalculatorManager::TestInterrupt()
-{
+bool TestCalculatorManager::TestInterrupt() {
     S_LOG("TestInterrupt");
     DeckSelectors deckSelector;
 
     Manager manager(mixersFactory);
     static const std::size_t testThreadsCount = 2;
-    manager.Launch(testThreadsCount, std::move(deckSelector), TestCalculatorThread::DefaultPatienceSelector());
+    manager.Launch(testThreadsCount, std::move(deckSelector),
+                   TestCalculatorThread::DefaultPatienceSelector());
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -122,9 +126,9 @@ bool TestCalculatorManager::TestInterrupt()
 
     auto allParams = manager.GetExecutionParameters();
     if (!allParams.empty()) {
-        log(logxx::error) << "There should be no threads, but " << allParams.size() << " detected" << logxx::endl;
+        log(logxx::error) << "There should be no threads, but " << allParams.size()
+                          << " detected" << logxx::endl;
         return false;
     }
     return true;
 }
-

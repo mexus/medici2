@@ -11,11 +11,13 @@ public:
     typedef std::unique_ptr<MixerInterface<int>> Mixer;
 
     TestMixer();
+
 protected:
     static logxx::Log cLog;
     bool Tests();
 
-    bool TestStatistics(const std::string& mixer_name, MixersFactory::MixerType mixer_type);
+    bool TestStatistics(const std::string& mixer_name,
+                        MixersFactory::MixerType mixer_type);
 
     std::size_t CalculateLoops(Mixer&);
     std::size_t CalculateDuplicates(Mixer&);
@@ -23,7 +25,8 @@ protected:
     float CalculateAverageDuplicates(Mixer&);
 
     static std::vector<int> SimpleDeck();
-    static float CalculateAverage(std::size_t tests, const std::function<std::size_t()>& f);
+    static float CalculateAverage(std::size_t tests,
+                                  const std::function<std::size_t()>& f);
 };
 
 #endif /* TEST_MIXER_H */

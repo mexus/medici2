@@ -6,10 +6,14 @@
 #include <QCloseEvent>
 #include <random>
 
-CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations, QWidget* parent) :
-    QDialog(parent), mixersFactory(N), operationInProgress(false), calculatorManager(mixersFactory),
-    cardsTranslations(cardsTranslations), threadsCount(4)
-{
+CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations,
+                                   QWidget* parent)
+        : QDialog(parent),
+          mixersFactory(N),
+          operationInProgress(false),
+          calculatorManager(mixersFactory),
+          cardsTranslations(cardsTranslations),
+          threadsCount(4) {
     QSettings settings;
     restoreGeometry(settings.value("calculator-window:geometry").toByteArray());
 
@@ -22,19 +26,19 @@ CalculatorWindow::CalculatorWindow(const CardsTranslations& cardsTranslations, Q
     setModal(true);
 }
 
-void CalculatorWindow::CreateObjects()
-{
+void CalculatorWindow::CreateObjects() {
     interruptButton = new QPushButton(tr("Interrupt"));
-    QObject::connect(interruptButton, &QPushButton::clicked, this, &CalculatorWindow::InterruptCalculation);
+    QObject::connect(interruptButton, &QPushButton::clicked, this,
+                     &CalculatorWindow::InterruptCalculation);
 
     addThread = new QPushButton(tr("Add a thread"));
-    QObject::connect(addThread, &QPushButton::clicked, [this]{
-            std::thread(&CalculatorWindow::AddThread, this).detach();
-        });
+    QObject::connect(addThread, &QPushButton::clicked, [this] {
+        std::thread(&CalculatorWindow::AddThread, this).detach();
+    });
     removeThread = new QPushButton(tr("Remove a thread"));
-    QObject::connect(removeThread, &QPushButton::clicked, [this]{
-            std::thread(&CalculatorWindow::RemoveThread, this).detach();
-        });
+    QObject::connect(removeThread, &QPushButton::clicked, [this] {
+        std::thread(&CalculatorWindow::RemoveThread, this).detach();
+    });
 
     updateProgressTimer = new QTimer(this);
     updateProgressTimer->setInterval(1000);
@@ -43,8 +47,7 @@ void CalculatorWindow::CreateObjects()
     foundDecks = new QListWidget();
 }
 
-void CalculatorWindow::GenerateSeeds()
-{
+void CalculatorWindow::GenerateSeeds() {
     std::random_device rd;
     std::vector<std::uint_fast32_t> randomSeeds;
     for (std::size_t i = 0; i < threadsCount * 2; ++i) {
@@ -53,8 +56,7 @@ void CalculatorWindow::GenerateSeeds()
     calculatorManager.SetRandomSeeds(randomSeeds);
 }
 
-void CalculatorWindow::CreateLayout()
-{
+void CalculatorWindow::CreateLayout() {
     auto layout = new QVBoxLayout();
     {
         auto subLayout = new QHBoxLayout();
@@ -82,18 +84,18 @@ void CalculatorWindow::CreateLayout()
     setLayout(layout);
 }
 
-CalculatorWindow::~CalculatorWindow()
-{
+CalculatorWindow::~CalculatorWindow() {
     while (operationInProgress)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
-void CalculatorWindow::closeEvent(QCloseEvent* e)
-{
+void CalculatorWindow::closeEvent(QCloseEvent* e) {
     if (calculatorManager.IsRunning()) {
-        if (QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?")) == QMessageBox::No) {
+        if (QMessageBox::question(this, tr("Calculation"),
+                                  tr("Interrupt current calculation?")) ==
+            QMessageBox::No) {
             e->ignore();
-            return ;
+            return;
         } else
             InterruptCalculation();
     }
@@ -102,46 +104,50 @@ void CalculatorWindow::closeEvent(QCloseEvent* e)
     settings.setValue("calculator-window:geometry", saveGeometry());
 }
 
-void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector)
-{
+void CalculatorWindow::Calculate(DeckSelectors&& deckSelectors,
+                                 medici::PPatienceSelector&& patienceSelector) {
     if (isHidden())
         show();
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         bool launch = true;
         if (calculatorManager.IsRunning()) {
-            auto reply = QMessageBox::question(this, tr("Calculation"), tr("Interrupt current calculation?"));
+            auto reply = QMessageBox::question(this, tr("Calculation"),
+                                               tr("Interrupt current calculation?"));
             launch = reply == QMessageBox::Yes;
         }
         if (launch) {
-            std::thread([this](DeckSelectors&& deckSelectors, medici::PPatienceSelector&& patienceSelector) {
+            std::thread(
+                [this](DeckSelectors&& deckSelectors,
+                       medici::PPatienceSelector&& patienceSelector) {
                     calculatorManager.Interrupt();
-                    calculatorManager.Launch(threadsCount, std::move(deckSelectors), std::move(patienceSelector));
+                    calculatorManager.Launch(threadsCount, std::move(deckSelectors),
+                                             std::move(patienceSelector));
                     operationInProgress.store(false);
-                }, std::move(deckSelectors), std::move(patienceSelector)).detach();
-                QObject::connect(updateProgressTimer, &QTimer::timeout, this, &CalculatorWindow::ShowProgress);
-                updateProgressTimer->start();
+                },
+                std::move(deckSelectors), std::move(patienceSelector)).detach();
+            QObject::connect(updateProgressTimer, &QTimer::timeout, this,
+                             &CalculatorWindow::ShowProgress);
+            updateProgressTimer->start();
         } else
             operationInProgress.store(false);
     }
 }
 
-void CalculatorWindow::InterruptCalculation()
-{
+void CalculatorWindow::InterruptCalculation() {
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         DisableButtons(true);
         updateProgressTimer->stop();
         QObject::disconnect(updateProgressTimer);
-        std::thread([this]{
-                calculatorManager.Interrupt();
-                operationInProgress.store(false);
-            }).detach();
+        std::thread([this] {
+            calculatorManager.Interrupt();
+            operationInProgress.store(false);
+        }).detach();
     }
 }
 
-void CalculatorWindow::AddThread()
-{
+void CalculatorWindow::AddThread() {
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         calculatorManager.IncreaseThreads();
@@ -149,8 +155,7 @@ void CalculatorWindow::AddThread()
     }
 }
 
-void CalculatorWindow::RemoveThread()
-{
+void CalculatorWindow::RemoveThread() {
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         calculatorManager.DecreaseThreads();
@@ -158,15 +163,13 @@ void CalculatorWindow::RemoveThread()
     }
 }
 
-void CalculatorWindow::DisableButtons(bool disabled)
-{
+void CalculatorWindow::DisableButtons(bool disabled) {
     interruptButton->setVisible(!disabled);
     addThread->setVisible(!disabled);
     removeThread->setVisible(!disabled);
 }
 
-void CalculatorWindow::ShowProgress()
-{
+void CalculatorWindow::ShowProgress() {
     bool isInProgress(false);
     if (operationInProgress.compare_exchange_strong(isInProgress, true)) {
         if (calculatorManager.IsRunning()) {
@@ -180,8 +183,8 @@ void CalculatorWindow::ShowProgress()
     }
 }
 
-void CalculatorWindow::PopulateParameters(const std::vector<calculator::ExecutionParameters>& allParameters)
-{
+void CalculatorWindow::PopulateParameters(
+    const std::vector<calculator::ExecutionParameters>& allParameters) {
     if (allParameters.size() > progressVector.size()) {
         for (std::size_t i = progressVector.size(); i != allParameters.size(); ++i) {
             auto progress = new ProgressWidget(i + 1);
@@ -204,22 +207,19 @@ void CalculatorWindow::PopulateParameters(const std::vector<calculator::Executio
         progressVector[i]->Set(allParameters[i]);
 }
 
-void CalculatorWindow::PopulateDecks(const calculator::Manager::FoundVector& newDecks)
-{
+void CalculatorWindow::PopulateDecks(const calculator::Manager::FoundVector& newDecks) {
     static const std::size_t maxDecksAtOnce = 10;
     for (std::size_t i = 0, l = std::min(maxDecksAtOnce, newDecks.size()); i != l; ++i) {
-        auto &deck = newDecks[i];
+        auto& deck = newDecks[i];
         AddDeck(deck.first, deck.second);
     }
-
 }
 
-void CalculatorWindow::AddDeck(const std::vector<Card>& deck, const medici::PatienceInfo&)
-{
+void CalculatorWindow::AddDeck(const std::vector<Card>& deck,
+                               const medici::PatienceInfo&) {
     QString line;
-    for (auto &card : deck) {
+    for (auto& card : deck) {
         line += cardsTranslations.CardShortName(card) + " ";
     }
     foundDecks->addItem(line);
 }
-

@@ -15,12 +15,12 @@
 class CalculatorWindow : public QDialog {
     Q_OBJECT
 public:
-    CalculatorWindow(const CardsTranslations&, QWidget* parent = 0);
+    CalculatorWindow(const CardsTranslations &, QWidget *parent = 0);
     ~CalculatorWindow();
-    void Calculate(DeckSelectors&&, medici::PPatienceSelector&&);
+    void Calculate(DeckSelectors &&, medici::PPatienceSelector &&);
 
 protected:
-    virtual void closeEvent(QCloseEvent*) override;
+    virtual void closeEvent(QCloseEvent *) override;
 
 private:
     static constexpr std::size_t N = 36;
@@ -31,13 +31,13 @@ private:
     MixersFactory mixersFactory;
     std::atomic_bool operationInProgress;
     calculator::Manager calculatorManager;
-    const CardsTranslations& cardsTranslations;
+    const CardsTranslations &cardsTranslations;
 
     std::uint8_t threadsCount;
     QHBoxLayout *layout;
     QPushButton *interruptButton, *addThread, *removeThread;
     QVBoxLayout *progressBoxes;
-    std::vector<ProgressWidget*> progressVector;
+    std::vector<ProgressWidget *> progressVector;
     QListWidget *foundDecks;
 
     void InterruptCalculation();
@@ -46,15 +46,14 @@ private:
 
     void DisableButtons(bool disabled);
 
-    template<class T, class ...Args>
-    void DefferedCommand(T t, Args&&... args);
+    template <class T, class... Args>
+    void DefferedCommand(T t, Args &&... args);
 
     QTimer *updateProgressTimer;
     void ShowProgress();
-    void PopulateParameters(const std::vector<calculator::ExecutionParameters>&);
-    void PopulateDecks(const calculator::Manager::FoundVector&);
-    void AddDeck(const std::vector<Card>&, const medici::PatienceInfo&);
-
+    void PopulateParameters(const std::vector<calculator::ExecutionParameters> &);
+    void PopulateDecks(const calculator::Manager::FoundVector &);
+    void AddDeck(const std::vector<Card> &, const medici::PatienceInfo &);
 };
 
 #endif /* GUI_WINDOWS_CALCULATOR_WINDOW */

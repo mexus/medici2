@@ -9,69 +9,67 @@
 
 namespace logxx {
 
-    enum LogLevel {
-        debug = 10,
-        notice = 20,
-        warning = 30,
-        info = 40,
-        error = 50,
-        nothing = 60
-    };
+enum LogLevel {
+    debug = 10,
+    notice = 20,
+    warning = 30,
+    info = 40,
+    error = 50,
+    nothing = 60
+};
 
-        class Log {
-        public:
-                Log(const std::string& label = std::string());
-                Log(const Log&, const std::string& label, bool inheritLevel = true);
-                virtual ~Log();
+class Log {
+public:
+    Log(const std::string& label = std::string());
+    Log(const Log&, const std::string& label, bool inheritLevel = true);
+    virtual ~Log();
 
-                void OverrideLogLevel();
-                void OverrideLogLevel(LogLevel);
-                static void GlobalLogLevel(LogLevel);
-                static LogLevel GlobalLogLevel();
+    void OverrideLogLevel();
+    void OverrideLogLevel(LogLevel);
+    static void GlobalLogLevel(LogLevel);
+    static LogLevel GlobalLogLevel();
 
-                void OverrideStream();
-                void OverrideStream(const std::shared_ptr<std::ostream> &);
-                void OverrideStream(const std::string & fileName);
-                static void SetStream(std::ostream &);
+    void OverrideStream();
+    void OverrideStream(const std::shared_ptr<std::ostream>&);
+    void OverrideStream(const std::string& fileName);
+    static void SetStream(std::ostream&);
 
-                template<class ...Args>
-                std::ostream& operator()(LogLevel, Args... args);
+    template <class... Args>
+    std::ostream& operator()(LogLevel, Args... args);
 
-                static std::ostream& endl(std::ostream&);
-        private:
-                static std::mutex lock;
-                static const std::map<LogLevel, std::string> levelMessages;
+    static std::ostream& endl(std::ostream&);
 
-                static std::ostream cnull, *defaultStream;
-                std::shared_ptr<std::ostream> overrideStream;
+private:
+    static std::mutex lock;
+    static const std::map<LogLevel, std::string> levelMessages;
 
-                std::string label;
+    static std::ostream cnull, *defaultStream;
+    std::shared_ptr<std::ostream> overrideStream;
 
-                static LogLevel globalLogLevel;
-                std::shared_ptr<LogLevel> overrideLogLevel;
+    std::string label;
 
-                void AddLabel(const std::string &newLabel);
-                LogLevel GetLogLevel() const;
-                std::ostream& GetStream();
-                template<class T, class ...Args>
-                std::ostream& Print(std::ostream&, T t, Args... args) const;
-                std::ostream& Print(std::ostream&) const;
-        };
-        
-        std::ostream& endl(std::ostream&);
-        void GlobalLogLevel(LogLevel);
-        LogLevel GlobalLogLevel();
-        void SetStream(std::ostream &);
-        
-} //namespace logxx
+    static LogLevel globalLogLevel;
+    std::shared_ptr<LogLevel> overrideLogLevel;
 
-#define S_LOG(label) \
-        static logxx::Log log(cLog, label)
+    void AddLabel(const std::string& newLabel);
+    LogLevel GetLogLevel() const;
+    std::ostream& GetStream();
+    template <class T, class... Args>
+    std::ostream& Print(std::ostream&, T t, Args... args) const;
+    std::ostream& Print(std::ostream&) const;
+};
 
-#define D_LOG(label) \
-        logxx::Log log(cLog, label)
+std::ostream& endl(std::ostream&);
+void GlobalLogLevel(LogLevel);
+LogLevel GlobalLogLevel();
+void SetStream(std::ostream&);
+
+}  // namespace logxx
+
+#define S_LOG(label) static logxx::Log log(cLog, label)
+
+#define D_LOG(label) logxx::Log log(cLog, label)
 
 #include "logxx.tcc"
 
 #endif /* LOG_HELPER_H */
-

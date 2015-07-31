@@ -1,7 +1,6 @@
 #include "performance.h"
 
-int main()
-{
+int main() {
     logxx::Log log("Performance");
 
     Performance perf;
@@ -10,4 +9,3 @@ int main()
     log(logxx::info) << "Testing FullCapacity mixer engine" << logxx::endl;
     perf.Run(MixersFactory::FULL_CAPACITY);
 }
-

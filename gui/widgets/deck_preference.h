@@ -19,6 +19,7 @@ public:
     QJsonObject GetConfig() const;
     DeckSelectors GetDeckSelectors() const;
     medici::PPatienceSelector GetPatienceSelector() const;
+
 private:
     const CardsTranslations& cardsTranslations;
     QCheckBox* iChingCheck;
@@ -26,7 +27,7 @@ private:
     QCheckBox* findMaximumConvolutions;
     QVBoxLayout* decksLayout;
     std::set<GuiDeckSelector*> deckSelectors;
-    
+
     void CreateLayout();
     medici::PPatienceSelector GetSelector() const;
 

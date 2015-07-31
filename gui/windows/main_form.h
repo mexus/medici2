@@ -11,32 +11,29 @@
 #include <helpers/cards_translations.h>
 #include "calculator_window.h"
 
-
 class MainForm : public QMainWindow {
     Q_OBJECT
 public:
     MainForm(QWidget *parent = 0);
     virtual ~MainForm();
-        
+
 protected:
-    virtual void closeEvent(QCloseEvent*);
+    virtual void closeEvent(QCloseEvent *);
     CardsTranslations cardsTranslations;
 
-    QTabWidget* tabs;
+    QTabWidget *tabs;
     QPushButton *actionButton;
     CalculatorWindow *calculator;
     DeckPreference *deckPreferenceTab;
 
-    void CreateObjects(const QJsonObject&);
+    void CreateObjects(const QJsonObject &);
     void CreateLayout();
 
-    void AddSelectorTab(GuiDeckSelector*, const QString& label);
-        
+    void AddSelectorTab(GuiDeckSelector *, const QString &label);
+
     static logxx::Log cLog;
 
     void ActivateCalculation();
-
 };
 
-#endif  /* GUI_WINDOWS_MAIN_FORM_H */
-
+#endif /* GUI_WINDOWS_MAIN_FORM_H */

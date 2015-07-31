@@ -15,32 +15,30 @@
 #include "gui_card_selector.h"
 
 class GuiDeckSelector : public ClicableGroupBox {
-Q_OBJECT
+    Q_OBJECT
 public:
-    GuiDeckSelector(const CardsTranslations&, const QJsonObject&);
-    GuiDeckSelector(const CardsTranslations&, GuiCardSelector*, const QString& label);
-    GuiDeckSelector(const CardsTranslations&, bool newCard = true);
+    GuiDeckSelector(const CardsTranslations &, const QJsonObject &);
+    GuiDeckSelector(const CardsTranslations &, GuiCardSelector *, const QString &label);
+    GuiDeckSelector(const CardsTranslations &, bool newCard = true);
 
     std::unique_ptr<DeckAbstractSelector> GetSelector() const;
     QJsonObject GetConfig() const;
-    void AddButton(QPushButton*);
+    void AddButton(QPushButton *);
+
 private:
-    const CardsTranslations& cardsTranslations;
-    void AddCardSelector(const QJsonObject&);
+    const CardsTranslations &cardsTranslations;
+    void AddCardSelector(const QJsonObject &);
     void AddCardSelector();
-    void AddCardSelector(GuiCardSelector*, bool removeButton = true);
-    std::set<GuiCardSelector*> selectors;
-    
-    enum SelectorMode {
-        SELECT_ALL,
-        SELECT_ONE
-    };
+    void AddCardSelector(GuiCardSelector *, bool removeButton = true);
+    std::set<GuiCardSelector *> selectors;
+
+    enum SelectorMode { SELECT_ALL, SELECT_ONE };
 
     QComboBox *selectorMode;
     QSpinBox *positionStart, *positionEnd;
     QCheckBox *enabled;
     QPushButton *addCardButton;
-    //ClickableLabel* selectorLabel;
+    // ClickableLabel* selectorLabel;
     QMetaObject::Connection renameConnection;
 
     QVBoxLayout *configLayout;
@@ -51,7 +49,7 @@ private:
     void CreateLayout();
     void SetupConnections();
 
-    static QSpinBox* CreateSpinBox(int min, int max);
+    static QSpinBox *CreateSpinBox(int min, int max);
 
     void ValidatePositionStart(int newValue);
     void ValidatePositionEnd(int newValue);

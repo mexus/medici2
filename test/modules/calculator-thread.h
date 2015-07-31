@@ -9,6 +9,7 @@ public:
     TestCalculatorThread();
 
     static medici::PPatienceSelector DefaultPatienceSelector();
+
 protected:
     static constexpr std::size_t N = 36;
     static logxx::Log cLog;

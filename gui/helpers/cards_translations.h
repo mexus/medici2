@@ -27,7 +27,7 @@ private:
     void PopulateSuits();
     void AddCard(const Card&);
 
-    template<class T>
+    template <class T>
     static const QString& Name(const std::map<T, QString>& translations, const T&);
 };
 

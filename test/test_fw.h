@@ -7,11 +7,12 @@
 class TestFW {
 public:
     TestFW(const std::string& label, logxx::LogLevel = logxx::warning);
-    TestFW(const TestFW& ) = delete;
+    TestFW(const TestFW&) = delete;
     virtual ~TestFW();
-    
+
     bool RunTests(bool colouredOutput);
     std::string GetLabel() const;
+
 protected:
     virtual bool Tests() = 0;
     const std::string label;
@@ -20,8 +21,6 @@ protected:
 
 private:
     logxx::LogLevel desiredLevel;
-
 };
 
 #endif /* TEST_FW_H */
-

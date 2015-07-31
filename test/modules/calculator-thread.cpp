@@ -7,12 +7,10 @@ MixersFactory TestCalculatorThread::mixersFactory(TestCalculatorThread::N);
 
 using namespace calculator;
 
-TestCalculatorThread::TestCalculatorThread() : TestFW("calculator-thread")
-{
+TestCalculatorThread::TestCalculatorThread() : TestFW("calculator-thread") {
 }
 
-bool TestCalculatorThread::Tests()
-{
+bool TestCalculatorThread::Tests() {
     S_LOG("Tests");
     try {
         return TestRunning() && TestRunningMultithreaded();
@@ -22,8 +20,7 @@ bool TestCalculatorThread::Tests()
     }
 }
 
-bool TestCalculatorThread::TestRunning()
-{
+bool TestCalculatorThread::TestRunning() {
     S_LOG("TestRunning");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
@@ -39,8 +36,7 @@ bool TestCalculatorThread::TestRunning()
     return params.checkedDecks != 0 && params.suitableDecks != 0;
 }
 
-bool TestCalculatorThread::TestRunningMultithreaded()
-{
+bool TestCalculatorThread::TestRunningMultithreaded() {
     S_LOG("TestRunningMultithreaded");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
@@ -48,13 +44,14 @@ bool TestCalculatorThread::TestRunningMultithreaded()
     static const std::size_t testThreadsCount = 4;
     std::vector<std::unique_ptr<Thread>> threads;
     for (std::size_t i = 0; i != testThreadsCount; ++i) {
-        threads.emplace_back(new Thread(deckSelector, patienceSelector, mixersFactory.CreateMixer<Card>(0)));
+        threads.emplace_back(new Thread(deckSelector, patienceSelector,
+                                        mixersFactory.CreateMixer<Card>(0)));
         threads.back()->Launch();
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    for (auto & thread : threads) {
+    for (auto& thread : threads) {
         auto params = thread->GetExecutionParameters();
         log(logxx::debug) << "Parameters: " << params << logxx::endl;
         if (params.checkedDecks == 0 || params.suitableDecks == 0)
@@ -63,9 +60,6 @@ bool TestCalculatorThread::TestRunningMultithreaded()
     return true;
 }
 
-
-medici::PPatienceSelector TestCalculatorThread::DefaultPatienceSelector()
-{
+medici::PPatienceSelector TestCalculatorThread::DefaultPatienceSelector() {
     return medici::PPatienceSelector(new medici::PatienceSelector());
 }
-
