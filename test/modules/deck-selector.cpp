@@ -1,9 +1,9 @@
 #include "deck-selector.h"
 #include <operators.h>
 #include "operators.h"
+#include <easylogging++.h>
 
 using namespace standard_36_deck;
-logxx::Log TestDeckSelector::cLog("TestDeckSelector");
 CardSelectorConfigurator TestDeckSelector::configurator;
 
 TestDeckSelector::TestDeckSelector() : TestFW("deck-selector") {
@@ -74,7 +74,6 @@ bool TestDeckSelector::TestOneSelector() {
 }
 
 bool TestDeckSelector::TestComplex() {
-    S_LOG("TestComplex");
     using namespace standard_36_deck;
     std::vector<Card> deck1{
         {Hearts, Jack},     // 0
@@ -129,7 +128,7 @@ bool TestDeckSelector::TestComplex() {
     selectors.AddDeckSelector(thirdCard);
 
     if (!selectors.Check(deck1)) {
-        log(logxx::error) << "Failed" << logxx::endl;
+        LOG(ERROR) << "Failed";
         return false;
     } else
         return true;
@@ -162,26 +161,19 @@ std::ostream& operator<<(std::ostream& s, const DeckAbstractSelector& abstractSe
     return s;
 }
 
-void PrintDeckPart(std::ostream& s, const std::vector<Card>& deck, std::size_t from,
-                   std::size_t to) {
-    std::vector<Card> cards(deck.begin() + from, deck.begin() + to + 1);
-    s << cards;
-}
-
 bool TestDeckSelector::TestSelector(const std::vector<Card>& deck,
                                     const DeckAbstractSelector& deckSelector,
                                     bool etalonResult) {
-    S_LOG("TestSelector");
     auto result = deckSelector.Check(deck);
     if (result == etalonResult)
         return true;
     else {
-        auto& s = log(logxx::error) << "\nDeck: ";
-        PrintDeckPart(s, deck, deckSelector.from, deckSelector.to);
-        s << "\n"
-          << "Deck selector: " << deckSelector << "\n"
-          << "Should return " << std::boolalpha << etalonResult << ", but returned "
-          << std::boolalpha << result << logxx::endl;
+        std::vector<Card> deck_part(deck.begin() + deckSelector.from,
+                                    deck.begin() + deckSelector.to + 1);
+        LOG(ERROR) << "\nDeck: " << deck_part << "\n"
+                   << "Deck selector: " << deckSelector << "\n"
+                   << "Should return " << std::boolalpha << etalonResult
+                   << ", but returned " << std::boolalpha << result;
         return false;
     }
 }

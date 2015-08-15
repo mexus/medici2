@@ -12,7 +12,6 @@ public:
 protected:
     static constexpr std::size_t N = 36;
 
-    static logxx::Log cLog;
     static MixersFactory mixersFactory;
 
     bool Tests() override;

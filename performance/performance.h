@@ -2,7 +2,6 @@
 #define PERFORMANCE_H
 
 #include <atomic>
-#include <logxx/logxx.h>
 #include <cards/standard-36-deck.h>
 #include <cards/deck-selector.h>
 #include <mixer/factory.h>
@@ -25,8 +24,6 @@ private:
     static constexpr std::size_t N = 36;
     static CardSelectorConfigurator configurator;
     MixersFactory mixersFactory;
-
-    static logxx::Log cLog;
 
     void Mixing() const;
     std::vector<std::vector<Card>> PregenerateConvergableDecks() const;

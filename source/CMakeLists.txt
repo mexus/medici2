@@ -1,6 +1,4 @@
 add_library (source-library
-    logxx/logxx.cpp
-
     helpers/time_measure.cpp
 
     cards/card.cpp

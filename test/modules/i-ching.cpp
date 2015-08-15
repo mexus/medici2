@@ -3,7 +3,6 @@
 #include <comparisons.h>
 #include "operators.h"
 
-logxx::Log TestIChing::cLog("TestIChing");
 using namespace i_ching;
 using namespace medici;
 using namespace standard_36_deck;
@@ -24,7 +23,6 @@ SuitsHexagrams TestIChing::CalculateHexagrams(const std::vector<Card>& deck) {
 }
 
 bool TestIChing::TestCalculation() {
-    S_LOG("TestCalculation");
     PatienceInfo info1, info2;
     info1.stationars = {{Spades, Jack},
                         {Spades, Eight},
@@ -114,7 +112,7 @@ bool TestIChing::TestCalculation() {
     if (!::Compare(etalonHexagrams1, resultHexagrams1) ||
         !::Compare(etalonHexagrams2, resultHexagrams2) ||
         !::Compare(etalonHexagrams3, resultHexagrams3)) {
-        log(logxx::error) << "Failed" << logxx::endl;
+        LOG(ERROR) << "Failed";
         return false;
     } else
         return true;
@@ -270,23 +268,24 @@ bool TestIChing::TestBalance() {
 }
 
 bool TestIChing::TestBalance(const std::vector<Card>& deck, bool balancedEtalon) {
-    S_LOG("TestBalance");
     PatienceInfo info;
     if (!TryToConverge(deck, info)) {
-        log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
+        LOG(ERROR) << "Deck doesn't converge!\n" << deck;
         return false;
     } else {
         BalanceChecker checker;
         bool balancedResult = checker.Check(info);
         if (balancedResult != balancedEtalon) {
-            auto& s = log(logxx::error) << "Deck is";
+            std::ostringstream s;
+            s << "Deck is";
             if (!balancedResult)
                 s << " not";
             s << " balanced, but it should";
             if (!balancedEtalon)
                 s << " not";
-            s << " be";
-            s << "\nDeck: " << deck << logxx::endl;
+            s << " be"
+              << "\nDeck: " << deck;
+            LOG(ERROR) << s.str();
             return false;
         } else
             return true;
@@ -337,17 +336,16 @@ bool TestIChing::TestBalanceAndSuit() {
 
 bool TestIChing::TestBalanceAndSuit(const std::vector<Card>& deck, std::uint_fast8_t suit,
                                     const i_ching::Hexagram& etalonHexagram) {
-    S_LOG("TestBalanceAndSuit");
     PatienceInfo info;
     if (!TryToConverge(deck, info)) {
-        log(logxx::error) << "Deck doesn't converge!\n" << deck << logxx::endl;
+        LOG(ERROR) << "Deck doesn't converge!\n" << deck;
         return false;
     } else {
         BalanceAndSuitChecker checker(suit, etalonHexagram);
         bool checkResult = checker.Check(info);
         if (!checkResult) {
-            log(logxx::error) << "Deck doesn't match, but it should"
-                              << "\nDeck: " << deck << logxx::endl;
+            LOG(ERROR) << "Deck doesn't match, but it should"
+                       << "\nDeck: " << deck;
             return false;
         } else
             return true;

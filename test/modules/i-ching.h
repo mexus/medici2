@@ -9,7 +9,6 @@ public:
     TestIChing();
 
 protected:
-    static logxx::Log cLog;
     bool Tests();
 
     static i_ching::SuitsHexagrams CalculateHexagrams(const std::vector<Card>& deck);

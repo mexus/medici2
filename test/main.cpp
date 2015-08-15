@@ -3,8 +3,8 @@
 
 #include "test_fw.h"
 #include "operators.h"
-#include <logxx/logxx.h>
 #include <stdbool.h>
+#include <easylogging++.h>
 
 #include "modules/mixer.h"
 #include "modules/medici.h"
@@ -13,7 +13,7 @@
 #include "modules/calculator-thread.h"
 #include "modules/calculator-manager.h"
 
-logxx::Log cLog("testing");
+INITIALIZE_EASYLOGGINGPP
 
 std::map<std::shared_ptr<TestFW>, bool> tests;
 
@@ -30,7 +30,6 @@ void SetAll(bool val) {
 }
 
 void Set(const std::string &arg) {
-    S_LOG("Set");
     if (!arg.empty()) {
         bool val;
         std::string label;
@@ -48,14 +47,18 @@ void Set(const std::string &arg) {
                     return;
                 }
             }
-            log(logxx::warning) << "No test {" << label << "} found" << logxx::endl;
+            LOG(INFO) << "No test {" << label << "} found";
         }
     }
 }
 
 int main(int argc, char **argv) {
-    S_LOG("main");
-    logxx::GlobalLogLevel(logxx::warning);
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    defaultConf.set(el::Level::Global, el::ConfigurationType::Format,
+                    "%level [%fbase:%line] %msg");
+    el::Loggers::reconfigureLogger("default", defaultConf);
+
     bool res(true);
     bool colouredOutput(true);
 
@@ -76,7 +79,7 @@ int main(int argc, char **argv) {
             Set(arg);
     }
 
-    log(logxx::info) << "Starting tests" << logxx::endl;
+    LOG(INFO) << "Starting tests";
 
     std::vector<std::string> passed, failed;
 
@@ -94,26 +97,22 @@ int main(int argc, char **argv) {
 
     if (colouredOutput) {
         if (!passed.empty())
-            log(logxx::info) << "\033[1;32mPASSED\033[0m tests: " << passed
-                             << logxx::endl;
+            LOG(INFO) << "\033[1;32mPASSED\033[0m tests: " << passed;
         else
-            log(logxx::info) << "\033[0;31mNo tests passed\033[0m" << logxx::endl;
-
+            LOG(INFO) << "\033[0;31mNo tests passed\033[0m";
         if (!failed.empty())
-            log(logxx::info) << "\033[1;31mFAILED\033[0m tests: " << failed
-                             << logxx::endl;
+            LOG(INFO) << "\033[1;31mFAILED\033[0m tests: " << failed;
         else
-            log(logxx::info) << "\033[0;36mNo tests failed\033[0m" << logxx::endl;
+            LOG(INFO) << "\033[0;36mNo tests failed\033[0m";
     } else {
         if (!passed.empty())
-            log(logxx::info) << "PASSED tests: " << passed << logxx::endl;
+            LOG(INFO) << "PASSED tests: " << passed;
         else
-            log(logxx::info) << "No tests passed" << logxx::endl;
-
+            LOG(INFO) << "No tests passed";
         if (!failed.empty())
-            log(logxx::info) << "FAILED tests: " << failed << logxx::endl;
+            LOG(INFO) << "FAILED tests: " << failed;
         else
-            log(logxx::info) << "No tests failed" << logxx::endl;
+            LOG(INFO) << "No tests failed";
     }
 
     return res ? 0 : 1;

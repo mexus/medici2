@@ -1,12 +1,12 @@
 #ifndef TEST_FW_H
 #define TEST_FW_H
 
-#include <logxx/logxx.h>
 #include <functional>
+#include <string>
 
 class TestFW {
 public:
-    TestFW(const std::string& label, logxx::LogLevel = logxx::warning);
+    TestFW(const std::string& label);
     TestFW(const TestFW&) = delete;
     virtual ~TestFW();
 
@@ -18,9 +18,6 @@ protected:
     const std::string label;
 
     static bool CompareFiles(const std::string&, const std::string&);
-
-private:
-    logxx::LogLevel desiredLevel;
 };
 
 #endif /* TEST_FW_H */

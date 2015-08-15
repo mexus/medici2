@@ -3,8 +3,6 @@
 #include <comparisons.h>
 #include "operators.h"
 
-logxx::Log TestMedici::cLog("TestMedici");
-
 TestMedici::TestMedici() : TestFW("medici") {
 }
 
@@ -189,37 +187,36 @@ bool TestMedici::Tests() {
 
 bool TestMedici::Test(const std::vector<Card>& deck, bool etalonConverges,
                       const PatienceInfo& etalonInfo) {
-    S_LOG("Test");
     PatienceInfo resultInfo;
     bool resultConverges = TryToConverge(deck, resultInfo);
 
     bool res;
     if (resultConverges != etalonConverges) {
-        auto& s = log(logxx::error) << "Deck should ";
+        std::ostringstream s;
+        s << "Deck should ";
         if (!etalonConverges)
             s << "not ";
         s << "converge, but it does ";
         if (!resultConverges)
             s << "not";
-        s << logxx::endl;
         res = false;
+        LOG(ERROR) << s.str();
     } else if (resultConverges)
         res = Compare(resultInfo, etalonInfo);
     else
         res = true;
     if (!res) {
-        log(logxx::error) << "Failed on {" << deck << "}" << logxx::endl;
+        LOG(ERROR) << "Failed on {" << deck << "}";
     }
     return res;
 }
 
 bool TestMedici::Compare(const PatienceInfo& etalon, const PatienceInfo& result) {
-    S_LOG("Compare");
     if (!::Compare(etalon.convolutions, result.convolutions)) {
-        log(logxx::error) << "Convolutions check failed" << logxx::endl;
+        LOG(ERROR) << "Convolutions check failed";
         return false;
     } else if (!::Compare(etalon.stationars, result.stationars)) {
-        log(logxx::error) << "Stationars check failed" << logxx::endl;
+        LOG(ERROR) << "Stationars check failed";
         return false;
     } else
         return true;

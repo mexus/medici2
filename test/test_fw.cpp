@@ -1,37 +1,37 @@
 #include "test_fw.h"
 #include <helpers/time_measure.h>
+#include <easylogging++.h>
 #include <fstream>
 #include <cstring>
+#include <map>
 
-TestFW::TestFW(const std::string& label, logxx::LogLevel l)
-        : label(label), desiredLevel(l) {
+TestFW::TestFW(const std::string& label) : label(label) {
 }
 
 TestFW::~TestFW() {
 }
 
-bool TestFW::RunTests(bool colouredOutput) {
-    static const std::map<bool, std::string> colouredResult{
-        {true, "\033[1;32mPASSED\033[0m"}, {false, "\033[1;31mFAILED\033[0m"}};
-    static const std::map<bool, std::string> nonColouredResult{{true, "PASSED"},
-                                                               {false, "FAILED"}};
-
-    static logxx::Log log("TestFw::RunTests");
-    log(logxx::info, label) << "Starting test" << logxx::endl;
-    TimeMeasure timeMeasure;
-
-    auto storedLevel = logxx::GlobalLogLevel();
-    if (storedLevel != desiredLevel)
-        logxx::GlobalLogLevel(desiredLevel);
-    bool res = Tests();
-    logxx::GlobalLogLevel(storedLevel);
-
-    auto& s = log(logxx::info, label) << "Test ";
-    if (colouredOutput)
-        s << colouredResult.at(res);
+std::string ResultToString(bool result) {
+    if (result)
+        return "PASSED";
     else
-        s << nonColouredResult.at(res);
-    s << " in " << timeMeasure.Elapsed() << "s" << logxx::endl;
+        return "FAILED";
+}
+
+std::string ResultToColouredString(bool result) {
+    if (result)
+        return "\033[1;32mPASSED\033[0m";
+    else
+        return "\033[1;31mFAILED\033[0m";
+}
+
+bool TestFW::RunTests(bool colouredOutput) {
+    auto result_to_string = colouredOutput ? &ResultToString : &ResultToColouredString;
+    LOG(INFO) << "Starting test [" << label << "]";
+    TimeMeasure timeMeasure;
+    bool res = Tests();
+    LOG(INFO) << "Test " << result_to_string(res) << " in " << timeMeasure.Elapsed()
+              << "s";
     return res;
 }
 

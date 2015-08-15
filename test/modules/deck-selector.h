@@ -12,7 +12,6 @@ public:
     TestDeckSelector();
 
 protected:
-    static logxx::Log cLog;
     static CardSelectorConfigurator configurator;
     bool Tests();
 

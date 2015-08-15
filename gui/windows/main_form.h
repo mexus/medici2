@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QJsonArray>
-#include <logxx/logxx.h>
 #include <widgets/selectors/gui_deck_selector.h>
 #include <widgets/deck_preference.h>
 #include <helpers/cards_translations.h>
@@ -30,8 +29,6 @@ protected:
     void CreateLayout();
 
     void AddSelectorTab(GuiDeckSelector *, const QString &label);
-
-    static logxx::Log cLog;
 
     void ActivateCalculation();
 };

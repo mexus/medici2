@@ -1,8 +1,8 @@
 #include "calculator-thread.h"
 #include <calculator/thread.h>
 #include "operators.h"
+#include <easylogging++.h>
 
-logxx::Log TestCalculatorThread::cLog("TestCalculatorThread");
 MixersFactory TestCalculatorThread::mixersFactory(TestCalculatorThread::N);
 
 using namespace calculator;
@@ -11,17 +11,15 @@ TestCalculatorThread::TestCalculatorThread() : TestFW("calculator-thread") {
 }
 
 bool TestCalculatorThread::Tests() {
-    S_LOG("Tests");
     try {
         return TestRunning() && TestRunningMultithreaded();
     } catch (const std::exception& e) {
-        log(logxx::error) << "Caught an exception: " << e.what() << logxx::endl;
+        LOG(ERROR) << "Caught an exception: " << e.what();
         return false;
     }
 }
 
 bool TestCalculatorThread::TestRunning() {
-    S_LOG("TestRunning");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
 
@@ -31,13 +29,12 @@ bool TestCalculatorThread::TestRunning() {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     auto params = thread.GetExecutionParameters();
-    log(logxx::debug) << "Parameters: " << params << logxx::endl;
+    LOG(DEBUG) << "Parameters: " << params;
 
     return params.checkedDecks != 0 && params.suitableDecks != 0;
 }
 
 bool TestCalculatorThread::TestRunningMultithreaded() {
-    S_LOG("TestRunningMultithreaded");
     DeckSelectors deckSelector;
     auto patienceSelector = TestCalculatorThread::DefaultPatienceSelector();
 
@@ -53,7 +50,7 @@ bool TestCalculatorThread::TestRunningMultithreaded() {
 
     for (auto& thread : threads) {
         auto params = thread->GetExecutionParameters();
-        log(logxx::debug) << "Parameters: " << params << logxx::endl;
+        LOG(DEBUG) << "Parameters: " << params;
         if (params.checkedDecks == 0 || params.suitableDecks == 0)
             return false;
     }

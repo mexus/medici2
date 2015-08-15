@@ -8,8 +8,6 @@
 #include <type_traits>
 #include <cards/deck-selector.h>
 
-logxx::Log MainForm::cLog("MainForm");
-
 MainForm::MainForm(QWidget* parent) : QMainWindow(parent) {
     QSettings settings;
     restoreGeometry(settings.value("main-window:geometry").toByteArray());

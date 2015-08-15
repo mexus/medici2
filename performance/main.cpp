@@ -1,11 +1,18 @@
 #include "performance.h"
+#include <easylogging++.h>
+
+INITIALIZE_EASYLOGGINGPP
 
 int main() {
-    logxx::Log log("Performance");
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    defaultConf.set(el::Level::Global, el::ConfigurationType::Format,
+                    "%datetime %level %msg");
+    el::Loggers::reconfigureLogger("default", defaultConf);
 
     Performance perf;
-    log(logxx::info) << "Testing OneSwap mixer engine" << logxx::endl;
+    LOG(INFO) << "Testing OneSwap mixer engine";
     perf.Run(MixersFactory::ONE_SWAP);
-    log(logxx::info) << "Testing FullCapacity mixer engine" << logxx::endl;
+    LOG(INFO) << "Testing FullCapacity mixer engine";
     perf.Run(MixersFactory::FULL_CAPACITY);
 }

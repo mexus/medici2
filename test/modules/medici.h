@@ -12,7 +12,6 @@ public:
     TestMedici();
 
 protected:
-    static logxx::Log cLog;
     bool Tests();
     bool Test(const std::vector<Card>& deck, bool converges,
               const PatienceInfo& etalonInfo = PatienceInfo());

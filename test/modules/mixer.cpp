@@ -1,6 +1,7 @@
 #include "mixer.h"
 #include <cmath>
 #include <algorithm>
+#include <easylogging++.h>
 
 constexpr unsigned long int factorial(unsigned int n) {
     return n <= 1 ? 1 : (n * factorial(n - 1));
@@ -39,9 +40,7 @@ std::vector<int> TestMixer::SimpleDeck() {
     return deck;
 }
 
-logxx::Log TestMixer::cLog("TestMixer");
-
-TestMixer::TestMixer() : TestFW("mixer", logxx::debug) {
+TestMixer::TestMixer() : TestFW("mixer") {
 }
 
 bool TestMixer::Tests() {
@@ -51,7 +50,7 @@ bool TestMixer::Tests() {
 
 bool TestMixer::TestStatistics(const std::string& mixer_name,
                                MixersFactory::MixerType mixer_type) {
-    D_LOG("TestStatistics::" + mixer_name);
+    LOG(INFO) << "Testing mixer " << mixer_name;
     MixersFactory mixers_factory(test_size);
     mixers_factory.SetMixer(mixer_type);
     auto mixer = mixers_factory.CreateMixer<int>(0);
@@ -59,24 +58,20 @@ bool TestMixer::TestStatistics(const std::string& mixer_name,
     float loopsResult = CalculateAverageLoops(mixer);
     float loopsEtalon = factorial(test_size);
     if (std::fabs(loopsResult - loopsEtalon) / loopsEtalon > relativeEps) {
-        log(logxx::error) << "Got " << loopsResult << " loops, but should be "
-                          << loopsEtalon << logxx::endl;
+        LOG(ERROR) << "Got " << loopsResult << " loops, but should be " << loopsEtalon;
         return false;
     } else
-        log(logxx::debug) << "Got " << loopsResult << " loops, should be " << loopsEtalon
-                          << logxx::endl;
+        LOG(DEBUG) << "Got " << loopsResult << " loops, should be " << loopsEtalon;
 
     float duplicatesResult = CalculateAverageDuplicates(mixer) / factorial(test_size);
     float duplicatesEtalon = 0.5;
     if ((duplicatesResult - duplicatesEtalon) / duplicatesEtalon > relativeEps) {
-        log(logxx::error) << "Got " << duplicatesResult
-                          << " duplicates (relative), but should be " << duplicatesEtalon
-                          << logxx::endl;
+        LOG(ERROR) << "Got " << duplicatesResult
+                   << " duplicates (relative), but should be " << duplicatesEtalon;
         return false;
     } else
-        log(logxx::debug) << "Got " << duplicatesResult
-                          << " duplicates (relative), should be " << duplicatesEtalon
-                          << logxx::endl;
+        LOG(DEBUG) << "Got " << duplicatesResult << " duplicates (relative), should be "
+                   << duplicatesEtalon;
 
     return true;
 }

@@ -13,7 +13,6 @@ public:
     TestMixer();
 
 protected:
-    static logxx::Log cLog;
     bool Tests();
 
     bool TestStatistics(const std::string& mixer_name,
