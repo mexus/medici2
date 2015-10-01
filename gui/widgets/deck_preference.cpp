@@ -111,5 +111,5 @@ DeckSelectors DeckPreference::GetDeckSelectors() const {
         if (selector)
             selectors.AddDeckSelector(std::move(selector));
     }
-    return std::move(selectors);
+    return selectors;
 }
