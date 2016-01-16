@@ -4,90 +4,78 @@ from clang_helpers import PrepareClangFlags
 
 
 class YcmFlags:
-    def __init__(self, additional_includes=[], enable_qt=False):
-        self.flags = [
-            '-std=c++11',
-            '-x', 'c++',
-            '-I', 'source/',
-        ]
-        self.project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.compilation_database_folder = os.path.join(self.project_path, 'build/')
-        self.database = None
-        if enable_qt:
-            self.flags.extend([
-                '-DQT_CORE_LIB',
-                '-DQT_GUI_LIB',
-                '-DQT_NETWORK_LIB',
-                '-DQT_QML_LIB',
-                '-DQT_QUICK_LIB',
-                '-DQT_SQL_LIB',
-                '-DQT_WIDGETS_LIB',
-                '-DQT_XML_LIB'
-            ])
-            self.find_qt_components()
-        for include in additional_includes:
-            self.flags.extend(['-I', include])
-
-    @staticmethod
-    def find_qt5_location():
-        prefixes = ["/usr/include/qt5", "/usr/include/qt"]
-        for prefix in prefixes:
-            if os.path.isdir(prefix + '/QtCore'):
-                return prefix
-        raise Exception('Not found qt')
-
-    def find_qt_components(self):
-        location = self.find_qt5_location()
-        components = [d for d in os.listdir(location) if os.path.isdir(os.path.join(location, d))]
-        self.flags.extend(['-I', location])
-        for component in components:
-            inclusion_path = os.path.join(location, component)
-            self.flags.extend(['-I', inclusion_path])
-        if self.compilation_database_folder:
-            self.database = ycm_core.CompilationDatabase(self.compilation_database_folder)
+    def __init__(self, flags = [], additional_includes = []):
+        self._flags = flags
+        self._project_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../'))
+        self._compilation_database_folder = os.path.join(self._project_path, 'build/')
+        if self._compilation_database_folder:
+            self._database = ycm_core.CompilationDatabase(self._compilation_database_folder)
+            if not self._database:
+                raise NameError('Failed to prepare a compilation DB')
         else:
-            self.database = None
+            raise NameError('No compilation DB!')
+        for include in additional_includes:
+            self._flags.extend(['-I', include])
 
     @staticmethod
-    def relative_to_absolute(flags, working_directory):
-        if not working_directory:
-            return flags
+    def find_source_for_header(filename):
+        (base_folder, name) = os.path.split(filename)
+        (base_name, extension) = os.path.splitext(name)
+        # 0. Check if the file is a header:
+        if extension not in {".h", ".hpp"}:
+            return (filename, [])
+        extensions = [["c++", ".cpp"], ["c++", ".cxx"], ["c", ".c"]]
+        for pair in extensions:
+            lang = pair[0]
+            source_extension = pair[1]
+            source_file_name = base_name + source_extension
+            # 1. Look in the same folder and subfolders
+            for subfolder_name in {"", "src", "source"}:
+                sub_folder = os.path.join(base_folder, subfolder_name)
+                if os.path.exists(sub_folder) and os.path.isdir(sub_folder):
+                    probable_source = os.path.join(sub_folder, source_file_name)
+                    if os.path.exists(probable_source):
+                        return (probable_source, ["-x", lang])
+        # 3. Give up
+        return (filename, [])
+
+    @staticmethod
+    def relative_to_absolute(flags, absolute_path):
         new_flags = []
-        make_next_absolute = False
         path_flags = ['-isystem', '-I', '-iquote', '--sysroot=']
+        make_next_absolute = False
         for flag in flags:
-            new_flag = flag
             if make_next_absolute:
                 make_next_absolute = False
                 if not flag.startswith('/'):
-                    new_flag = os.path.join(working_directory, flag)
+                    new_flag = os.path.join(absolute_path, flag)
+                else:
+                    new_flag = flag
+                new_flags.append(os.path.normpath(new_flag))
+                continue
+            new_flag = flag
             for path_flag in path_flags:
                 if flag == path_flag:
                     make_next_absolute = True
                     break
                 if flag.startswith(path_flag):
                     path = flag[len(path_flag):]
-                    new_flag = path_flag + os.path.join(working_directory, path)
-            if new_flag:
-                new_flags.append(new_flag)
+                    new_flag = path_flag + os.path.normpath(os.path.join(absolute_path, path))
+                    break
+            new_flags.append(new_flag)
         return new_flags
 
-    def flags_for_file(self, filename):
-        final_flags = None
-        if self.database:
-            # Bear in mind that compilation_info.compiler_flags_ does NOT return a
-            # python list, but a "list-like" StringVec object
-            compilation_info = self.database.GetCompilationInfoForFile(filename)
-            final_flags = PrepareClangFlags(
-                self.relative_to_absolute(
-                    compilation_info.compiler_flags_,
-                    compilation_info.compiler_working_dir_),
-                filename)
-        if not final_flags:
-            relative_to = self.project_path
-            final_flags = self.relative_to_absolute(self.flags, relative_to)
+    def flags_for_file(self, original_filename):
+        (filename, extra_flags) = YcmFlags.find_source_for_header(original_filename)
+        compilation_info = self._database.GetCompilationInfoForFile(filename)
+        flags = PrepareClangFlags(
+            self.relative_to_absolute(
+                compilation_info.compiler_flags_,
+                compilation_info.compiler_working_dir_),
+            filename)
+        additional_flags = self.relative_to_absolute(self._flags, self._project_path)
+        flags.extend(additional_flags)
         return {
-            'flags': final_flags,
+            'flags': flags + extra_flags,
             'do_cache': True
         }
-
