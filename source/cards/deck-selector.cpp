@@ -4,13 +4,11 @@ typedef std::vector<CardSelector> CardSelectors;
 
 DeckAbstractSelector::DeckAbstractSelector(const CardSelectors& selectors,
                                            std::size_t from, std::size_t to)
-        : cardSelectors(selectors), from(from), to(to) {
-}
+        : cardSelectors(selectors), from(from), to(to) {}
 
 DeckAbstractSelector::DeckAbstractSelector(CardSelectors&& selectors, std::size_t from,
                                            std::size_t to)
-        : cardSelectors(selectors), from(from), to(to) {
-}
+        : cardSelectors(selectors), from(from), to(to) {}
 
 void DeckSelectors::AddDeckSelector(std::unique_ptr<DeckAbstractSelector>&& selector) {
     deckSelectors.push_back(std::move(selector));
@@ -22,13 +20,11 @@ bool DeckSelectors::IsEmpty() const {
 
 DeckAllSelector::DeckAllSelector(const CardSelectors& selectors, std::size_t from,
                                  std::size_t to)
-        : DeckAbstractSelector(selectors, from, to) {
-}
+        : DeckAbstractSelector(selectors, from, to) {}
 
 DeckAllSelector::DeckAllSelector(CardSelectors&& selectors, std::size_t from,
                                  std::size_t to)
-        : DeckAbstractSelector(selectors, from, to) {
-}
+        : DeckAbstractSelector(selectors, from, to) {}
 
 bool DeckAllSelector::CheckPart(const std::vector<Card>& deckPart) const {
     for (auto& selector : cardSelectors) {
@@ -42,13 +38,11 @@ bool DeckAllSelector::CheckPart(const std::vector<Card>& deckPart) const {
 
 DeckOneSelector::DeckOneSelector(const CardSelectors& selectors, std::size_t from,
                                  std::size_t to)
-        : DeckAbstractSelector(selectors, from, to) {
-}
+        : DeckAbstractSelector(selectors, from, to) {}
 
 DeckOneSelector::DeckOneSelector(CardSelectors&& selectors, std::size_t from,
                                  std::size_t to)
-        : DeckAbstractSelector(selectors, from, to) {
-}
+        : DeckAbstractSelector(selectors, from, to) {}
 
 bool DeckOneSelector::CheckPart(const std::vector<Card>& deckPart) const {
     for (auto& selector : cardSelectors) {
