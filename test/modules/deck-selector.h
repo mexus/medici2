@@ -19,7 +19,7 @@ protected:
     bool TestOneSelector();
     bool TestComplex();
 
-    static bool TestSelector(const std::vector<Card>& deck, const DeckAbstractSelector&,
+    static bool TestSelector(const std::vector<Card>& deck, const DeckAbstractRangeSelector&,
                              bool etalonResult);
     static CardSelector SelectorAnyRank(std::uint_fast8_t suit, bool straight = true);
     static CardSelector SelectorAnySuit(std::uint_fast8_t rank, bool straight = true);

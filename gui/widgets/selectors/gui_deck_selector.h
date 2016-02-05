@@ -21,7 +21,7 @@ public:
     GuiDeckSelector(const CardsTranslations &, GuiCardSelector *, const QString &label);
     GuiDeckSelector(const CardsTranslations &, bool newCard = true);
 
-    std::unique_ptr<DeckAbstractSelector> GetSelector() const;
+    std::unique_ptr<DeckAbstractCardsSelector> GetSelector() const;
     QJsonObject GetConfig() const;
     void AddButton(QPushButton *);
 

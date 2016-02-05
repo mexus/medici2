@@ -5,7 +5,13 @@
 #include <vector>
 #include <memory>
 
+
 class DeckAbstractSelector {
+public:
+    virtual bool Check(const std::vector<Card>& deck) const = 0;
+};
+
+class DeckAbstractRangeSelector : public DeckAbstractSelector {
 public:
     bool Check(const std::vector<Card>& deck) const {
         std::vector<Card> deckPart(deck.begin() + from, deck.begin() + to + 1);
@@ -16,9 +22,9 @@ protected:
     const std::vector<CardSelector> cardSelectors;
     const std::size_t from, to;
 
-    DeckAbstractSelector(const std::vector<CardSelector>&, std::size_t from,
+    DeckAbstractRangeSelector(const std::vector<CardSelector>&, std::size_t from,
                          std::size_t to);
-    DeckAbstractSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
+    DeckAbstractRangeSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
     virtual bool CheckPart(const std::vector<Card>& deckPart) const = 0;
 };
 
@@ -53,7 +59,7 @@ private:
     std::vector<std::unique_ptr<DeckAbstractSelector>> deckSelectors;
 };
 
-class DeckAllSelector : public DeckAbstractSelector {
+class DeckAllSelector : public DeckAbstractRangeSelector {
 public:
     DeckAllSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
     DeckAllSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);
@@ -62,7 +68,7 @@ protected:
     bool CheckPart(const std::vector<Card>& deckPart) const override;
 };
 
-class DeckOneSelector : public DeckAbstractSelector {
+class DeckOneSelector : public DeckAbstractRangeSelector {
 public:
     DeckOneSelector(const std::vector<CardSelector>&, std::size_t from, std::size_t to);
     DeckOneSelector(std::vector<CardSelector>&&, std::size_t from, std::size_t to);

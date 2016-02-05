@@ -177,8 +177,8 @@ void GuiDeckSelector::AddButton(QPushButton* button) {
     configLayout->addWidget(button);
 }
 
-std::unique_ptr<DeckAbstractSelector> GuiDeckSelector::GetSelector() const {
-    std::unique_ptr<DeckAbstractSelector> selector;
+std::unique_ptr<DeckAbstractCardsSelector> GuiDeckSelector::GetSelector() const {
+    std::unique_ptr<DeckAbstractCardsSelector> selector;
     SelectorMode mode = static_cast<SelectorMode>(selectorMode->currentData().toUInt());
 
     std::vector<CardSelector> cardSelectors;

@@ -135,12 +135,12 @@ bool TestDeckSelector::TestComplex() {
 }
 
 void PrintDeckSelectorInfo(std::ostream& s,
-                           const DeckAbstractSelector& abstractSelector) {
+                           const DeckAbstractRangeSelector& abstractSelector) {
     s << "range {" << abstractSelector.from << ", " << abstractSelector.to << "}, ";
     s << "card selectors: {" << abstractSelector.cardSelectors << "}";
 }
 
-std::ostream& operator<<(std::ostream& s, const DeckAbstractSelector& abstractSelector) {
+std::ostream& operator<<(std::ostream& s, const DeckAbstractRangeSelector& abstractSelector) {
     try {
         auto& selector = dynamic_cast<const DeckAllSelector&>(abstractSelector);
         s << "DeckAllSelector ";
@@ -162,7 +162,7 @@ std::ostream& operator<<(std::ostream& s, const DeckAbstractSelector& abstractSe
 }
 
 bool TestDeckSelector::TestSelector(const std::vector<Card>& deck,
-                                    const DeckAbstractSelector& deckSelector,
+                                    const DeckAbstractRangeSelector& deckSelector,
                                     bool etalonResult) {
     auto result = deckSelector.Check(deck);
     if (result == etalonResult)
