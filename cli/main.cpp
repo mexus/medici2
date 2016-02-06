@@ -10,7 +10,7 @@ int main() {
                     "%datetime %level %msg");
     el::Loggers::reconfigureLogger("default", defaultConf);
 
-    Cli cli;
+    Cli cli(MixersFactory::FULL_CAPACITY);
     LOG(INFO) << "Running CLI";
     cli.Run();
 }

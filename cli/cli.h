@@ -14,4 +14,6 @@ private:
     static constexpr size_t N = 36;
     MixersFactory mixers_factory_;
     calculator::Manager calculator_;
+
+    static CardSelector AnySuit(standard_36_deck::Ranks rank, bool straight = true);
 };
