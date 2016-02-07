@@ -82,7 +82,7 @@ private:
             ++checkedDecks;
 
             if (deckSelector.Check(deck) && medici::TryToConverge(deck, patienceInfo) &&
-                patienceSelector->Check(patienceInfo)) {
+                patienceSelector->Check(deck, patienceInfo)) {
                 ++suitableDecks;
                 std::lock_guard<std::mutex> guard(accessDecks);
                 foundDecks.push_back({deck, patienceInfo});

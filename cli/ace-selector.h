@@ -6,4 +6,5 @@ public:
     AceSelector();
 
     bool Check(const std::vector<Card>& deck) const override;
+    static bool IsAce(const Card& card);
 };

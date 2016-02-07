@@ -8,7 +8,7 @@ namespace medici {
 PatienceTargetSelector::PatienceTargetSelector(const Card& target) : target(target) {
 }
 
-bool PatienceTargetSelector::Check(const PatienceInfo& info) {
+bool PatienceTargetSelector::Check(const std::vector<Card>& /*deck*/, const PatienceInfo& info) {
     auto it = info.convolutions.find(target);
     return it != info.convolutions.end() && it->second != 0;
 }
@@ -19,7 +19,7 @@ PatienceMaxSelector::PatienceMaxSelector(const Card& target, bool strictComparis
           maxConvolutions(0) {
 }
 
-bool PatienceMaxSelector::Check(const PatienceInfo& info) {
+bool PatienceMaxSelector::Check(const std::vector<Card>& /*deck*/, const PatienceInfo& info) {
     auto it = info.convolutions.find(target);
     if (it != info.convolutions.end() && it->second != 0) {
         std::size_t targetConvolutions = it->second;
@@ -47,7 +47,7 @@ PatienceIChingSelector::PatienceIChingSelector(std::uint_fast8_t suit,
         : parent(std::move(parent)), checker(new BalanceAndSuitChecker(suit, targetHex)) {
 }
 
-bool PatienceIChingSelector::Check(const PatienceInfo& info) {
-    return parent->Check(info) && checker->Check(info);
+bool PatienceIChingSelector::Check(const std::vector<Card>& deck, const PatienceInfo& info) {
+    return parent->Check(deck, info) && checker->Check(info);
 }
 }
