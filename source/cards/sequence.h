@@ -7,18 +7,18 @@
 
 namespace cards {
 
-struct ClosedSequence {
+struct SimpleSequence {
     std::vector<Card> cards;
     size_t position;
 
-    bool Contradicts(const ClosedSequence& other) const;
+    bool Contradicts(const SimpleSequence& other) const;
     bool IsOccupied(size_t place_number) const;
     Card GetCard(size_t place_number) const;
-    bool Overlaps(const ClosedSequence& other) const;
-    ClosedSequence Merge(const ClosedSequence& other) const;
+    bool Overlaps(const SimpleSequence& other) const;
+    SimpleSequence Merge(const SimpleSequence& other) const;
 };
 
-bool operator==(const ClosedSequence& lhs, const ClosedSequence& rhs);
+bool operator==(const SimpleSequence& lhs, const SimpleSequence& rhs);
 
 class Storage;
 
@@ -27,7 +27,7 @@ public:
     Sequence();
     Sequence(const Sequence& other);
     Sequence(Sequence&& other);
-    Sequence(ClosedSequence&& sequence);
+    Sequence(SimpleSequence&& sequence);
 
     Sequence& operator=(Sequence&& other);
 
@@ -35,8 +35,8 @@ public:
     Sequence ShiftRight(size_t shift) const;
     bool Contradicts(const Sequence& other) const;
 
-    void AddPart(const ClosedSequence& part);
-    void AddPart(ClosedSequence&& part);
+    void AddPart(const SimpleSequence& part);
+    void AddPart(SimpleSequence&& part);
     void AddSequence(const Sequence& sequence);
     bool IsOccupied(size_t place_number) const;
     Card GetCard(size_t place_number) const;
@@ -45,12 +45,12 @@ public:
     size_t GetLastOccupied() const;
 
     void TakeCardsFromStorage(Storage* storage) const;
-    const std::vector<ClosedSequence>& GetParts() const;
+    const std::vector<SimpleSequence>& GetParts() const;
 
     std::vector<Sequence> operator+(const std::vector<Sequence>& sequences) const;
 
 private:
-    std::vector<ClosedSequence> parts_;
+    std::vector<SimpleSequence> parts_;
     friend bool operator==(const Sequence& lhs, const Sequence& rhs);
 };
 

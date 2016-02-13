@@ -7,7 +7,7 @@
 
 namespace cards {
 
-bool ClosedSequence::Overlaps(const ClosedSequence& other) const {
+bool SimpleSequence::Overlaps(const SimpleSequence& other) const {
     auto& x = *this;
     auto& y = other;
     /* If sequences are 'touching' each other, we consider them as overlapping */
@@ -24,9 +24,9 @@ bool ClosedSequence::Overlaps(const ClosedSequence& other) const {
     return true;
 }
 
-ClosedSequence ClosedSequence::Merge(const ClosedSequence& other) const {
+SimpleSequence SimpleSequence::Merge(const SimpleSequence& other) const {
     assert(Overlaps(other) && "Sequences are not overlapping");
-    ClosedSequence result;
+    SimpleSequence result;
     auto& x = *this;
     auto& y = other;
     result.position = std::min(x.position, y.position);
@@ -42,7 +42,7 @@ ClosedSequence ClosedSequence::Merge(const ClosedSequence& other) const {
     return result;
 }
 
-bool ClosedSequence::Contradicts(const ClosedSequence& other) const {
+bool SimpleSequence::Contradicts(const SimpleSequence& other) const {
     auto& x = *this;
     auto& y = other;
     size_t first = std::max(x.position, y.position);
@@ -55,19 +55,19 @@ bool ClosedSequence::Contradicts(const ClosedSequence& other) const {
     return false;
 }
 
-bool ClosedSequence::IsOccupied(size_t place_number) const {
+bool SimpleSequence::IsOccupied(size_t place_number) const {
     if (place_number < position) {
         return false;
     }
     return place_number < position + cards.size();
 }
 
-Card ClosedSequence::GetCard(size_t place_number) const {
+Card SimpleSequence::GetCard(size_t place_number) const {
     assert(IsOccupied(place_number) && "Position is not occupied!");
     return cards[place_number - position];
 }
 
-bool operator==(const ClosedSequence& lhs, const ClosedSequence& rhs) {
+bool operator==(const SimpleSequence& lhs, const SimpleSequence& rhs) {
     return lhs.position == rhs.position && lhs.cards == rhs.cards;
 }
 
@@ -77,7 +77,7 @@ Sequence::Sequence(const Sequence& other) : parts_(other.parts_) {}
 
 Sequence::Sequence(Sequence&& other) : parts_(std::move(other.parts_)) {}
 
-Sequence::Sequence(ClosedSequence&& sequence) {
+Sequence::Sequence(SimpleSequence&& sequence) {
     AddPart(std::move(sequence));
 }
 
@@ -86,7 +86,7 @@ Sequence& Sequence::operator=(Sequence&& other) {
     return *this;
 }
 
-void Sequence::AddPart(const ClosedSequence& sequence) {
+void Sequence::AddPart(const SimpleSequence& sequence) {
     for (auto& part : parts_) {
         if (part.Overlaps(sequence)) {
             part = part.Merge(sequence);
@@ -96,7 +96,7 @@ void Sequence::AddPart(const ClosedSequence& sequence) {
     parts_.push_back(sequence);
 }
 
-void Sequence::AddPart(ClosedSequence&& sequence) {
+void Sequence::AddPart(SimpleSequence&& sequence) {
     for (auto& part : parts_) {
         if (part.Overlaps(sequence)) {
             part = part.Merge(sequence);
@@ -141,7 +141,7 @@ void Sequence::TakeCardsFromStorage(Storage* storage) const {
     }
 }
 
-const std::vector<ClosedSequence>& Sequence::GetParts() const {
+const std::vector<SimpleSequence>& Sequence::GetParts() const {
     return parts_;
 }
 

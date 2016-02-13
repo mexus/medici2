@@ -23,17 +23,17 @@ std::vector<Sequence> OneCardCondition::GetVariants(const Sequence& applied_sequ
             return {};
         }
         return {
-            Sequence(ClosedSequence{{applied_sequence.GetCard(position_)}, position_})};
+            Sequence(SimpleSequence{{applied_sequence.GetCard(position_)}, position_})};
     }
     if (!inverse_) {
         if (!storage.HasCard(card_)) {
             return {};
         }
-        return {Sequence(ClosedSequence{{card_}, position_})};
+        return {Sequence(SimpleSequence{{card_}, position_})};
     }
     std::vector<Sequence> result;
     for (auto& card : storage.GetAllAvailableCards()) {
-        result.emplace_back(ClosedSequence{{card}, position_});
+        result.emplace_back(SimpleSequence{{card}, position_});
     }
     return result;
 }
@@ -59,7 +59,7 @@ std::vector<Sequence> AnyRankCardCondition::GetVariants(const Sequence& applied_
             return {};
         }
         return {
-            Sequence(ClosedSequence{{applied_sequence.GetCard(position_)}, position_})};
+            Sequence(SimpleSequence{{applied_sequence.GetCard(position_)}, position_})};
     }
     std::vector<Card> cards;
     if (!inverse_) {
@@ -75,7 +75,7 @@ std::vector<Sequence> AnyRankCardCondition::GetVariants(const Sequence& applied_
     }
     std::vector<Sequence> result;
     for (auto& card : cards) {
-        result.emplace_back(ClosedSequence{{card}, position_});
+        result.emplace_back(SimpleSequence{{card}, position_});
     }
     return result;
 }
@@ -101,7 +101,7 @@ std::vector<Sequence> AnySuitCardCondition::GetVariants(const Sequence& applied_
             return {};
         }
         return {
-            Sequence(ClosedSequence{{applied_sequence.GetCard(position_)}, position_})};
+            Sequence(SimpleSequence{{applied_sequence.GetCard(position_)}, position_})};
     }
     std::vector<Card> cards;
     if (!inverse_) {
@@ -117,7 +117,7 @@ std::vector<Sequence> AnySuitCardCondition::GetVariants(const Sequence& applied_
     }
     std::vector<Sequence> result;
     for (auto& card : cards) {
-        result.emplace_back(ClosedSequence{{card}, position_});
+        result.emplace_back(SimpleSequence{{card}, position_});
     }
     return result;
 }

@@ -78,7 +78,7 @@ std::vector<Sequence> MediciCondition::GetVariants(const Sequence& applied_seque
         if (!selector_->Check(simple_sequence, info)) {
             continue;
         }
-        result.emplace_back(ClosedSequence{simple_sequence, start_position_});
+        result.emplace_back(SimpleSequence{simple_sequence, start_position_});
     }
     return result;
 }
