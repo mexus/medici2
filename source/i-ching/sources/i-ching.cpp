@@ -1,4 +1,4 @@
-#include "i-ching.h"
+#include <i-ching/i-ching.h>
 
 #include <unordered_map>
 
@@ -53,6 +53,10 @@ SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info) {
 
 bool BalanceChecker::Check(const medici::PatienceInfo& info) const {
     auto hexagrams = CalculateHexagrams(info);
+    return Check(hexagrams);
+}
+
+bool BalanceChecker::Check(const SuitsHexagrams& hexagrams) const {
     return CheckBalance(hexagrams);
 }
 
@@ -60,8 +64,7 @@ BalanceAndSuitChecker::BalanceAndSuitChecker(std::uint_fast8_t suit,
                                              const Hexagram& hexagram)
         : suit_(suit), hexagram_(hexagram) {}
 
-bool BalanceAndSuitChecker::Check(const medici::PatienceInfo& info) const {
-    auto hexagrams = CalculateHexagrams(info);
+bool BalanceAndSuitChecker::Check(const SuitsHexagrams& hexagrams) const {
     return hexagrams[suit_] == hexagram_ && CheckBalance(hexagrams);
 }
 }

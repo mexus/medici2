@@ -1,4 +1,4 @@
-#include "patience-selector.h"
+#include <i-ching/patience-selector.h>
 
 namespace i_ching {
 

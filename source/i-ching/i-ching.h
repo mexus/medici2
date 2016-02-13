@@ -17,14 +17,15 @@ class BalanceChecker {
 public:
     virtual ~BalanceChecker() = default;
 
-    virtual bool Check(const medici::PatienceInfo& info) const;
+    bool Check(const medici::PatienceInfo& info) const;
+    virtual bool Check(const SuitsHexagrams& hexagrams) const;
 };
 
 class BalanceAndSuitChecker : public BalanceChecker {
 public:
     BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram& hexagram);
 
-    bool Check(const medici::PatienceInfo& info) const override;
+    bool Check(const SuitsHexagrams& hexagrams) const override;
 
 private:
     const std::uint_fast8_t suit_;
