@@ -1,4 +1,4 @@
-#include "patience-target-card-selector.h"
+#include <medici/patience-target-card-selector.h>
 
 using cards::Card;
 

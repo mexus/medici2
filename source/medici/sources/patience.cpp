@@ -1,4 +1,4 @@
-#include "patience.h"
+#include <medici/patience.h>
 
 using cards::Card;
 

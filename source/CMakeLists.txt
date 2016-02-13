@@ -12,9 +12,9 @@ add_library (source-library
     "i-ching/i-ching.cpp"
     "i-ching/patience-selector.cpp"
 
-    "medici/patience-selector.cpp"
-    "medici/patience-target-card-selector.cpp"
-    "medici/patience.cpp"
+    "medici/sources/patience-selector.cpp"
+    "medici/sources/patience-target-card-selector.cpp"
+    "medici/sources/patience.cpp"
 
     "mixer/sources/factory.cpp"
 )
@@ -22,6 +22,8 @@ add_library (source-library
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable("source-test"
         "helpers/tests/time_measure.cpp"
+        "medici/tests/patience-selector.cpp"
+        "medici/tests/patience.cpp"
         "mixer/tests/factory.cpp"
         "mixer/tests/mixer.cpp"
 )

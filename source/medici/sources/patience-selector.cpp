@@ -1,4 +1,4 @@
-#include "patience-selector.h"
+#include <medici/patience-selector.h>
 
 namespace medici {
 
