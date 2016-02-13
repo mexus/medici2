@@ -11,6 +11,10 @@ ApplyToRangeCondition::ApplyToRangeCondition(
     }
 }
 
+bool ApplyToRangeCondition::CheckSequence(const std::vector<Card>& cards) const {
+    return condition_.CheckSequence(cards);
+}
+
 std::vector<Sequence> ApplyToRangeCondition::GetVariants(const Sequence& applied_sequence,
                                                          Storage storage) const {
     return condition_.GetVariants(applied_sequence, storage);

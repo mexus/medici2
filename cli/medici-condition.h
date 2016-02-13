@@ -9,6 +9,7 @@ public:
 
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
+    bool CheckSequence(const std::vector<Card>& cards) const override;
 
 private:
     const size_t start_position_, end_position_;

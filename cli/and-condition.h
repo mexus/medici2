@@ -6,6 +6,8 @@ class AndCondition : public Condition {
 public:
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
+    bool CheckSequence(const std::vector<Card>& cards) const override;
+
     void AddChild(const std::shared_ptr<Condition>& condition);
 
     template <class T, class... Args>

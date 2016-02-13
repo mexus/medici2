@@ -9,22 +9,12 @@ public:
 
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
+    bool CheckSequence(const std::vector<Card>& cards) const override;
 
 private:
     const size_t position_;
     const Card card_;
     const bool inverse_;
-};
-
-class AnyCardCondition : public Condition {
-public:
-    AnyCardCondition(size_t position);
-
-    std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
-                                      Storage storage) const override;
-
-private:
-    const size_t position_;
 };
 
 class AnyRankCardCondition : public Condition {
@@ -33,6 +23,7 @@ public:
 
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
+    bool CheckSequence(const std::vector<Card>& cards) const override;
 
 private:
     const size_t position_;
@@ -46,6 +37,7 @@ public:
 
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
+    bool CheckSequence(const std::vector<Card>& cards) const override;
 
 private:
     const size_t position_;

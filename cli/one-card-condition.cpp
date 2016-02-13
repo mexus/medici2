@@ -3,6 +3,14 @@
 OneCardCondition::OneCardCondition(size_t position, const Card& card, bool inverse)
         : position_(position), card_(card), inverse_(inverse) {}
 
+bool OneCardCondition::CheckSequence(const std::vector<Card>& cards) const {
+    if (position_ >= cards.size()) {
+        return false;
+    }
+    auto& card = cards[position_];
+    return card == card_;
+}
+
 std::vector<Sequence> OneCardCondition::GetVariants(const Sequence& applied_sequence,
                                                     Storage storage) const {
     if (applied_sequence.IsOccupied(position_)) {
@@ -28,24 +36,16 @@ std::vector<Sequence> OneCardCondition::GetVariants(const Sequence& applied_sequ
     return result;
 }
 
-AnyCardCondition::AnyCardCondition(size_t position) : position_(position) {}
-
-std::vector<Sequence> AnyCardCondition::GetVariants(const Sequence& applied_sequence,
-                                                    Storage storage) const {
-    if (applied_sequence.IsOccupied(position_)) {
-        return {
-            Sequence(ClosedSequence{{applied_sequence.GetCard(position_)}, position_})};
-    }
-    std::vector<Sequence> result;
-    for (auto& card : storage.GetAllAvailableCards()) {
-        result.emplace_back(ClosedSequence{{card}, position_});
-    }
-    return result;
-}
-
 AnyRankCardCondition::AnyRankCardCondition(size_t position, uint_fast8_t suit,
                                            bool inverse)
         : position_(position), suit_(suit), inverse_(inverse) {}
+
+bool AnyRankCardCondition::CheckSequence(const std::vector<Card>& cards) const {
+    if (position_ >= cards.size()) {
+        return false;
+    }
+    return cards[position_].suit == suit_;
+}
 
 std::vector<Sequence> AnyRankCardCondition::GetVariants(const Sequence& applied_sequence,
                                                         Storage storage) const {
@@ -81,6 +81,13 @@ std::vector<Sequence> AnyRankCardCondition::GetVariants(const Sequence& applied_
 AnySuitCardCondition::AnySuitCardCondition(size_t position, uint_fast8_t rank,
                                            bool inverse)
         : position_(position), rank_(rank), inverse_(inverse) {}
+
+bool AnySuitCardCondition::CheckSequence(const std::vector<Card>& cards) const {
+    if (position_ >= cards.size()) {
+        return false;
+    }
+    return cards[position_].rank == rank_;
+}
 
 std::vector<Sequence> AnySuitCardCondition::GetVariants(const Sequence& applied_sequence,
                                                         Storage storage) const {

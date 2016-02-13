@@ -14,6 +14,18 @@ MediciCondition::MediciCondition(size_t start_position, size_t end_position,
     assert(selector && "PatienceSelector should not be a null pointer");
 }
 
+bool MediciCondition::CheckSequence(const std::vector<Card>& cards) const {
+    if (end_position_ >= cards.size()) {
+        return false;
+    }
+    std::vector<Card> deck(cards.begin() + start_position_, cards.begin() + end_position_);
+    medici::PatienceInfo info;
+    if (!medici::TryToConverge(deck, info)) {
+        return false;
+    }
+    return selector_->Check(deck, info);
+}
+
 std::vector<Sequence> MediciCondition::GetVariants(const Sequence& applied_sequence,
                                                    Storage storage) const {
     std::vector<Card> simple_sequence(end_position_ - start_position_ + 1);
@@ -28,10 +40,13 @@ std::vector<Sequence> MediciCondition::GetVariants(const Sequence& applied_seque
     }
     if (free_positions.empty()) {
         medici::PatienceInfo info;
-        if (medici::TryToConverge(simple_sequence, info)) {
-            return {applied_sequence};
+        if (!medici::TryToConverge(simple_sequence, info)) {
+            return {};
         }
-        return {};
+        if (!selector_->Check(simple_sequence, info)) {
+            return {};
+        }
+        return {applied_sequence};
     }
     std::vector<Card> all_cards = storage.GetAllAvailableCards();
     if (all_cards.size() < free_positions.size()) {

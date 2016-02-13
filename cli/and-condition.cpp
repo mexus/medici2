@@ -4,6 +4,15 @@ void AndCondition::AddChild(const std::shared_ptr<Condition>& condition) {
     child_conditions_.push_back(condition);
 }
 
+bool AndCondition::CheckSequence(const std::vector<Card>& cards) const {
+    for (auto& condition: child_conditions_) {
+        if (!condition->CheckSequence(cards)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 std::vector<Sequence> AndCondition::GetVariants(const Sequence& applied_sequence,
                                                 Storage storage) const {
     if (child_conditions_.empty()) {
