@@ -4,7 +4,6 @@ add_executable(${EXE_NAME}
     "alternative-selection.cpp"
     "and-condition.cpp"
     "apply-to-range-condition.cpp"
-    "cli.cpp"
     "condition.cpp"
     "extravagant-conditions.cpp"
     "main.cpp"

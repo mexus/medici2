@@ -9,8 +9,5 @@ add_library (source-library
     medici/patience-selector.cpp
 
     i-ching/i-ching.cpp
-
-    calculator/thread.cpp
-    calculator/manager.cpp
 )
 
