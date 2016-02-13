@@ -55,6 +55,11 @@ bool TryToConverge(const std::vector<Card>& cards, PatienceInfo& info) {
         if (convolutions != 0)
             info.convolutions[current] = convolutions;
     }
-    return deck.size() == 2;
+    if (deck.size() != 2) {
+        return false;
+    }
+    /* Last card is always a mobile */
+    info.mobiles.insert(cards.back());
+    return true;
 }
 }
