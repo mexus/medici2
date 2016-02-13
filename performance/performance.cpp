@@ -7,6 +7,7 @@
 
 CardSelectorConfigurator Performance::configurator;
 using namespace medici;
+using helpers::TimeMeasure;
 
 Performance::Performance() : mixersFactory(N) {
 }
@@ -42,7 +43,7 @@ void Performance::Mixing() const {
         for (std::size_t i = 0; i != decksCount; ++i) {
             mixer->Mix(deck);
         }
-        double elapsed = timer.Elapsed();
+        double elapsed = timer.SecondsElapsed();
         LOG(INFO) << decksCount << " decks generated in " << elapsed
                   << "s: " << decksCount / elapsed << " decks per second";
     }
@@ -63,7 +64,7 @@ std::vector<std::vector<Card>> Performance::PregenerateConvergableDecks() const 
             } while (!TryToConverge(deck, info));
             pregeneratedDecks.push_back(deck);
         }
-        double elapsed = timer.Elapsed();
+        double elapsed = timer.SecondsElapsed();
         LOG(INFO) << decksCount << " convergable decks generated in " << elapsed
                   << "s: " << decksCount / elapsed << " decks per second";
     }
@@ -83,7 +84,7 @@ void Performance::MediciGenerator() const {
             if (!TryToConverge(deck, info))
                 throw std::logic_error("Convergable deck doesn't converges!");
         }
-        double elapsed = timer.Elapsed();
+        double elapsed = timer.SecondsElapsed();
         LOG(INFO) << pregeneratedDecks.size() << " convergable decks converged in "
                   << elapsed << "s: " << pregeneratedDecks.size() / elapsed
                   << " decks per second";
@@ -119,7 +120,7 @@ void Performance::MediciWithConditions() const {
             mixer->Mix(deck);
         } while (!(checker(deck) && TryToConverge(deck, info)));
     }
-    double elapsed = timer.Elapsed();
+    double elapsed = timer.SecondsElapsed();
     LOG(INFO) << totalDecks << " appropriate decks generated in " << elapsed
               << "s: " << totalDecks / elapsed << " decks per second";
 }
@@ -141,7 +142,7 @@ void Performance::MediciWithConditionsAndIChing() const {
         if (iChingChecker.Check(info))
             ++balanced;
     }
-    double elapsed = timer.Elapsed();
+    double elapsed = timer.SecondsElapsed();
     if (balanced != 0)
         LOG(INFO) << balanced << " balanced decks";
     LOG(INFO) << totalDecks << " appropriate decks generated and checked in " << elapsed

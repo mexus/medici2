@@ -2,13 +2,21 @@
 
 using namespace std::chrono;
 
-TimeMeasure::TimeMeasure() : startPoint(steady_clock::now()) {
+namespace helpers {
+
+TimeMeasure::TimeMeasure() : start_point_(ClockType::now()) {}
+
+TimeMeasure::~TimeMeasure() {}
+
+double TimeMeasure::SecondsElapsed() const {
+    ClockType::duration elapsed = ClockType::now() - start_point_;
+    auto elapsed_seconds = duration_cast<duration<double>>(elapsed);
+    return elapsed_seconds.count();
 }
 
-TimeMeasure::~TimeMeasure() {
-}
-
-double TimeMeasure::Elapsed() const {
-    duration<double> elapsed = steady_clock::now() - startPoint;
+TimeMeasure::ClockType::rep TimeMeasure::TicksElapsed() const {
+    ClockType::duration elapsed = ClockType::now() - start_point_;
     return elapsed.count();
+}
+
 }

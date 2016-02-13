@@ -1,18 +1,21 @@
-#ifndef TIME_MEASURE_H
-#define TIME_MEASURE_H
-
+#pragma once
 #include <chrono>
+
+namespace helpers {
 
 class TimeMeasure {
 public:
+    using ClockType = std::chrono::steady_clock;
+
     TimeMeasure();
     virtual ~TimeMeasure();
 
-    double Elapsed() const;
+    double SecondsElapsed() const;
+    ClockType::rep TicksElapsed() const;
 
 private:
-    std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds>
-        startPoint;
+
+    const ClockType::time_point start_point_;
 };
 
-#endif /* TIME_MEASURE_H */
+}
