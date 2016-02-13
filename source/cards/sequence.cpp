@@ -233,7 +233,13 @@ Sequence Sequence::ShiftRight(size_t shift) const {
 bool operator==(const Sequence& lhs, const Sequence& rhs) {
     for (auto& part : lhs.parts_) {
         auto it = std::find(rhs.parts_.begin(), rhs.parts_.end(), part);
-        if (it != rhs.parts_.end()) {
+        if (it == rhs.parts_.end()) {
+            return false;
+        }
+    }
+    for (auto& part : rhs.parts_) {
+        auto it = std::find(lhs.parts_.begin(), lhs.parts_.end(), part);
+        if (it == lhs.parts_.end()) {
             return false;
         }
     }
