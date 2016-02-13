@@ -10,5 +10,7 @@ struct Card {
 };
 
 bool operator<(const Card& lhs, const Card& rhs);
+bool operator==(const Card& lhs, const Card& rhs);
+bool operator!=(const Card& lhs, const Card& rhs);
 
 #endif /* CARDS_CARD_H */

@@ -1,4 +1,4 @@
-#include "cli.h"
+#include "alternative-selection.h"
 #include <easylogging++.h>
 
 INITIALIZE_EASYLOGGINGPP
@@ -10,7 +10,8 @@ int main() {
                     "%datetime %level %msg");
     el::Loggers::reconfigureLogger("default", defaultConf);
 
-    Cli cli(MixersFactory::FULL_CAPACITY);
+    AlternativeSelection cli;
     LOG(INFO) << "Running CLI";
     cli.Run();
+    return 0;
 }
