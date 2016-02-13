@@ -10,5 +10,6 @@ add_library (source-library
     medici/patience-target-card-selector.cpp
 
     i-ching/i-ching.cpp
+    i-ching/patience-selector.cpp
 )
 

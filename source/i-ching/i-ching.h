@@ -1,32 +1,33 @@
-#ifndef I_CHING_I_CHING_H
-#define I_CHING_I_CHING_H
+#pragma once
+
+#include <array>
 
 #include <cards/standard-36-deck.h>
 #include <medici/patience.h>
-#include <array>
 
 namespace i_ching {
 
 enum Line { Yang, Yin };
-typedef std::array<Line, 6> Hexagram;
-typedef std::array<Hexagram, 4> SuitsHexagrams;
+using Hexagram = std::array<Line, 6>;
+using SuitsHexagrams = std::array<Hexagram, 4>;
 
-struct BalanceChecker {
-    virtual bool Check(const medici::PatienceInfo&) const;
+SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info);
+
+class BalanceChecker {
+public:
     virtual ~BalanceChecker() = default;
+
+    virtual bool Check(const medici::PatienceInfo& info) const;
 };
 
 class BalanceAndSuitChecker : public BalanceChecker {
 public:
-    BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram&);
-    bool Check(const medici::PatienceInfo&) const override;
+    BalanceAndSuitChecker(std::uint_fast8_t suit, const Hexagram& hexagram);
+
+    bool Check(const medici::PatienceInfo& info) const override;
 
 private:
-    std::uint_fast8_t suit;
-    Hexagram hexagram;
+    const std::uint_fast8_t suit_;
+    const Hexagram hexagram_;
 };
-
-SuitsHexagrams CalculateHexagrams(const medici::PatienceInfo& info);
 }
-
-#endif /* I_CHING_I_CHING_H */
