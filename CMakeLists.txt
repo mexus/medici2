@@ -6,6 +6,10 @@ SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories("source")
 
+find_package(GTest REQUIRED)
+enable_testing()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} "--output-on-failure")
+
 add_subdirectory(converter)
 add_subdirectory(source)
 # add_subdirectory(performance)

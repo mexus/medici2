@@ -18,3 +18,11 @@ add_library (source-library
 
     "mixer/sources/factory.cpp"
 )
+
+include_directories(${GTEST_INCLUDE_DIRS})
+add_executable("source-test"
+        "mixer/tests/factory.cpp"
+        "mixer/tests/mixer.cpp"
+)
+target_link_libraries("source-test" "source-library" ${GTEST_BOTH_LIBRARIES})
+add_test(source "source-test")
