@@ -15,4 +15,6 @@ add_library (source-library
     "medici/patience-selector.cpp"
     "medici/patience-target-card-selector.cpp"
     "medici/patience.cpp"
+
+    "mixer/sources/factory.cpp"
 )
