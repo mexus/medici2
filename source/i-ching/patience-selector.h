@@ -12,7 +12,7 @@ public:
     PatienceIChingSelector(std::unique_ptr<medici::PatienceSelector>&& parent);
     PatienceIChingSelector(std::uint_fast8_t suit, const i_ching::Hexagram& targetHex,
                            std::unique_ptr<PatienceSelector>&& parent);
-    virtual bool Check(const std::vector<Card>& deck,
+    virtual bool Check(const std::vector<cards::Card>& deck,
                        const medici::PatienceInfo& info) override;
 
 private:

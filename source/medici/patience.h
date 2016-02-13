@@ -8,10 +8,10 @@
 namespace medici {
 
 struct PatienceInfo {
-    std::map<Card, std::size_t> convolutions;
-    std::set<Card> mobiles, stationars;
+    std::map<cards::Card, std::size_t> convolutions;
+    std::set<cards::Card> mobiles, stationars;
     void Clear();
 };
 
-bool TryToConverge(const std::vector<Card>& deck, PatienceInfo& info);
+bool TryToConverge(const std::vector<cards::Card>& deck, PatienceInfo& info);
 }

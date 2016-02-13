@@ -1,7 +1,6 @@
-#ifndef CARDS_STANDARD_36_DECK_H
-#define CARDS_STANDARD_36_DECK_H
-
+#pragma once
 #include <vector>
+
 #include "card.h"
 
 namespace standard_36_deck {
@@ -10,7 +9,7 @@ enum Suits : std::uint_fast8_t { Spades, Hearts, Diamonds, Clubs };
 
 enum Ranks : std::uint_fast8_t { Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 
-static const std::vector<Card> kDeck{{
+static const std::vector<cards::Card> kDeck{{
     {Spades, Six},    // 0
     {Spades, Seven},  // 1
     {Spades, Eight},  // 2
@@ -52,5 +51,3 @@ static const std::vector<Card> kDeck{{
     {Clubs, Ace}     // 35
 }};
 }
-
-#endif /* CARDS_STANDARD_36_DECK_H */

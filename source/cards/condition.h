@@ -2,9 +2,12 @@
 #include <cstdlib>
 #include <memory>
 #include <vector>
-#include <cards/card.h>
-#include "storage.h"
+
+#include "card.h"
 #include "sequence.h"
+#include "storage.h"
+
+namespace cards {
 
 class Condition {
 public:
@@ -12,3 +15,4 @@ public:
                                               Storage storage) const = 0;
     virtual bool CheckSequence(const std::vector<Card>& cards) const = 0;
 };
+}

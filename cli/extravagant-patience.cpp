@@ -1,7 +1,10 @@
-#include "extravagant-conditions.h"
+#include "extravagant-patience.h"
+
 #include <algorithm>
 
 #include <cards/standard-36-deck.h>
+
+using namespace cards;
 
 size_t ExtravagantPatience::GetConvolutions(const std::map<Card, size_t>& convolutions,
                                             const Card& card) {

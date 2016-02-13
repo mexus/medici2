@@ -2,7 +2,10 @@
 #include <map>
 #include <set>
 #include <vector>
-#include <cards/card.h>
+
+#include "card.h"
+
+namespace cards {
 
 class Storage {
 public:
@@ -18,3 +21,4 @@ public:
 private:
     std::map<uint_fast8_t, std::set<uint_fast8_t>> cards_by_rank_, cards_by_suit_;
 };
+}

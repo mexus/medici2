@@ -1,7 +1,9 @@
 #pragma once
-#include <cards/card.h>
 
+#include "card.h"
 #include "condition.h"
+
+namespace cards {
 
 class OneCardCondition : public Condition {
 public:
@@ -44,3 +46,4 @@ private:
     const uint_fast8_t rank_;
     const bool inverse_;
 };
+}

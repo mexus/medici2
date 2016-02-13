@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <vector>
 
-#include <cards/card.h>
+#include "card.h"
+
+namespace cards {
 
 struct ClosedSequence {
     std::vector<Card> cards;
@@ -53,3 +55,4 @@ private:
 };
 
 bool operator==(const Sequence& lhs, const Sequence& rhs);
+}

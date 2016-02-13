@@ -1,17 +1,22 @@
 #include "alternative-selection.h"
+
 #include <algorithm>
 #include <map>
 #include <set>
+
 #include <easylogging++.h>
+
+#include <cards/and-condition.h>
+#include <cards/apply-to-range-condition.h>
+#include <cards/move-condition.h>
+#include <cards/one-card-condition.h>
 #include <cards/standard-36-deck.h>
-// #include <mixer/factory.h>
-#include "and-condition.h"
-#include "move-condition.h"
+#include <cards/storage.h>
+
+#include "extravagant-patience.h"
 #include "medici-condition.h"
-#include "one-card-condition.h"
-#include "apply-to-range-condition.h"
-#include "storage.h"
-#include "extravagant-conditions.h"
+
+using namespace cards;
 
 namespace std {
 static ostream& operator<<(ostream& s, const Sequence& sequence) {

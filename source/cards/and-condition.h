@@ -2,6 +2,8 @@
 
 #include "condition.h"
 
+namespace cards {
+
 class AndCondition : public Condition {
 public:
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
@@ -18,3 +20,4 @@ public:
 private:
     std::vector<std::shared_ptr<Condition>> child_conditions_;
 };
+}

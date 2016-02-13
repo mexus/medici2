@@ -1,7 +1,11 @@
 #include "sequence.h"
+
 #include <algorithm>
 #include <cassert>
+
 #include "storage.h"
+
+namespace cards {
 
 bool ClosedSequence::Overlaps(const ClosedSequence& other) const {
     auto& x = *this;
@@ -205,7 +209,7 @@ Sequence Sequence::ShiftLeft(size_t shift) const {
             size_t trim_size = shift - part.position;
             if (part.cards.size() <= trim_size) {
                 // After trimming nothing remains
-                continue ;
+                continue;
             }
             part.cards.erase(part.cards.begin(), part.cards.begin() + trim_size);
             part.position = 0;
@@ -234,4 +238,5 @@ bool operator==(const Sequence& lhs, const Sequence& rhs) {
         }
     }
     return true;
+}
 }

@@ -12,7 +12,7 @@ PatienceIChingSelector::PatienceIChingSelector(
         : parent(std::move(parent)),
           checker(new BalanceAndSuitChecker(suit, targetHex)) {}
 
-bool PatienceIChingSelector::Check(const std::vector<Card>& deck,
+bool PatienceIChingSelector::Check(const std::vector<cards::Card>& deck,
                                    const medici::PatienceInfo& info) {
     return parent->Check(deck, info) && checker->Check(info);
 }

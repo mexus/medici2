@@ -1,6 +1,10 @@
 #include "apply-to-range-condition.h"
+
 #include <cassert>
+
 #include <easylogging++.h>
+
+namespace cards {
 
 ApplyToRangeCondition::ApplyToRangeCondition(
     size_t range_start, size_t range_end, const std::shared_ptr<Condition>& condition) {
@@ -18,4 +22,5 @@ bool ApplyToRangeCondition::CheckSequence(const std::vector<Card>& cards) const 
 std::vector<Sequence> ApplyToRangeCondition::GetVariants(const Sequence& applied_sequence,
                                                          Storage storage) const {
     return condition_.GetVariants(applied_sequence, storage);
+}
 }

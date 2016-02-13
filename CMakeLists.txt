@@ -8,5 +8,5 @@ include_directories("source")
 
 add_subdirectory(converter)
 add_subdirectory(source)
-add_subdirectory(performance)
+# add_subdirectory(performance)
 add_subdirectory(cli)

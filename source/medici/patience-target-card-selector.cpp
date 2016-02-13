@@ -1,5 +1,7 @@
 #include "patience-target-card-selector.h"
 
+using cards::Card;
+
 namespace medici {
 
 PatienceTargetSelector::PatienceTargetSelector(const Card& target) : target_(target) {}

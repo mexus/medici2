@@ -2,7 +2,7 @@
 
 namespace medici {
 
-bool PatienceSelector::Check(const std::vector<Card>& /*deck*/,
+bool PatienceSelector::Check(const std::vector<cards::Card>& /*deck*/,
                              const PatienceInfo& /*info*/) {
     return true;
 }

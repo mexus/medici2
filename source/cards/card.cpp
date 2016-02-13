@@ -1,5 +1,7 @@
 #include "card.h"
 
+namespace cards {
+
 bool operator<(const Card& lhs, const Card& rhs) {
     if (lhs.suit == rhs.suit)
         return lhs.rank < rhs.rank;
@@ -13,4 +15,5 @@ bool operator==(const Card& lhs, const Card& rhs) {
 
 bool operator!=(const Card& lhs, const Card& rhs) {
     return !(lhs == rhs);
+}
 }

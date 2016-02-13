@@ -1,5 +1,7 @@
 #include "patience.h"
 
+using cards::Card;
+
 namespace {
 inline bool CheckConvergence(const Card& left, const Card& right) {
     return left.suit == right.suit || left.rank == right.rank;

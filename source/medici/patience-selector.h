@@ -8,6 +8,6 @@ namespace medici {
 class PatienceSelector {
 public:
     virtual ~PatienceSelector() = default;
-    virtual bool Check(const std::vector<Card>& deck, const PatienceInfo& info);
+    virtual bool Check(const std::vector<cards::Card>& deck, const PatienceInfo& info);
 };
 }

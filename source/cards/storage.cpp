@@ -1,5 +1,7 @@
 #include "storage.h"
 
+namespace cards {
+
 Storage::Storage(const std::vector<Card>& cards) {
     for (auto& card : cards) {
         cards_by_rank_[card.rank].insert(card.suit);
@@ -45,9 +47,10 @@ std::vector<Card> Storage::GetAllAvailableCards() const {
     for (auto& pair : cards_by_rank_) {
         uint_fast8_t rank = pair.first;
         auto& suits = pair.second;
-        for (auto& suit: suits) {
+        for (auto& suit : suits) {
             result.push_back({suit, rank});
         }
     }
     return result;
+}
 }

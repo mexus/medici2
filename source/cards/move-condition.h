@@ -2,6 +2,8 @@
 
 #include "condition.h"
 
+namespace cards {
+
 class MoveCondition : public Condition {
 public:
     MoveCondition(size_t position, const std::shared_ptr<Condition>& condition);
@@ -14,3 +16,4 @@ private:
     const size_t position_;
     std::shared_ptr<Condition> condition_;
 };
+}

@@ -2,6 +2,8 @@
 #include "and-condition.h"
 #include "move-condition.h"
 
+namespace cards {
+
 class ApplyToRangeCondition : public Condition {
 public:
     ApplyToRangeCondition(size_t range_start, size_t range_end,
@@ -14,3 +16,4 @@ public:
 private:
     AndCondition condition_;
 };
+}

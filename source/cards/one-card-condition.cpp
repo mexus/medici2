@@ -1,5 +1,7 @@
 #include "one-card-condition.h"
 
+namespace cards {
+
 OneCardCondition::OneCardCondition(size_t position, const Card& card, bool inverse)
         : position_(position), card_(card), inverse_(inverse) {}
 
@@ -118,4 +120,5 @@ std::vector<Sequence> AnySuitCardCondition::GetVariants(const Sequence& applied_
         result.emplace_back(ClosedSequence{{card}, position_});
     }
     return result;
+}
 }

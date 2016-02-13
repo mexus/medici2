@@ -1,8 +1,11 @@
 #include "medici-condition.h"
+
 #include <algorithm>
 #include <cassert>
 
 #include <medici/patience.h>
+
+using namespace cards;
 
 MediciCondition::MediciCondition(size_t start_position, size_t end_position,
                                  medici::PatienceSelector* selector)
