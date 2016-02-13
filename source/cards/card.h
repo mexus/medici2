@@ -1,7 +1,5 @@
-#ifndef CARDS_CARD_H
-#define CARDS_CARD_H
+#pragma once
 
-#include <type_traits>
 #include <cstdint>
 
 struct Card {
@@ -12,5 +10,3 @@ struct Card {
 bool operator<(const Card& lhs, const Card& rhs);
 bool operator==(const Card& lhs, const Card& rhs);
 bool operator!=(const Card& lhs, const Card& rhs);
-
-#endif /* CARDS_CARD_H */

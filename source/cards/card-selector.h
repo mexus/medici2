@@ -1,6 +1,4 @@
-#ifndef CARDS_CARD_SELECTOR_H
-#define CARDS_CARD_SELECTOR_H
-
+#pragma once
 #include "card.h"
 
 class CardSelector {
@@ -15,7 +13,7 @@ private:
         bool rankSet;
         bool straight;
     };
-    const Config config;
+    const Config config_;
     CardSelector(Config&&);
 
     friend class CardSelectorConfigurator;
@@ -31,7 +29,5 @@ public:
     CardSelector GetSelector();
 
 private:
-    CardSelector::Config config;
+    CardSelector::Config config_;
 };
-
-#endif /* CARDS_CARD_SELECTOR_H */

@@ -1,35 +1,35 @@
 #include "card-selector.h"
 #include <utility>
 
-CardSelector::CardSelector(Config&& config) : config(config) {
+CardSelector::CardSelector(Config&& config) : config_(config) {
 }
 
 void CardSelectorConfigurator::SetSuit(std::uint_fast8_t suit) {
-    config.suitSet = true;
-    config.suit = suit;
+    config_.suitSet = true;
+    config_.suit = suit;
 }
 
 void CardSelectorConfigurator::SetRank(std::uint_fast8_t rank) {
-    config.rankSet = true;
-    config.rank = rank;
+    config_.rankSet = true;
+    config_.rank = rank;
 }
 
 void CardSelectorConfigurator::SetStraight(bool is_straight) {
-    config.straight = is_straight;
+    config_.straight = is_straight;
 }
 
 bool CardSelector::Check(const Card& card) const {
-    bool match = (!config.rankSet || config.rank == card.rank) &&
-                 (!config.suitSet || config.suit == card.suit);
-    return config.straight == match;
+    bool match = (!config_.rankSet || config_.rank == card.rank) &&
+                 (!config_.suitSet || config_.suit == card.suit);
+    return config_.straight == match;
 }
 
 CardSelector CardSelectorConfigurator::GetSelector() {
-    return CardSelector(std::move(config));
+    return CardSelector(std::move(config_));
 }
 
 void CardSelectorConfigurator::Reset() {
-    config.rankSet = false;
-    config.suitSet = false;
-    config.straight = true;
+    config_.rankSet = false;
+    config_.suitSet = false;
+    config_.straight = true;
 }
