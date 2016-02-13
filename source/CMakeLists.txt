@@ -7,7 +7,7 @@ add_library (source-library
     "cards/sequence.cpp"
     "cards/storage.cpp"
 
-    "helpers/time_measure.cpp"
+    "helpers/sources/time_measure.cpp"
 
     "i-ching/i-ching.cpp"
     "i-ching/patience-selector.cpp"
@@ -21,6 +21,7 @@ add_library (source-library
 
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable("source-test"
+        "helpers/tests/time_measure.cpp"
         "mixer/tests/factory.cpp"
         "mixer/tests/mixer.cpp"
 )
