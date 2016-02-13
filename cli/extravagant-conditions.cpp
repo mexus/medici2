@@ -1,6 +1,8 @@
 #include "extravagant-conditions.h"
 #include <algorithm>
 
+#include <cards/standard-36-deck.h>
+
 size_t ExtravagantPatience::GetConvolutions(const std::map<Card, size_t>& convolutions,
                                             const Card& card) {
     auto it = convolutions.find(card);

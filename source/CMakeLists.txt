@@ -7,6 +7,7 @@ add_library (source-library
 
     medici/patience.cpp
     medici/patience-selector.cpp
+    medici/patience-target-card-selector.cpp
 
     i-ching/i-ching.cpp
 )
