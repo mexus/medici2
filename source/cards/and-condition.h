@@ -18,6 +18,8 @@ public:
     }
 
 private:
+    static const size_t kMaxSequences = 100000;
+
     std::vector<std::shared_ptr<Condition>> child_conditions_;
 };
 }

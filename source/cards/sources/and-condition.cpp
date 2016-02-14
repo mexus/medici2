@@ -1,4 +1,5 @@
 #include <cards/and-condition.h>
+#include <easylogging++.h>
 
 namespace cards {
 
@@ -25,6 +26,13 @@ std::vector<Sequence> AndCondition::GetVariants(const Sequence& applied_sequence
     for (auto& condition : child_conditions_) {
         std::vector<Sequence> intermediate_sequences;
         for (auto& original_sequence : result) {
+            if (intermediate_sequences.size() > kMaxSequences) {
+                LOG(ERROR) << "Too many sequences generated ("
+                           << intermediate_sequences.size()
+                           << "), consider running this condition as a post-condition, "
+                              "or narrow the condition";
+                return {};
+            }
             Storage storage_copy(storage);
             original_sequence.TakeCardsFromStorage(&storage_copy);
             auto variants = condition->GetVariants(original_sequence, storage_copy);
