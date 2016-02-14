@@ -5,22 +5,9 @@
 #include <cards/sequence.h>
 #include <cards/storage.h>
 
+#include "print.h"
+
 using namespace cards;
-
-namespace {
-::std::ostream& operator<<(::std::ostream& s, const ::cards::SimpleSequence& sequence) {
-    s << "{at " << sequence.position << ", " << sequence.cards.size() << ":";
-    for (auto& card : sequence.cards) {
-        s << " [" << (int)card.suit << ", " << (int)card.rank << "]";
-    }
-    s << "}";
-    return s;
-}
-
-::std::ostream& operator<<(::std::ostream& s, const ::cards::Sequence& sequence) {
-    return s << ::testing::PrintToString(sequence.GetParts());
-}
-}
 
 TEST(Cards_Sequence, DefaultConstructor) {
     const Sequence sequence;

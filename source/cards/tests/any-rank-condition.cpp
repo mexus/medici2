@@ -2,21 +2,9 @@
 
 #include <cards/any-rank-condition.h>
 
+#include "print.h"
+
 using namespace cards;
-
-namespace {
-
-::std::ostream& operator<<(::std::ostream& s, const Sequence& sequence) {
-    for (auto& part : sequence.GetParts()) {
-        s << "<At " << part.position << ":";
-        for (auto& card : part.cards) {
-            s << " [" << (int)card.suit << ", " << (int)card.rank << "]";
-        }
-        s << "> ";
-    }
-    return s;
-}
-}
 
 TEST(Cards_AnyRankCondition, Check) {
     std::vector<Card> deck{{0, 0}, {0, 1}, {1, 2}};

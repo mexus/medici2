@@ -2,6 +2,8 @@
 
 #include <cards/apply-to-range-condition.h>
 
+#include "print.h"
+
 using namespace cards;
 
 TEST(Cards_ApplyToRangeCondition, ConstructorAssert) {

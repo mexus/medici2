@@ -3,10 +3,12 @@
 #include <cards/standard-36-deck.h>
 #include <medici/patience.h>
 
-namespace {
-std::ostream& operator<<(::std::ostream& s, const cards::Card& card) {
-    return s << "[" << (int)card.suit << ", " << (int)card.rank << "] ";
+namespace cards {
+
+static void PrintTo(const Card& card, ::std::ostream* os) {
+  *os << "[" << (int)card.suit << ", " << (int)card.rank << "] ";
 }
+
 }
 
 namespace {

@@ -14,11 +14,13 @@ Requirements
 ============
 
 1. CMake to build tests.
-2. C++11 compliant compiler required.
-3. [Easylogging++](https://github.com/easylogging/easyloggingpp) header-only library.
+1. C++11 compliant compiler is required.
+1. [Easylogging++](https://github.com/easylogging/easyloggingpp) header-only library.
 
 Tested with:
+
 1. clang++ 3.6.2 AND g++ 5.2.0, cmake 3.3.0.
+1. clang++ 3.7.1 AND g++ 5.3.0, cmake 3.4.3.
 
 
 Building
@@ -31,13 +33,13 @@ Go to a [build](/build/) folder and execute:
 % make
 ```
 
-Consider running tests via `./test/medici-test` and `./performance/performance-test`.
+Consider running tests via `make check` (unit-tests) and `./performance/performance-test`.
 
 
 Using the library
 =================
 
-See usage at [test](/test/) folder.
+See usage at `tests` folders.
 
 
 Code analysis

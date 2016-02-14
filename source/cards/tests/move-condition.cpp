@@ -2,6 +2,8 @@
 
 #include <cards/move-condition.h>
 
+#include "print.h"
+
 using namespace cards;
 
 TEST(Cards_MoveCondition, CheckOutOfRange) {

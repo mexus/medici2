@@ -2,6 +2,8 @@
 
 #include <cards/one-card-condition.h>
 
+#include "print.h"
+
 using namespace cards;
 
 TEST(Cards_OneCardCondition, Check) {

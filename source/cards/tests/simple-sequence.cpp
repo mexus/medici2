@@ -2,6 +2,8 @@
 
 #include <cards/simple-sequence.h>
 
+#include "print.h"
+
 using namespace cards;
 
 TEST(Cards_SimpleSequence, Equals) {

@@ -2,6 +2,8 @@
 
 #include <cards/and-condition.h>
 
+#include "print.h"
+
 using namespace cards;
 
 namespace {

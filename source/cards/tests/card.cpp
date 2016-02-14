@@ -2,6 +2,8 @@
 
 #include <cards/card.h>
 
+#include "print.h"
+
 using namespace cards;
 
 TEST(Cards, CardLesser) {

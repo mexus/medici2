@@ -2,6 +2,8 @@
 
 #include <cards/or-condition.h>
 
+#include "print.h"
+
 using namespace cards;
 
 struct FakeCondition : public Condition {

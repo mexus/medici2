@@ -4,6 +4,8 @@
 
 #include <cards/storage.h>
 
+#include "print.h"
+
 using namespace cards;
 
 namespace {

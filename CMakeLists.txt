@@ -1,8 +1,21 @@
 cmake_minimum_required (VERSION 2.8.5)
 project(medici)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Werror -Wall -Wextra -O3 -g")
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_EXTRA_FLAGS "-Wall -Wextra -Werror")
+
+if (NOT CMAKE_BUILD_TYPE)
+    message(STATUS "No build type selected, default to Debug")
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        SET(CMAKE_CXX_EXTRA_FLAGS "${CMAKE_CXX_EXTRA_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    endif()
+endif()
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_EXTRA_FLAGS}")
 
 include_directories("source")
 
