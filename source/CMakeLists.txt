@@ -10,6 +10,7 @@ add_library (source-library
     "cards/sources/simple-sequence.cpp"
     "cards/sources/storage.cpp"
 
+    "helpers/sources/sequence-mixer.cpp"
     "helpers/sources/time_measure.cpp"
 
     "i-ching/sources/i-ching.cpp"
@@ -35,6 +36,7 @@ add_executable("source-test"
     "cards/tests/simple-sequence.cpp"
     "cards/tests/storage.cpp"
 
+    "helpers/tests/sequence-mixer.cpp"
     "helpers/tests/time_measure.cpp"
 
     "i-ching/tests/i-ching.cpp"
