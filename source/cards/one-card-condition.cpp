@@ -10,6 +10,9 @@ bool OneCardCondition::CheckSequence(const std::vector<Card>& cards) const {
         return false;
     }
     auto& card = cards[position_];
+    if (inverse_) {
+        return !(card == card_);
+    }
     return card == card_;
 }
 
@@ -45,6 +48,9 @@ AnyRankCardCondition::AnyRankCardCondition(size_t position, uint_fast8_t suit,
 bool AnyRankCardCondition::CheckSequence(const std::vector<Card>& cards) const {
     if (position_ >= cards.size()) {
         return false;
+    }
+    if (inverse_) {
+        return cards[position_].suit != suit_;
     }
     return cards[position_].suit == suit_;
 }
@@ -87,6 +93,9 @@ AnySuitCardCondition::AnySuitCardCondition(size_t position, uint_fast8_t rank,
 bool AnySuitCardCondition::CheckSequence(const std::vector<Card>& cards) const {
     if (position_ >= cards.size()) {
         return false;
+    }
+    if (inverse_) {
+        return cards[position_].rank != rank_;
     }
     return cards[position_].rank == rank_;
 }
