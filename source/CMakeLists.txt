@@ -46,5 +46,5 @@ add_executable("source-test"
     "mixer/tests/factory.cpp"
     "mixer/tests/mixer.cpp"
 )
-target_link_libraries("source-test" "source-library" ${GTEST_BOTH_LIBRARIES})
+target_link_libraries("source-test" "source-library" "gtest-main")
 add_test(source "source-test")

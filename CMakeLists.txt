@@ -10,6 +10,7 @@ find_package(GTest REQUIRED)
 enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} "--output-on-failure")
 
+add_subdirectory(gtest-main)
 add_subdirectory(converter)
 add_subdirectory(source)
 # add_subdirectory(performance)
