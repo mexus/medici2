@@ -18,7 +18,14 @@ public:
     }
 
 private:
-    static const size_t kMaxSequences = 100000;
+    /* Emperical formula for memory consumption:
+     * Memory(Size) ~ -6.9541822e-13 * (Size)^2 + 1.8728709e-4 * Size + 5.556528
+     * For example, for 1e7 (one billion) sequences an estimated memory consumption is
+     * around 1.9 GB, and for one thousand sequences it is around 5.7 MB
+     *
+     * See "memory-consumption.md" for details
+     */
+    static const size_t kMaxSequences = 1e7;
 
     std::vector<std::shared_ptr<Condition>> child_conditions_;
 };
