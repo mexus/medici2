@@ -1,5 +1,5 @@
-#include "performance.h"
 #include <easylogging++.h>
+#include "performance.h"
 
 INITIALIZE_EASYLOGGINGPP
 

@@ -1,19 +1,10 @@
-#ifndef PERFORMANCE_H
-#define PERFORMANCE_H
-
+#pragma once
 #include <atomic>
+
+#include <cards/condition.h>
 #include <cards/standard-36-deck.h>
-#include <cards/deck-selector.h>
+#include <helpers/sequence-mixer.h>
 #include <mixer/factory.h>
-
-class CheckOperand {
-public:
-    CheckOperand(DeckSelectors&&);
-    bool operator()(const std::vector<Card>&) const;
-
-private:
-    DeckSelectors deckSelectors;
-};
 
 class Performance {
 public:
@@ -22,25 +13,22 @@ public:
 
 private:
     static constexpr std::size_t N = 36;
-    static CardSelectorConfigurator configurator;
-    MixersFactory mixersFactory;
+    MixersFactory::MixerType mixer_type_;
+    MixersFactory mixers_factory_36_;
+    static std::vector<cards::Sequence> default_sequences_;
 
     void Mixing() const;
-    std::vector<std::vector<Card>> PregenerateConvergableDecks() const;
+    void ConditionGenerator() const;
+
+    std::vector<std::vector<cards::Card>> PregenerateConvergableDecks() const;
     void MediciGenerator() const;
     void MediciWithConditions() const;
     void MediciWithConditionsAndIChing() const;
     void IChingBalancedPercent() const;
 
-    static DeckSelectors DefaultSelectors();
-    static CheckOperand DefaultCheckOperand();
-    static CardSelector SelectorAnyRank(std::uint_fast8_t suit, bool straight = true);
-    static CardSelector SelectorAnySuit(std::uint_fast8_t rank, bool straight = true);
-    static CardSelector Selector(std::uint_fast8_t suit, std::uint_fast8_t rank,
-                                 bool straight = true);
+    static std::shared_ptr<cards::Condition> DefaultPreCondition();
+    static std::shared_ptr<cards::Condition> DefaultPostCondition();
 
-    typedef std::unique_ptr<MixerInterface<Card>> StandardGenerator;
-    StandardGenerator GetMixer(std::uint_fast32_t seed = 0) const;
+    std::shared_ptr<MixerInterface<cards::Card>> GetMixer36(
+        std::uint_fast32_t seed = 0) const;
 };
-
-#endif /* PERFORMANCE_H */
