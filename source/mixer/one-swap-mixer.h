@@ -1,15 +1,16 @@
 #pragma once
 #include "mixer.h"
 
-template <class DataType, class RandomEngine>
-class OneSwapMixer : public RandomMixer<DataType, RandomEngine> {
+template <class DataType, class RandomEngine, class SwapFunctor = DefaultSwap<DataType>>
+class OneSwapMixer : public RandomMixer<DataType, RandomEngine, SwapFunctor> {
 public:
-    OneSwapMixer(size_t array_size, uint_fast32_t seed)
-            : RandomMixer<DataType, RandomEngine>(seed), distribution_(1, array_size - 1) {}
+    OneSwapMixer(size_t array_size, uint_fast32_t seed, SwapFunctor swap_functor = {})
+            : RandomMixer<DataType, RandomEngine, SwapFunctor>(seed, swap_functor),
+              distribution_(1, array_size - 1) {}
 
     void Mix(std::vector<DataType>& array) override {
         size_t i = distribution_(this->random_engine_);
-        std::swap(array[0], array[i]);
+        this->swap_functor_(array, 0, i);
     }
 
 private:

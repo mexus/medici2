@@ -12,13 +12,16 @@ public:
     enum MixerType { ONE_SWAP, FULL_CAPACITY };
     enum EngineName { RANLUX24_BASE, MINSTD_RAND };
 
-    template <class DataType>
-    std::unique_ptr<MixerInterface<DataType>> CreateMixer(uint_fast32_t seed) const {
+    template <class DataType, class SwapFunctor = DefaultSwap<DataType>>
+    std::shared_ptr<MixerInterface<DataType, SwapFunctor>> CreateMixer(
+        uint_fast32_t seed, SwapFunctor swap_functor = {}) const {
         switch (engine_) {
             case RANLUX24_BASE:
-                return CreateMixer<DataType, std::ranlux24_base>(seed);
+                return CreateMixer<DataType, std::ranlux24_base, SwapFunctor>(
+                    seed, swap_functor);
             case MINSTD_RAND:
-                return CreateMixer<DataType, std::minstd_rand>(seed);
+                return CreateMixer<DataType, std::minstd_rand, SwapFunctor>(seed,
+                                                                            swap_functor);
             default:
                 throw std::logic_error("Unimplemented engine " + std::to_string(engine_));
         }
@@ -32,15 +35,18 @@ private:
     EngineName engine_ = RANLUX24_BASE;
     MixerType mixer_type_ = FULL_CAPACITY;
 
-    template <class DataType, class RandomEngine>
-    std::unique_ptr<MixerInterface<DataType>> CreateMixer(uint_fast32_t seed) const {
+    template <class DataType, class RandomEngine, class SwapFunctor>
+    std::shared_ptr<MixerInterface<DataType, SwapFunctor>> CreateMixer(
+        uint_fast32_t seed, SwapFunctor swap_functor) const {
         switch (mixer_type_) {
             case ONE_SWAP:
-                return std::unique_ptr<MixerInterface<DataType>>(
-                    new OneSwapMixer<DataType, RandomEngine>(deck_size_, seed));
+                return std::shared_ptr<MixerInterface<DataType, SwapFunctor>>(
+                    new OneSwapMixer<DataType, RandomEngine, SwapFunctor>(
+                        deck_size_, seed, swap_functor));
             case FULL_CAPACITY:
-                return std::unique_ptr<MixerInterface<DataType>>(
-                    new FullCapacityMixer<DataType, RandomEngine>(deck_size_, seed));
+                return std::shared_ptr<MixerInterface<DataType, SwapFunctor>>(
+                    new FullCapacityMixer<DataType, RandomEngine, SwapFunctor>(
+                        deck_size_, seed, swap_functor));
             default:
                 throw std::logic_error("Unimplemented mixer type " +
                                        std::to_string(mixer_type_));

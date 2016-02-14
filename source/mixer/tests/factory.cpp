@@ -3,7 +3,7 @@
 #include <mixer/factory.h>
 
 namespace {
-bool DeckChanged(std::unique_ptr<MixerInterface<int>>& mixer,
+bool DeckChanged(std::shared_ptr<MixerInterface<int>>& mixer,
                  const std::vector<int>& original_deck, size_t attempts) {
     auto deck = original_deck;
     for (size_t i = 0; i != attempts; ++i) {
