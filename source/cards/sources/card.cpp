@@ -1,4 +1,4 @@
-#include "card.h"
+#include <cards/card.h>
 
 namespace cards {
 

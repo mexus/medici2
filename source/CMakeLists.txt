@@ -1,11 +1,14 @@
 add_library (source-library
-    "cards/and-condition.cpp"
-    "cards/apply-to-range-condition.cpp"
-    "cards/card.cpp"
-    "cards/move-condition.cpp"
-    "cards/one-card-condition.cpp"
-    "cards/sequence.cpp"
-    "cards/storage.cpp"
+    "cards/sources/and-condition.cpp"
+    "cards/sources/any-rank-condition.cpp"
+    "cards/sources/any-suit-condition.cpp"
+    "cards/sources/apply-to-range-condition.cpp"
+    "cards/sources/card.cpp"
+    "cards/sources/move-condition.cpp"
+    "cards/sources/one-card-condition.cpp"
+    "cards/sources/sequence.cpp"
+    "cards/sources/simple-sequence.cpp"
+    "cards/sources/storage.cpp"
 
     "helpers/sources/time_measure.cpp"
 
@@ -21,16 +24,27 @@ add_library (source-library
 
 include_directories(${GTEST_INCLUDE_DIRS})
 add_executable("source-test"
-        "helpers/tests/time_measure.cpp"
+    "cards/tests/and-condition.cpp"
+    "cards/tests/any-rank-condition.cpp"
+    "cards/tests/any-suit-condition.cpp"
+    "cards/tests/apply-to-range-condition.cpp"
+    "cards/tests/card.cpp"
+    "cards/tests/move-condition.cpp"
+    "cards/tests/one-card-condition.cpp"
+    "cards/tests/sequence.cpp"
+    "cards/tests/simple-sequence.cpp"
+    "cards/tests/storage.cpp"
 
-        "i-ching/tests/i-ching.cpp"
-        "i-ching/tests/patience-selector.cpp"
+    "helpers/tests/time_measure.cpp"
 
-        "medici/tests/patience-selector.cpp"
-        "medici/tests/patience.cpp"
+    "i-ching/tests/i-ching.cpp"
+    "i-ching/tests/patience-selector.cpp"
 
-        "mixer/tests/factory.cpp"
-        "mixer/tests/mixer.cpp"
+    "medici/tests/patience-selector.cpp"
+    "medici/tests/patience.cpp"
+
+    "mixer/tests/factory.cpp"
+    "mixer/tests/mixer.cpp"
 )
 target_link_libraries("source-test" "source-library" ${GTEST_BOTH_LIBRARIES})
 add_test(source "source-test")

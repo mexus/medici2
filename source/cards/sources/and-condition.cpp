@@ -1,4 +1,4 @@
-#include "and-condition.h"
+#include <cards/and-condition.h>
 
 namespace cards {
 

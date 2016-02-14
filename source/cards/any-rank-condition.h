@@ -5,9 +5,9 @@
 
 namespace cards {
 
-class OneCardCondition : public Condition {
+class AnyRankCondition : public Condition {
 public:
-    OneCardCondition(size_t position, const Card& card, bool inverse = false);
+    AnyRankCondition(size_t position, uint_fast8_t suit, bool inverse = false);
 
     std::vector<Sequence> GetVariants(const Sequence& applied_sequence,
                                       Storage storage) const override;
@@ -15,7 +15,7 @@ public:
 
 private:
     const size_t position_;
-    const Card card_;
+    const uint_fast8_t suit_;
     const bool inverse_;
 };
 }

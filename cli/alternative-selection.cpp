@@ -46,7 +46,7 @@ void AlternativeSelection::Run() {
     //     1, Card{standard_36_deck::Diamonds, standard_36_deck::Seven});
     // main_cond.AddChild<OneCardCondition>(
     //     8, Card{standard_36_deck::Clubs, standard_36_deck::Ace});
-    // main_cond.AddChild<AnySuitCardCondition>(14, standard_36_deck::Ace, true);
+    // main_cond.AddChild<AnySuitCondition>(14, standard_36_deck::Ace, true);
 
     main_cond.AddChild<OneCardCondition>(
         7, Card{standard_36_deck::Diamonds, standard_36_deck::Ace});
@@ -56,10 +56,10 @@ void AlternativeSelection::Run() {
         9, Card{standard_36_deck::Hearts, standard_36_deck::Ace});
     main_cond.AddChild<OneCardCondition>(
         10, Card{standard_36_deck::Spades, standard_36_deck::Ace});
-    // main_cond.AddChild<AnyRankCardCondition>(8, standard_36_deck::Hearts);
+    // main_cond.AddChild<AnyRankCondition>(8, standard_36_deck::Hearts);
     // main_cond.AddChild<OneCardCondition>(6, Card{0, 0});
     // main_cond.AddChild<ApplyToRangeCondition>(
-    //     7, 10, std::make_shared<AnySuitCardCondition>(0, standard_36_deck::Ace));
+    //     7, 10, std::make_shared<AnySuitCondition>(0, standard_36_deck::Ace));
 
     // main_cond.AddChild<OneCardCondition>(0, Card{standard_36_deck::Spades,
     // standard_36_deck::Ace});

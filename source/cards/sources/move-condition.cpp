@@ -1,4 +1,4 @@
-#include "move-condition.h"
+#include <cards/move-condition.h>
 
 #include <algorithm>
 
